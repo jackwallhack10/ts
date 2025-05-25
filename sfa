@@ -176,7 +176,11 @@ function lib:Window(text, preset, closebind)
     headerLayout.Padding = UDim.new(0, 8) -- Padding between items
 
     TabHold.Name = "TabHold"
-    TabHold.Parent = Main -- Temporarily keep parent as Main before reparenting to TabAreaFrame
+    TabHold.Parent = TabAreaFrame -- Reparent to the new TabAreaFrame
+    TabHold.BackgroundColor3 = Color3.fromRGB(30, 30, 30) -- Match header background
+    TabHold.BackgroundTransparency = 0
+    TabHold.Position = UDim2.new(0, 0, 0, 0) -- Reset position as it's controlled by layout
+    TabHold.Size = UDim2.new(1, 0, 1, 0) -- Fill the TabAreaFrame
 
     TabHoldLayout.Name = "TabHoldLayout"
     TabHoldLayout.Parent = TabHold
@@ -254,7 +258,7 @@ function lib:Window(text, preset, closebind)
     )
 
     TabFolder.Name = "TabFolder"
-    TabFolder.Parent = Main
+    TabFolder.Parent = contentFrame -- Reparent to the new contentFrame
 
     function lib:ChangePresetColor(toch)
         PresetColor = toch
