@@ -106,6 +106,20 @@ function lib:Window(text, preset, closebind)
     Main.ClipsDescendants = true
     Main.Visible = true
 
+    local headerContainer = Instance.new("Frame")
+    headerContainer.Name = "headerContainer"
+    headerContainer.Parent = Main
+    headerContainer.BackgroundColor3 = Color3.fromRGB(255, 255, 255) -- Temporary color for visibility
+    headerContainer.BackgroundTransparency = 1 -- Will likely be transparent later
+    headerContainer.Size = UDim2.new(1, 0, 0, 41) -- Size to match header height
+
+    local headerLayout = Instance.new("UIListLayout")
+    headerLayout.Name = "headerLayout"
+    headerLayout.Parent = headerContainer
+    headerLayout.FillDirection = Enum.FillDirection.Horizontal
+    headerLayout.VerticalAlignment = Enum.VerticalAlignment.Center
+    headerLayout.Padding = UDim.new(0, 8) -- Padding between items
+
     TabHold.Name = "TabHold"
     TabHold.Parent = Main
     TabHold.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
@@ -119,16 +133,35 @@ function lib:Window(text, preset, closebind)
     TabHoldLayout.Padding = UDim.new(0, 11)
 
     Title.Name = "Title"
-    Title.Parent = Main
+    Title.Parent = headerContainer
     Title.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
     Title.BackgroundTransparency = 1.000
-    Title.Position = UDim2.new(0.0339285731, 0, 0.0564263314, 0)
-    Title.Size = UDim2.new(0, 200, 0, 23)
+    Title.Position = UDim2.new(0, 0, 0, 0)
+    Title.Size = UDim2.new(1, 0, 1, 0)
     Title.Font = Enum.Font.GothamSemibold
     Title.Text = text
-    Title.TextColor3 = Color3.fromRGB(255, 255, 0)
-    Title.TextSize = 12.000
+    Title.TextColor3 = Color3.fromRGB(255, 255, 255)
+    Title.TextSize = 16.000
     Title.TextXAlignment = Enum.TextXAlignment.Left
+    Title.RichText = true
+
+    local devVersionLabel = Instance.new("TextLabel") -- Create new label for DEV VERSION
+    devVersionLabel.Name = "devVersionLabel"
+    devVersionLabel.Parent = headerContainer -- Parent to the header container
+    devVersionLabel.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+    devVersionLabel.BackgroundTransparency = 1.000
+    devVersionLabel.Size = UDim2.new(0, 0, 1, 0) -- Size will be determined by text and padding in horizontal layout
+    devVersionLabel.Font = Enum.Font.Code
+    devVersionLabel.Text = "DEV VERSION"
+    devVersionLabel.TextColor3 = Color3.fromRGB(255, 165, 0) -- Set DEV VERSION color to orange
+    devVersionLabel.TextSize = 14.000 -- Slightly smaller size
+    devVersionLabel.TextXAlignment = Enum.TextXAlignment.Left
+    devVersionLabel.RichText = true
+
+    local devVersionPadding = Instance.new("UIPadding") -- Add padding for spacing
+    devVersionPadding.Name = "devVersionPadding"
+    devVersionPadding.Parent = devVersionLabel
+    devVersionPadding.PaddingLeft = UDim.new(0, 8) -- Add space to the left
 
     DragFrame.Name = "DragFrame"
     DragFrame.Parent = Main
