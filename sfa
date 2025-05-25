@@ -414,9 +414,9 @@ function lib:Window(text, preset, closebind)
 
         TabBtn.Name = "TabBtn"
         TabBtn.Parent = TabHold
-        TabBtn.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
-        TabBtn.BackgroundTransparency = 1.000
-        TabBtn.Size = UDim2.new(0, 107, 0, 21)
+        TabBtn.BackgroundColor3 = Color3.fromRGB(30, 30, 30) -- Match header background
+        TabBtn.BackgroundTransparency = 0
+        TabBtn.Size = UDim2.new(0, 0, 1, 0) -- Use automatic sizing based on content and layout
         TabBtn.Font = Enum.Font.SourceSans
         TabBtn.Text = ""
         TabBtn.TextColor3 = Color3.fromRGB(0, 0, 0)
@@ -426,19 +426,19 @@ function lib:Window(text, preset, closebind)
         TabTitle.Parent = TabBtn
         TabTitle.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
         TabTitle.BackgroundTransparency = 1.000
-        TabTitle.Size = UDim2.new(0, 107, 0, 21)
+        TabTitle.Size = UDim2.new(1, 0, 1, 0)
         TabTitle.Font = Enum.Font.Gotham
         TabTitle.Text = text
-        TabTitle.TextColor3 = Color3.fromRGB(150, 150, 150)
+        TabTitle.TextColor3 = Color3.fromRGB(150, 150, 150) -- Grey for inactive tabs
         TabTitle.TextSize = 14.000
-        TabTitle.TextXAlignment = Enum.TextXAlignment.Left
+        TabTitle.TextXAlignment = Enum.TextXAlignment.Center -- Center text for tabs
 
         TabBtnIndicator.Name = "TabBtnIndicator"
         TabBtnIndicator.Parent = TabBtn
-        TabBtnIndicator.BackgroundColor3 = PresetColor
+        TabBtnIndicator.BackgroundColor3 = PresetColor -- Accent color
         TabBtnIndicator.BorderSizePixel = 0
-        TabBtnIndicator.Position = UDim2.new(0, 0, 1, 0)
-        TabBtnIndicator.Size = UDim2.new(0, 0, 0, 2)
+        TabBtnIndicator.Position = UDim2.new(0, 0, 1, -2) -- Position at the bottom, slightly inside
+        TabBtnIndicator.Size = UDim2.new(1, 0, 0, 2) -- Thin indicator line
 
         TabBtnIndicatorCorner.Name = "TabBtnIndicatorCorner"
         TabBtnIndicatorCorner.Parent = TabBtnIndicator
@@ -457,11 +457,11 @@ function lib:Window(text, preset, closebind)
         Tab.Name = "Tab"
         Tab.Parent = TabFolder
         Tab.Active = true
-        Tab.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
-        Tab.BackgroundTransparency = 1.000
+        Tab.BackgroundColor3 = Color3.fromRGB(40, 40, 40) -- Match content frame background
+        Tab.BackgroundTransparency = 0
         Tab.BorderSizePixel = 0
-        Tab.Position = UDim2.new(0.31400001, 0, 0.147, 0)
-        Tab.Size = UDim2.new(0, 373, 0, 254)
+        Tab.Position = UDim2.new(0, 0, 0, 0) -- Position at top left of content frame
+        Tab.Size = UDim2.new(1, 0, 1, 0) -- Fill the content frame
         Tab.CanvasSize = UDim2.new(0, 0, 0, 0)
         Tab.ScrollBarThickness = 3
         Tab.Visible = false
@@ -469,13 +469,17 @@ function lib:Window(text, preset, closebind)
         TabLayout.Name = "TabLayout"
         TabLayout.Parent = Tab
         TabLayout.SortOrder = Enum.SortOrder.LayoutOrder
-        TabLayout.Padding = UDim.new(0, 6)
+        TabLayout.Padding = UDim.new(0, 6) -- Padding between components in the tab
+        TabLayout.HorizontalAlignment = Enum.HorizontalAlignment.Center
+        TabLayout.VerticalAlignment = Enum.VerticalAlignment.Top
 
         if fs == false then
             fs = true
-            TabBtnIndicator.Size = UDim2.new(0, 13, 0, 2)
-            TabTitle.TextColor3 = Color3.fromRGB(255, 255, 255)
+            TabBtnIndicator.Size = UDim2.new(1, 0, 0, 2) -- Ensure indicator is visible for the first tab
+            TabTitle.TextColor3 = Color3.fromRGB(255, 255, 255) -- White for the first active tab
             Tab.Visible = true
+        else
+            TabBtnIndicator.Size = UDim2.new(0, 0, 0, 2) -- Hide indicator for inactive tabs initially
         end
 
         TabBtn.MouseButton1Click:Connect(
@@ -484,8 +488,9 @@ function lib:Window(text, preset, closebind)
                     if v.Name == "Tab" then
                         v.Visible = false
                     end
-                    Tab.Visible = true
                 end
+                Tab.Visible = true
+
                 for i, v in next, TabHold:GetChildren() do
                     if v.Name == "TabBtn" then
                         v.TabBtnIndicator:TweenSize(
@@ -495,25 +500,25 @@ function lib:Window(text, preset, closebind)
                             .2,
                             true
                         )
-                        TabBtnIndicator:TweenSize(
-                            UDim2.new(0, 13, 0, 2),
-                            Enum.EasingDirection.Out,
-                            Enum.EasingStyle.Quart,
-                            .2,
-                            true
-                        )
                         TweenService:Create(
                             v.TabTitle,
                             TweenInfo.new(.3, Enum.EasingStyle.Quad, Enum.EasingDirection.Out),
-                            {TextColor3 = Color3.fromRGB(150, 150, 150)}
-                        ):Play()
-                        TweenService:Create(
-                            TabTitle,
-                            TweenInfo.new(.3, Enum.EasingStyle.Quad, Enum.EasingDirection.Out),
-                            {TextColor3 = Color3.fromRGB(255, 255, 255)}
+                            {TextColor3 = Color3.fromRGB(150, 150, 150)} -- Set inactive tabs to grey
                         ):Play()
                     end
                 end
+                TabBtnIndicator:TweenSize(
+                    UDim2.new(1, 0, 0, 2),
+                    Enum.EasingDirection.Out,
+                    Enum.EasingStyle.Quart,
+                    .2,
+                    true
+                )
+                TweenService:Create(
+                    TabTitle,
+                    TweenInfo.new(.3, Enum.EasingStyle.Quad, Enum.EasingDirection.Out),
+                    {TextColor3 = Color3.fromRGB(255, 255, 255)} -- Set active tab to white
+                ):Play()
             end
         )
         local tabcontent = {}
@@ -524,15 +529,17 @@ function lib:Window(text, preset, closebind)
 
             Button.Name = "Button"
             Button.Parent = Tab
-            Button.BackgroundColor3 = Color3.fromRGB(34, 34, 34)
-            Button.Size = UDim2.new(0, 363, 0, 42)
+            Button.BackgroundColor3 = Color3.fromRGB(40, 40, 40) -- Match content background
+            Button.Size = UDim2.new(1, 0, 0, 30) -- Adjust size to be thinner
             Button.AutoButtonColor = false
             Button.Font = Enum.Font.SourceSans
             Button.Text = ""
             Button.TextColor3 = Color3.fromRGB(0, 0, 0)
             Button.TextSize = 14.000
+            Button.BorderSizePixel = 1 -- Add a border
+            Button.BorderColor3 = Color3.fromRGB(50, 50, 50) -- Border color
 
-            ButtonCorner.CornerRadius = UDim.new(0, 5)
+            ButtonCorner.CornerRadius = UDim.new(0, 3) -- Slightly smaller corner radius
             ButtonCorner.Name = "ButtonCorner"
             ButtonCorner.Parent = Button
 
@@ -541,10 +548,10 @@ function lib:Window(text, preset, closebind)
             ButtonTitle.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
             ButtonTitle.BackgroundTransparency = 1.000
             ButtonTitle.Position = UDim2.new(0.0358126722, 0, 0, 0)
-            ButtonTitle.Size = UDim2.new(0, 187, 0, 42)
+            ButtonTitle.Size = UDim2.new(1, 0, 1, 0)
             ButtonTitle.Font = Enum.Font.Gotham
             ButtonTitle.Text = text
-            ButtonTitle.TextColor3 = Color3.fromRGB(255, 255, 255)
+            ButtonTitle.TextColor3 = Color3.fromRGB(255, 255, 255) -- White text
             ButtonTitle.TextSize = 14.000
             ButtonTitle.TextXAlignment = Enum.TextXAlignment.Left
 
@@ -552,8 +559,8 @@ function lib:Window(text, preset, closebind)
                 function()
                     TweenService:Create(
                         Button,
-                        TweenInfo.new(.3, Enum.EasingStyle.Quad, Enum.EasingDirection.Out),
-                        {BackgroundColor3 = Color3.fromRGB(37, 37, 37)}
+                        TweenInfo.new(.1, Enum.EasingStyle.Quad, Enum.EasingDirection.Out),
+                        {BackgroundColor3 = Color3.fromRGB(50, 50, 50)} -- Darker hover effect
                     ):Play()
                 end
             )
@@ -562,8 +569,8 @@ function lib:Window(text, preset, closebind)
                 function()
                     TweenService:Create(
                         Button,
-                        TweenInfo.new(.2, Enum.EasingStyle.Quad, Enum.EasingDirection.Out),
-                        {BackgroundColor3 = Color3.fromRGB(34, 34, 34)}
+                        TweenInfo.new(.1, Enum.EasingStyle.Quad, Enum.EasingDirection.Out),
+                        {BackgroundColor3 = Color3.fromRGB(40, 40, 40)} -- Return to normal background
                     ):Play()
                 end
             )
@@ -575,9 +582,20 @@ function lib:Window(text, preset, closebind)
             )
 
             Tab.CanvasSize = UDim2.new(0, 0, 0, TabLayout.AbsoluteContentSize.Y)
+
+            local ButtonFunctions = {}
+            function ButtonFunctions:Text(newText)
+                ButtonTitle.Text = newText or text
+                return ButtonFunctions
+            end
+             function ButtonFunctions:Remove()
+                Button:Destroy()
+                return ButtonFunctions
+            end
+            return ButtonFunctions
         end
         function tabcontent:Toggle(text,default, callback)
-            local toggled = false
+            local toggled = default or false
 
             local Toggle = Instance.new("TextButton")
             local ToggleCorner = Instance.new("UICorner")
@@ -593,16 +611,18 @@ function lib:Window(text, preset, closebind)
 
             Toggle.Name = "Toggle"
             Toggle.Parent = Tab
-            Toggle.BackgroundColor3 = Color3.fromRGB(34, 34, 34)
-            Toggle.Position = UDim2.new(0.215625003, 0, 0.446271926, 0)
-            Toggle.Size = UDim2.new(0, 363, 0, 42)
+            Toggle.BackgroundColor3 = Color3.fromRGB(40, 40, 40) -- Match content background
+            Toggle.Position = UDim2.new(0, 0, 0, 0) -- Position controlled by layout
+            Toggle.Size = UDim2.new(1, 0, 0, 30) -- Adjust size to be thinner
             Toggle.AutoButtonColor = false
             Toggle.Font = Enum.Font.SourceSans
             Toggle.Text = ""
             Toggle.TextColor3 = Color3.fromRGB(0, 0, 0)
             Toggle.TextSize = 14.000
+            Toggle.BorderSizePixel = 1 -- Add a border
+            Toggle.BorderColor3 = Color3.fromRGB(50, 50, 50) -- Border color
 
-            ToggleCorner.CornerRadius = UDim.new(0, 5)
+            ToggleCorner.CornerRadius = UDim.new(0, 3) -- Slightly smaller corner radius
             ToggleCorner.Name = "ToggleCorner"
             ToggleCorner.Parent = Toggle
 
@@ -611,48 +631,54 @@ function lib:Window(text, preset, closebind)
             ToggleTitle.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
             ToggleTitle.BackgroundTransparency = 1.000
             ToggleTitle.Position = UDim2.new(0.0358126722, 0, 0, 0)
-            ToggleTitle.Size = UDim2.new(0, 187, 0, 42)
+            ToggleTitle.Size = UDim2.new(0, 187, 0, 42) -- Adjust size as needed for horizontal layout
             ToggleTitle.Font = Enum.Font.Gotham
             ToggleTitle.Text = text
-            ToggleTitle.TextColor3 = Color3.fromRGB(255, 255, 255)
+            ToggleTitle.TextColor3 = Color3.fromRGB(255, 255, 255) -- White text
             ToggleTitle.TextSize = 14.000
             ToggleTitle.TextXAlignment = Enum.TextXAlignment.Left
 
+            -- Toggle switch visual elements
             FrameToggle1.Name = "FrameToggle1"
             FrameToggle1.Parent = Toggle
-            FrameToggle1.BackgroundColor3 = Color3.fromRGB(50, 50, 50)
-            FrameToggle1.Position = UDim2.new(0.859504104, 0, 0.285714298, 0)
-            FrameToggle1.Size = UDim2.new(0, 37, 0, 18)
+            FrameToggle1.BackgroundColor3 = Color3.fromRGB(50, 50, 50) -- Track color off
+            FrameToggle1.Position = UDim2.new(1, -40, 0.5, -9) -- Position on the right, centered vertically
+            FrameToggle1.Size = UDim2.new(0, 30, 0, 18) -- Size of the track
+            FrameToggle1.AnchorPoint = Vector2.new(1, 0.5)
+            FrameToggle1.BorderSizePixel = 1 -- Add border to track
+            FrameToggle1.BorderColor3 = Color3.fromRGB(60, 60, 60)
 
             FrameToggle1Corner.Name = "FrameToggle1Corner"
             FrameToggle1Corner.Parent = FrameToggle1
+            FrameToggle1Corner.CornerRadius = UDim.new(0, 9) -- Rounded ends
 
-            FrameToggle2.Name = "FrameToggle2"
-            FrameToggle2.Parent = FrameToggle1
-            FrameToggle2.BackgroundColor3 = Color3.fromRGB(34, 34, 34)
-            FrameToggle2.Position = UDim2.new(0.0489999987, 0, 0.0930000022, 0)
-            FrameToggle2.Size = UDim2.new(0, 33, 0, 14)
-
-            FrameToggle2Corner.Name = "FrameToggle2Corner"
-            FrameToggle2Corner.Parent = FrameToggle2
-
-            FrameToggle3.Name = "FrameToggle3"
+            FrameToggle3.Name = "FrameToggle3" -- This will be the colored track when on
             FrameToggle3.Parent = FrameToggle1
-            FrameToggle3.BackgroundColor3 = PresetColor
-            FrameToggle3.BackgroundTransparency = 1.000
-            FrameToggle3.Size = UDim2.new(0, 37, 0, 18)
+            FrameToggle3.BackgroundColor3 = PresetColor -- Accent color
+            FrameToggle3.BackgroundTransparency = 1.000 -- Initially transparent (off state)
+            FrameToggle3.Size = UDim2.new(0, 30, 0, 18)
 
             FrameToggle3Corner.Name = "FrameToggle3Corner"
             FrameToggle3Corner.Parent = FrameToggle3
+            FrameToggle3Corner.CornerRadius = UDim.new(0, 9)
 
             FrameToggleCircle.Name = "FrameToggleCircle"
             FrameToggleCircle.Parent = FrameToggle1
-            FrameToggleCircle.BackgroundColor3 = Color3.fromRGB(50, 50, 50)
-            FrameToggleCircle.Position = UDim2.new(0.127000004, 0, 0.222000003, 0)
-            FrameToggleCircle.Size = UDim2.new(0, 10, 0, 10)
+            FrameToggleCircle.BackgroundColor3 = Color3.fromRGB(200, 200, 200) -- Circle color off
+            FrameToggleCircle.Position = UDim2.new(0, -3, 0.5, -7) -- Initial position (left side of track)
+            FrameToggleCircle.Size = UDim2.new(0, 14, 0, 14) -- Size of the circle
+            FrameToggleCircle.AnchorPoint = Vector2.new(0, 0.5)
+            FrameToggleCircle.BorderSizePixel = 1 -- Add border to circle
+            FrameToggleCircle.BorderColor3 = Color3.fromRGB(220, 220, 220)
 
             FrameToggleCircleCorner.Name = "FrameToggleCircleCorner"
             FrameToggleCircleCorner.Parent = FrameToggleCircle
+            FrameToggleCircleCorner.CornerRadius = UDim.new(0, 7) -- Make it a circle
+
+            -- Remove unused FrameToggle2 and FrameToggle2_2
+            if FrameToggle2 then FrameToggle2:Destroy() end
+            if FrameToggle2Corner then FrameToggle2Corner:Destroy() end
+            if FrameToggle2_2 then FrameToggle2_2:Destroy() end
 
             coroutine.wrap(
                 function()
@@ -662,117 +688,86 @@ function lib:Window(text, preset, closebind)
                 end
             )()
 
+            local function updateToggleState()
+                 if toggled then
+                    TweenService:Create(
+                        FrameToggle3,
+                        TweenInfo.new(.2, Enum.EasingStyle.Quad, Enum.EasingDirection.Out),
+                        {BackgroundTransparency = 0} -- Show colored track
+                    ):Play()
+                    FrameToggleCircle:TweenPosition(
+                        UDim2.new(1, -11, 0.5, -7), -- Move circle to the right
+                        Enum.EasingDirection.Out,
+                        Enum.EasingStyle.Quad,
+                        .2,
+                        true
+                    )
+                    TweenService:Create(
+                         FrameToggleCircle,
+                         TweenInfo.new(.2, Enum.EasingStyle.Quad, Enum.EasingDirection.Out),
+                         {BackgroundColor3 = Color3.fromRGB(255, 255, 255)} -- White circle when on
+                     ):Play()
+                 else
+                    TweenService:Create(
+                        FrameToggle3,
+                        TweenInfo.new(.2, Enum.EasingStyle.Quad, Enum.EasingDirection.Out),
+                        {BackgroundTransparency = 1} -- Hide colored track
+                    ):Play()
+                    FrameToggleCircle:TweenPosition(
+                        UDim2.new(0, -3, 0.5, -7), -- Move circle to the left
+                        Enum.EasingDirection.Out,
+                        Enum.EasingStyle.Quad,
+                        .2,
+                        true
+                    )
+                     TweenService:Create(
+                         FrameToggleCircle,
+                         TweenInfo.new(.2, Enum.EasingStyle.Quad, Enum.EasingDirection.Out),
+                         {BackgroundColor3 = Color3.fromRGB(200, 200, 200)} -- Grey circle when off
+                     ):Play()
+                 end
+                 if type(callback) == 'function' then
+                     pcall(callback, toggled)
+                 end
+            end
+
             Toggle.MouseButton1Click:Connect(
                 function()
-                    if toggled == false then
-                        TweenService:Create(
-                            Toggle,
-                            TweenInfo.new(.3, Enum.EasingStyle.Quad, Enum.EasingDirection.Out),
-                            {BackgroundColor3 = Color3.fromRGB(37, 37, 37)}
-                        ):Play()
-                        TweenService:Create(
-                            FrameToggle1,
-                            TweenInfo.new(.3, Enum.EasingStyle.Quad, Enum.EasingDirection.Out),
-                            {BackgroundTransparency = 1}
-                        ):Play()
-                        TweenService:Create(
-                            FrameToggle2,
-                            TweenInfo.new(.3, Enum.EasingStyle.Quad, Enum.EasingDirection.Out),
-                            {BackgroundTransparency = 1}
-                        ):Play()
-                        TweenService:Create(
-                            FrameToggle3,
-                            TweenInfo.new(.3, Enum.EasingStyle.Quad, Enum.EasingDirection.Out),
-                            {BackgroundTransparency = 0}
-                        ):Play()
-                        TweenService:Create(
-                            FrameToggleCircle,
-                            TweenInfo.new(.3, Enum.EasingStyle.Quad, Enum.EasingDirection.Out),
-                            {BackgroundColor3 = Color3.fromRGB(255, 255, 255)}
-                        ):Play()
-                        FrameToggleCircle:TweenPosition(
-                            UDim2.new(0.587, 0, 0.222000003, 0),
-                            Enum.EasingDirection.Out,
-                            Enum.EasingStyle.Quart,
-                            .2,
-                            true
-                        )
-                    else
-                        TweenService:Create(
-                            Toggle,
-                            TweenInfo.new(.3, Enum.EasingStyle.Quad, Enum.EasingDirection.Out),
-                            {BackgroundColor3 = Color3.fromRGB(34, 34, 34)}
-                        ):Play()
-                        TweenService:Create(
-                            FrameToggle1,
-                            TweenInfo.new(.3, Enum.EasingStyle.Quad, Enum.EasingDirection.Out),
-                            {BackgroundTransparency = 0}
-                        ):Play()
-                        TweenService:Create(
-                            FrameToggle2,
-                            TweenInfo.new(.3, Enum.EasingStyle.Quad, Enum.EasingDirection.Out),
-                            {BackgroundTransparency = 0}
-                        ):Play()
-                        TweenService:Create(
-                            FrameToggle3,
-                            TweenInfo.new(.3, Enum.EasingStyle.Quad, Enum.EasingDirection.Out),
-                            {BackgroundTransparency = 1}
-                        ):Play()
-                        TweenService:Create(
-                            FrameToggleCircle,
-                            TweenInfo.new(.3, Enum.EasingStyle.Quad, Enum.EasingDirection.Out),
-                            {BackgroundColor3 = Color3.fromRGB(50, 50, 50)}
-                        ):Play()
-                        FrameToggleCircle:TweenPosition(
-                            UDim2.new(0.127000004, 0, 0.222000003, 0),
-                            Enum.EasingDirection.Out,
-                            Enum.EasingStyle.Quart,
-                            .2,
-                            true
-                        )
-                    end
                     toggled = not toggled
-                    pcall(callback, toggled)
+                    updateToggleState()
+                end
+            )
+             ToggleTitle.MouseButton1Click:Connect(
+                function()
+                    toggled = not toggled
+                     updateToggleState()
                 end
             )
 
-            if default == true then
-                TweenService:Create(
-                    Toggle,
-                    TweenInfo.new(.3, Enum.EasingStyle.Quad, Enum.EasingDirection.Out),
-                    {BackgroundColor3 = Color3.fromRGB(37, 37, 37)}
-                ):Play()
-                TweenService:Create(
-                    FrameToggle1,
-                    TweenInfo.new(.3, Enum.EasingStyle.Quad, Enum.EasingDirection.Out),
-                    {BackgroundTransparency = 1}
-                ):Play()
-                TweenService:Create(
-                    FrameToggle2,
-                    TweenInfo.new(.3, Enum.EasingStyle.Quad, Enum.EasingDirection.Out),
-                    {BackgroundTransparency = 1}
-                ):Play()
-                TweenService:Create(
-                    FrameToggle3,
-                    TweenInfo.new(.3, Enum.EasingStyle.Quad, Enum.EasingDirection.Out),
-                    {BackgroundTransparency = 0}
-                ):Play()
-                TweenService:Create(
-                    FrameToggleCircle,
-                    TweenInfo.new(.3, Enum.EasingStyle.Quad, Enum.EasingDirection.Out),
-                    {BackgroundColor3 = Color3.fromRGB(255, 255, 255)}
-                ):Play()
-                FrameToggleCircle:TweenPosition(
-                    UDim2.new(0.587, 0, 0.222000003, 0),
-                    Enum.EasingDirection.Out,
-                    Enum.EasingStyle.Quart,
-                    .2,
-                    true
-                )
-                toggled = not toggled
-            end
+            -- Set initial state
+            updateToggleState()
 
             Tab.CanvasSize = UDim2.new(0, 0, 0, TabLayout.AbsoluteContentSize.Y)
+
+            local ToggleFunctions = {}
+            function ToggleFunctions:Set(state)
+                toggled = state
+                updateToggleState()
+                return ToggleFunctions
+            end
+            function ToggleFunctions:Get()
+                return toggled
+            end
+            function ToggleFunctions:Text(newText)
+                ToggleTitle.Text = newText or text
+                return ToggleFunctions
+            end
+            function ToggleFunctions:Remove()
+                Toggle:Destroy()
+                return ToggleFunctions
+            end
+
+            return ToggleFunctions
         end
         function tabcontent:Slider(text, min, max, start, callback)
             local dragging = false
@@ -786,16 +781,18 @@ function lib:Window(text, preset, closebind)
 
             Slider.Name = "Slider"
             Slider.Parent = Tab
-            Slider.BackgroundColor3 = Color3.fromRGB(34, 34, 34)
-            Slider.Position = UDim2.new(-0.48035714, 0, -0.570532918, 0)
-            Slider.Size = UDim2.new(0, 363, 0, 60)
+            Slider.BackgroundColor3 = Color3.fromRGB(40, 40, 40) -- Match content background
+            Slider.Position = UDim2.new(0, 0, 0, 0) -- Position controlled by layout
+            Slider.Size = UDim2.new(1, 0, 0, 40) -- Adjust size for slider
             Slider.AutoButtonColor = false
             Slider.Font = Enum.Font.SourceSans
             Slider.Text = ""
             Slider.TextColor3 = Color3.fromRGB(0, 0, 0)
             Slider.TextSize = 14.000
+            Slider.BorderSizePixel = 1 -- Add a border
+            Slider.BorderColor3 = Color3.fromRGB(50, 50, 50) -- Border color
 
-            SliderCorner.CornerRadius = UDim.new(0, 5)
+            SliderCorner.CornerRadius = UDim.new(0, 3) -- Slightly smaller corner radius
             SliderCorner.Name = "SliderCorner"
             SliderCorner.Parent = Slider
 
@@ -804,10 +801,10 @@ function lib:Window(text, preset, closebind)
             SliderTitle.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
             SliderTitle.BackgroundTransparency = 1.000
             SliderTitle.Position = UDim2.new(0.0358126722, 0, 0, 0)
-            SliderTitle.Size = UDim2.new(0, 187, 0, 42)
+            SliderTitle.Size = UDim2.new(0, 187, 0, 20) -- Adjust size
             SliderTitle.Font = Enum.Font.Gotham
             SliderTitle.Text = text
-            SliderTitle.TextColor3 = Color3.fromRGB(255, 255, 255)
+            SliderTitle.TextColor3 = Color3.fromRGB(255, 255, 255) -- White text
             SliderTitle.TextSize = 14.000
             SliderTitle.TextXAlignment = Enum.TextXAlignment.Left
 
@@ -815,63 +812,58 @@ function lib:Window(text, preset, closebind)
             SliderValue.Parent = Slider
             SliderValue.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
             SliderValue.BackgroundTransparency = 1.000
-            SliderValue.Position = UDim2.new(0.0358126722, 0, 0, 0)
-            SliderValue.Size = UDim2.new(0, 335, 0, 42)
+            SliderValue.Position = UDim2.new(1, -10, 0, 0) -- Position on the right
+            SliderValue.AnchorPoint = Vector2.new(1, 0)
+            SliderValue.Size = UDim2.new(0, 100, 0, 20) -- Adjust size
             SliderValue.Font = Enum.Font.Gotham
             SliderValue.Text = tostring(start and math.floor((start / max) * (max - min) + min) or 0)
-            SliderValue.TextColor3 = Color3.fromRGB(255, 255, 255)
+            SliderValue.TextColor3 = Color3.fromRGB(255, 255, 255) -- White text
             SliderValue.TextSize = 14.000
             SliderValue.TextXAlignment = Enum.TextXAlignment.Right
 
             SlideFrame.Name = "SlideFrame"
             SlideFrame.Parent = Slider
-            SlideFrame.BackgroundColor3 = Color3.fromRGB(50, 50, 50)
+            SlideFrame.BackgroundColor3 = Color3.fromRGB(50, 50, 50) -- Track color
             SlideFrame.BorderSizePixel = 0
-            SlideFrame.Position = UDim2.new(0.0342647657, 0, 0.686091602, 0)
-            SlideFrame.Size = UDim2.new(0, 335, 0, 3)
+            SlideFrame.Position = UDim2.new(0.0358, 0, 1, -15) -- Position below text
+            SlideFrame.AnchorPoint = Vector2.new(0, 1)
+            SlideFrame.Size = UDim2.new(1, -7, 0, 4) -- Track size, slightly thinner and with padding
 
             CurrentValueFrame.Name = "CurrentValueFrame"
             CurrentValueFrame.Parent = SlideFrame
-            CurrentValueFrame.BackgroundColor3 = PresetColor
+            CurrentValueFrame.BackgroundColor3 = PresetColor -- Accent color
             CurrentValueFrame.BorderSizePixel = 0
-            CurrentValueFrame.Size = UDim2.new((start or 0) / max, 0, 0, 3)
+            CurrentValueFrame.Size = UDim2.new((start or 0) / max, 0, 1, 0) -- Fill height of track
 
             SlideCircle.Name = "SlideCircle"
             SlideCircle.Parent = SlideFrame
-            SlideCircle.BackgroundColor3 = PresetColor
-            SlideCircle.BackgroundTransparency = 1.000
-            SlideCircle.Position = UDim2.new((start or 0) / max, -6, -1.30499995, 0)
-            SlideCircle.Size = UDim2.new(0, 11, 0, 11)
-            SlideCircle.Image = "rbxassetid://3570695787"
-            SlideCircle.ImageColor3 = PresetColor
+            SlideCircle.BackgroundColor3 = PresetColor -- Accent color
+            SlideCircle.BackgroundTransparency = 0
+            SlideCircle.Position = UDim2.new((start or 0) / max, -6, 0.5, 0) -- Position on track, centered vertically
+            SlideCircle.AnchorPoint = Vector2.new(0.5, 0.5)
+            SlideCircle.Size = UDim2.new(0, 12, 0, 12) -- Thumb size
+            SlideCircle.Image = "rbxassetid://3570695787" -- Generic circle image, replace if needed
+            SlideCircle.ImageColor3 = PresetColor -- Accent color
 
             coroutine.wrap(
                 function()
                     while wait() do
                         CurrentValueFrame.BackgroundColor3 = PresetColor
+                        SlideCircle.BackgroundColor3 = PresetColor -- Update thumb color
                         SlideCircle.ImageColor3 = PresetColor
                     end
                 end
             )()
 
             local function move(input)
-                local pos =
-                    UDim2.new(
-                    math.clamp((input.Position.X - SlideFrame.AbsolutePosition.X) / SlideFrame.AbsoluteSize.X, 0, 1),
-                    -6,
-                    -1.30499995,
-                    0
-                )
-                local pos1 =
-                    UDim2.new(
-                    math.clamp((input.Position.X - SlideFrame.AbsolutePosition.X) / SlideFrame.AbsoluteSize.X, 0, 1),
-                    0,
-                    0,
-                    3
-                )
-                CurrentValueFrame:TweenSize(pos1, "Out", "Sine", 0.1, true)
-                SlideCircle:TweenPosition(pos, "Out", "Sine", 0.1, true)
-                local value = math.floor(((pos.X.Scale * max) / max) * (max - min) + min)
+                local pos = math.clamp((input.Position.X - SlideFrame.AbsolutePosition.X) / SlideFrame.AbsoluteSize.X, 0, 1)
+                local thumbPos = UDim2.new(pos, -6, 0.5, 0)
+                local valueFrameSize = UDim2.new(pos, 0, 1, 0)
+
+                CurrentValueFrame:TweenSize(valueFrameSize, "Out", "Sine", 0.05, true) -- Faster tween
+                SlideCircle:TweenPosition(thumbPos, "Out", "Sine", 0.05, true) -- Faster tween
+
+                local value = math.floor((pos * (max - min)) + min)
                 SliderValue.Text = tostring(value)
                 pcall(callback, value)
             end
@@ -896,7 +888,59 @@ function lib:Window(text, preset, closebind)
                     end
                 end
             )
+             Slider.InputBegan:Connect( -- Allow dragging on the track as well
+                function(input)
+                    if input.UserInputType == Enum.UserInputType.MouseButton1 then
+                        move(input)
+                        dragging = true
+                    end
+                end
+            )
+            Slider.InputEnded:Connect(
+                function(input)
+                    if input.UserInputType == Enum.UserInputType.MouseButton1 then
+                        dragging = false
+                    end
+                end
+            )
+             Slider.InputChanged:Connect(
+                function(input)
+                    if dragging and input.UserInputType == Enum.UserInputType.MouseMovement then
+                        move(input)
+                    end
+                end
+            )
+
             Tab.CanvasSize = UDim2.new(0, 0, 0, TabLayout.AbsoluteContentSize.Y)
+
+            local SliderFunctions = {}
+            function SliderFunctions:SetValue(value)
+                local clampedValue = math.clamp(value, min, max)
+                local pos = (clampedValue - min) / (max - min)
+                local thumbPos = UDim2.new(pos, -6, 0.5, 0)
+                local valueFrameSize = UDim2.new(pos, 0, 1, 0)
+
+                CurrentValueFrame:TweenSize(valueFrameSize, "Out", "Sine", 0.05, true)
+                SlideCircle:TweenPosition(thumbPos, "Out", "Sine", 0.05, true)
+                SliderValue.Text = tostring(math.floor(clampedValue))
+                 if type(callback) == 'function' then
+                    pcall(callback, math.floor(clampedValue))
+                end
+                return SliderFunctions
+            end
+            function SliderFunctions:GetValue()
+                return tonumber(SliderValue.Text)
+            end
+             function SliderFunctions:Text(newText)
+                SliderTitle.Text = newText or text
+                return SliderFunctions
+            end
+             function SliderFunctions:Remove()
+                Slider:Destroy()
+                return SliderFunctions
+            end
+
+            return SliderFunctions
         end
         function tabcontent:Dropdown(text, list, callback)
             local droptog = false
