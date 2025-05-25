@@ -102,13 +102,67 @@ function lib:Window(text, preset, closebind)
     Main.BackgroundColor3 = Color3.fromRGB(30, 30, 30)
     Main.BorderSizePixel = 0
     Main.Position = UDim2.new(0.5, 0, 0.5, 0)
-    Main.Size = UDim2.new(0, 0, 0, 0)
+    Main.Size = UDim2.new(0, 600, 0, 400) -- Adjusting size based on example image
     Main.ClipsDescendants = true
     Main.Visible = true
 
+    local mainLayout = Instance.new("UIListLayout") -- Add a vertical layout for the main frame
+    mainLayout.Name = "mainLayout"
+    mainLayout.Parent = Main
+    mainLayout.FillDirection = Enum.FillDirection.Vertical
+    mainLayout.HorizontalAlignment = Enum.HorizontalAlignment.Center
+    mainLayout.Padding = UDim.new(0, 0) -- No padding between header and content initially
+
+    local headerFrame = Instance.new("Frame") -- Container for title and tabs
+    headerFrame.Name = "headerFrame"
+    headerFrame.Parent = Main
+    headerFrame.BackgroundColor3 = Color3.fromRGB(30, 30, 30) -- Match main background
+    headerFrame.BackgroundTransparency = 0
+    headerFrame.Size = UDim2.new(1, 0, 0, 70) -- Approximate height for title and tabs
+
+    local headerLayout = Instance.new("UIListLayout") -- Vertical layout within header for title and tabs
+    headerLayout.Name = "headerLayout"
+    headerLayout.Parent = headerFrame
+    headerLayout.FillDirection = Enum.FillDirection.Vertical
+    headerLayout.HorizontalAlignment = Enum.HorizontalAlignment.Left
+    headerLayout.Padding = UDim.new(0, 5) -- Padding between title and tabs
+
+    local titleFrame = Instance.new("Frame") -- Container for just the title
+    titleFrame.Name = "titleFrame"
+    titleFrame.Parent = headerFrame
+    titleFrame.BackgroundTransparency = 1
+    titleFrame.Size = UDim2.new(1, 0, 0, 25) -- Approximate height for title
+
+    local titleLayout = Instance.new("UIListLayout") -- Horizontal layout for title and dev version
+    titleLayout.Name = "titleLayout"
+    titleLayout.Parent = titleFrame
+    titleLayout.FillDirection = Enum.FillDirection.Horizontal
+    titleLayout.VerticalAlignment = Enum.VerticalAlignment.Center
+    titleLayout.Padding = UDim.new(0, 8) -- Padding between title and dev version
+
+    local TabAreaFrame = Instance.new("Frame") -- Container for tabs
+    TabAreaFrame.Name = "TabAreaFrame"
+    TabAreaFrame.Parent = headerFrame
+    TabAreaFrame.BackgroundTransparency = 1
+    TabAreaFrame.Size = UDim2.new(1, 0, 0, 30) -- Approximate height for tabs
+
+    local TabAreaLayout = Instance.new("UIListLayout") -- Horizontal layout for tabs
+    TabAreaLayout.Name = "TabAreaLayout"
+    TabAreaLayout.Parent = TabAreaFrame
+    TabAreaLayout.FillDirection = Enum.FillDirection.Horizontal
+    TabAreaLayout.VerticalAlignment = Enum.VerticalAlignment.Center
+    TabAreaLayout.Padding = UDim.new(0, 10) -- Padding between tabs
+
+    local contentFrame = Instance.new("Frame") -- Container for the main content (components)
+    contentFrame.Name = "contentFrame"
+    contentFrame.Parent = Main
+    contentFrame.BackgroundColor3 = Color3.fromRGB(40, 40, 40) -- Slightly lighter background for content area
+    contentFrame.BackgroundTransparency = 0
+    contentFrame.Size = UDim2.new(1, 0, 1, -headerFrame.Size.Y.Offset) -- Fill remaining space below header
+
     local headerContainer = Instance.new("Frame")
     headerContainer.Name = "headerContainer"
-    headerContainer.Parent = Main
+    headerContainer.Parent = headerFrame
     headerContainer.BackgroundColor3 = Color3.fromRGB(255, 255, 255) -- Temporary color for visibility
     headerContainer.BackgroundTransparency = 1 -- Will likely be transparent later
     headerContainer.Size = UDim2.new(1, 0, 0, 41) -- Size to match header height
@@ -122,11 +176,7 @@ function lib:Window(text, preset, closebind)
     headerLayout.Padding = UDim.new(0, 8) -- Padding between items
 
     TabHold.Name = "TabHold"
-    TabHold.Parent = Main
-    TabHold.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
-    TabHold.BackgroundTransparency = 1.000
-    TabHold.Position = UDim2.new(0.0339285731, 0, 0.147335425, 0)
-    TabHold.Size = UDim2.new(0, 107, 0, 254)
+    TabHold.Parent = Main -- Temporarily keep parent as Main before reparenting to TabAreaFrame
 
     TabHoldLayout.Name = "TabHoldLayout"
     TabHoldLayout.Parent = TabHold
@@ -134,11 +184,11 @@ function lib:Window(text, preset, closebind)
     TabHoldLayout.Padding = UDim.new(0, 11)
 
     Title.Name = "Title"
-    Title.Parent = headerContainer -- Parent to the new headerContainer
+    Title.Parent = titleFrame -- Reparent to the new titleFrame
     Title.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
     Title.BackgroundTransparency = 1.000
     Title.Position = UDim2.new(0, 0, 0, 0) -- Reset position as it's controlled by layout
-    Title.Size = UDim2.new(1, -128, 1, 0) -- Make Title take up remaining space (1 scale) minus fixed width of devVersionLabel (120) and padding (8)
+    Title.Size = UDim2.new(0, 0, 1, 0) -- Use automatic sizing based on text for horizontal layout
     Title.Font = Enum.Font.GothamSemibold
     Title.Text = text
     Title.TextColor3 = Color3.fromRGB(255, 255, 255) -- Set main title color to white
@@ -148,10 +198,10 @@ function lib:Window(text, preset, closebind)
 
     local devVersionLabel = Instance.new("TextLabel") -- Redefine DEV VERSION label
     devVersionLabel.Name = "devVersionLabel"
-    devVersionLabel.Parent = headerContainer -- Parent to the header container
+    devVersionLabel.Parent = titleFrame -- Reparent to the new titleFrame
     devVersionLabel.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
     devVersionLabel.BackgroundTransparency = 1.000
-    devVersionLabel.Size = UDim2.new(0, 120, 1, 0) -- Give it a fixed width
+    devVersionLabel.Size = UDim2.new(0, 0, 1, 0) -- Use automatic sizing based on text for horizontal layout
     devVersionLabel.Font = Enum.Font.Code
     devVersionLabel.Text = "DEV VERSION"
     devVersionLabel.TextColor3 = Color3.fromRGB(255, 165, 0) -- Set DEV VERSION color to orange
