@@ -117,6 +117,7 @@ function lib:Window(text, preset, closebind)
     headerLayout.Name = "headerLayout"
     headerLayout.Parent = headerContainer
     headerLayout.FillDirection = Enum.FillDirection.Horizontal
+    headerLayout.HorizontalAlignment = Enum.HorizontalAlignment.Left -- Align items to the left
     headerLayout.VerticalAlignment = Enum.VerticalAlignment.Center
     headerLayout.Padding = UDim.new(0, 8) -- Padding between items
 
@@ -137,7 +138,7 @@ function lib:Window(text, preset, closebind)
     Title.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
     Title.BackgroundTransparency = 1.000
     Title.Position = UDim2.new(0, 0, 0, 0) -- Reset position as it's controlled by layout
-    Title.Size = UDim2.new(1, -8 - 100, 1, 0) -- Give Title flexible width, subtract padding and approx dev version width
+    Title.Size = UDim2.new(1, -128, 1, 0) -- Make Title take up remaining space (1 scale) minus fixed width of devVersionLabel (120) and padding (8)
     Title.Font = Enum.Font.GothamSemibold
     Title.Text = text
     Title.TextColor3 = Color3.fromRGB(255, 255, 255) -- Set main title color to white
@@ -145,23 +146,18 @@ function lib:Window(text, preset, closebind)
     Title.TextXAlignment = Enum.TextXAlignment.Left
     Title.RichText = true
 
-    local devVersionLabel = Instance.new("TextLabel") -- Create new label for DEV VERSION
+    local devVersionLabel = Instance.new("TextLabel") -- Redefine DEV VERSION label
     devVersionLabel.Name = "devVersionLabel"
     devVersionLabel.Parent = headerContainer -- Parent to the header container
     devVersionLabel.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
     devVersionLabel.BackgroundTransparency = 1.000
-    devVersionLabel.Size = UDim2.new(0, 100, 1, 0) -- Give it a fixed width
+    devVersionLabel.Size = UDim2.new(0, 120, 1, 0) -- Give it a fixed width
     devVersionLabel.Font = Enum.Font.Code
     devVersionLabel.Text = "DEV VERSION"
     devVersionLabel.TextColor3 = Color3.fromRGB(255, 165, 0) -- Set DEV VERSION color to orange
     devVersionLabel.TextSize = 14.000 -- Slightly smaller size
     devVersionLabel.TextXAlignment = Enum.TextXAlignment.Left
     devVersionLabel.RichText = true
-
-    local devVersionPadding = Instance.new("UIPadding") -- Add padding for spacing
-    devVersionPadding.Name = "devVersionPadding"
-    devVersionPadding.Parent = devVersionLabel
-    devVersionPadding.PaddingLeft = UDim.new(0, 8) -- Add space to the left
 
     DragFrame.Name = "DragFrame"
     DragFrame.Parent = Main
