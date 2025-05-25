@@ -133,14 +133,14 @@ function lib:Window(text, preset, closebind)
     TabHoldLayout.Padding = UDim.new(0, 11)
 
     Title.Name = "Title"
-    Title.Parent = headerContainer
+    Title.Parent = headerContainer -- Parent to the new headerContainer
     Title.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
     Title.BackgroundTransparency = 1.000
-    Title.Position = UDim2.new(0, 0, 0, 0)
-    Title.Size = UDim2.new(1, 0, 1, 0)
+    Title.Position = UDim2.new(0, 0, 0, 0) -- Reset position as it's controlled by layout
+    Title.Size = UDim2.new(1, -8 - 100, 1, 0) -- Give Title flexible width, subtract padding and approx dev version width
     Title.Font = Enum.Font.GothamSemibold
     Title.Text = text
-    Title.TextColor3 = Color3.fromRGB(255, 255, 255)
+    Title.TextColor3 = Color3.fromRGB(255, 255, 255) -- Set main title color to white
     Title.TextSize = 16.000
     Title.TextXAlignment = Enum.TextXAlignment.Left
     Title.RichText = true
@@ -150,7 +150,7 @@ function lib:Window(text, preset, closebind)
     devVersionLabel.Parent = headerContainer -- Parent to the header container
     devVersionLabel.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
     devVersionLabel.BackgroundTransparency = 1.000
-    devVersionLabel.Size = UDim2.new(0, 0, 1, 0) -- Size will be determined by text and padding in horizontal layout
+    devVersionLabel.Size = UDim2.new(0, 100, 1, 0) -- Give it a fixed width
     devVersionLabel.Font = Enum.Font.Code
     devVersionLabel.Text = "DEV VERSION"
     devVersionLabel.TextColor3 = Color3.fromRGB(255, 165, 0) -- Set DEV VERSION color to orange
