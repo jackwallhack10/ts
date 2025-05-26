@@ -496,6 +496,66 @@ function Library:Create(table)
             end)
         end
 
+        function ElementHandler:ColorPicker(text, callback)
+            text = text or "Color"
+            callback = callback or function() end
+
+            local colorPicker = Instance.new("Frame")
+            colorPicker.Name = "colorPicker"
+            colorPicker.BackgroundColor3 = Color3.fromRGB(38, 38, 38)
+            colorPicker.Size = UDim2.fromOffset(441, 32)
+
+            local uICorner = Instance.new("UICorner")
+            uICorner.Name = "uICorner"
+            uICorner.CornerRadius = UDim.new(0, 6)
+            uICorner.Parent = colorPicker
+
+            local textLabel = Instance.new("TextLabel")
+            textLabel.Name = "textLabel"
+            textLabel.Font = Enum.Font.Gotham
+            textLabel.Text = text
+            textLabel.TextColor3 = Color3.fromRGB(195, 195, 195)
+            textLabel.TextSize = 13
+            textLabel.TextStrokeColor3 = Color3.fromRGB(195, 195, 195)
+            textLabel.TextXAlignment = Enum.TextXAlignment.Left
+            textLabel.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+            textLabel.BackgroundTransparency = 1
+            textLabel.Position = UDim2.fromScale(0.0181, 0)
+            textLabel.Size = UDim2.fromOffset(1, 32)
+            textLabel.Parent = colorPicker
+
+            local colorTextBox = Instance.new("TextBox")
+            colorTextBox.Name = "colorTextBox"
+            colorTextBox.Font = Enum.Font.SourceSans
+            colorTextBox.PlaceholderText = "#RRGGBB"
+            colorTextBox.Text = ""
+            colorTextBox.TextColor3 = Color3.fromRGB(195, 195, 195)
+            colorTextBox.TextSize = 12
+            colorTextBox.BackgroundColor3 = Color3.fromRGB(33, 33, 33)
+            colorTextBox.Position = UDim2.fromScale(0.7, 0.188) -- Adjust position
+            colorTextBox.Size = UDim2.fromOffset(120, 19) -- Adjust size
+
+            local uICornerTB = Instance.new("UICorner")
+            uICornerTB.Name = "uICornerTB"
+            uICornerTB.CornerRadius = UDim.new(0, 6)
+            uICornerTB.Parent = colorTextBox
+
+            colorTextBox.Parent = colorPicker
+            colorPicker.Parent = holder
+
+            colorPicker.MouseEnter:Connect(function()
+                game:GetService('TweenService'):Create(colorPicker, TweenInfo.new(0.3), {BackgroundColor3 = Color3.fromRGB(43,43,43)}):Play()
+            end)
+
+            colorPicker.MouseLeave:Connect(function()
+                game:GetService('TweenService'):Create(colorPicker, TweenInfo.new(0.3), {BackgroundColor3 = Color3.fromRGB(38,38,38)}):Play()
+            end)
+
+            colorTextBox.FocusLost:Connect(function()
+                callback(colorTextBox.Text) -- Pass the hex string
+            end)
+        end
+
         return ElementHandler
     end
     --// Drag - not by me
