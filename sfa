@@ -34,7 +34,6 @@ function Library:Create(table)
     titleContainer.BackgroundTransparency = 1
     titleContainer.Position = UDim2.fromScale(0.5, 0.0543) -- Center the container
     titleContainer.Size = UDim2.fromOffset(0, 28)
-    titleContainer.SizeConstraint = Enum.SizeConstraint.RelativeFactor -- Allow automatic sizing based on children
     titleContainer.AnchorPoint = Vector2.new(0.5, 0)
     titleContainer.Parent = main
 
