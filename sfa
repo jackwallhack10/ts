@@ -5,10 +5,23 @@ for _,v in pairs(game.CoreGui:GetChildren()) do
     end
 end
 
+-- Basic service availability checks
+local requiredServices = { "TweenService", "RunService", "UserInputService", "Players", "HttpService" }
+for _, serviceName in ipairs(requiredServices) do
+    if not game:GetService(serviceName) then
+        error("Blek Library Error: Required service '" .. serviceName .. "' is not available.")
+    end
+end
+
 local dark_UI = Instance.new("ScreenGui")
 dark_UI.Name = "dark_UI"
 dark_UI.ZIndexBehavior = Enum.ZIndexBehavior.Sibling
 dark_UI.Parent = game.CoreGui
+
+-- Check if ScreenGui creation was successful
+if not dark_UI or not dark_UI.Parent then
+    error("Blek Library Fatal Error: Failed to create or parent ScreenGui instance.")
+end
 
 local Library = {}
 local TweenService = game:GetService("TweenService")
@@ -16,102 +29,170 @@ local RunService = game:GetService("RunService")
 local UserInputService = game:GetService("UserInputService")
 local Players = game:GetService("Players")
 local LocalPlayer = Players.LocalPlayer
-local Mouse = LocalPlayer:GetMouse()
+local Mouse = LocalPlayer and LocalPlayer:GetMouse()
 local HTTPService = game:GetService("HttpService")
 
+-- Check for LocalPlayer and Mouse after getting services
+if not LocalPlayer then
+    warn("Blek Library Warning: LocalPlayer is not available. Some player-specific functionality may be limited.")
+end
+-- Check if Mouse was obtained (depends on LocalPlayer)
+if not Mouse and LocalPlayer then
+    warn("Blek Library Warning: Mouse could not be obtained for LocalPlayer.")
+end
+
 function Library:Create(table)
-    -- Error handling for Create function
-    if type(table) ~= "table" or type(table.Name) ~= "string" then
-        error("Library:Create expects a table with a 'Name' string.")
+    -- Robust Error handling for Create function
+    if type(table) ~= "table" then
+        error("Blek Library Error: Library:Create expects its argument to be a table.")
+    end
+    if type(table.Name) ~= "string" or table.Name == "" then
+        error("Blek Library Error: Library:Create expects a non-empty string for 'Name' in the configuration table.")
     end
     if table.StartupSound and type(table.StartupSound) ~= "table" then
-         warn("Optional 'StartupSound' in Library:Create should be a table.")
+         warn("Blek Library Warning: Optional 'StartupSound' in Library:Create should be a table. Ignoring invalid StartupSound configuration.")
+         table.StartupSound = nil -- Clear invalid configuration
     end
+    if table.StartupSound and type(table.StartupSound.SoundID) ~= "string" then
+         warn("Blek Library Warning: StartupSound.SoundID should be a string. Ignoring StartupSound.")
+         table.StartupSound = nil
+    end
+    -- Add more specific checks for StartupSound properties if needed
 
     local windowName = table.Name
 
     local main = Instance.new("Frame")
+    -- Check if main frame creation was successful
+    if not main then
+        error("Blek Library Fatal Error: Failed to create main Frame instance.")
+    end
     main.Name = "main"
     main.BackgroundColor3 = Color3.fromRGB(28, 28, 28)
     main.Position = UDim2.fromScale(0.244, 0.292)
     main.Size = UDim2.fromOffset(488, 299)
 
     local title = Instance.new("TextLabel")
-    title.Name = "title"
-    title.Font = Enum.Font.Gotham
-    title.Text = windowName
-    title.TextColor3 = Color3.fromRGB(255, 165, 0)
-    title.TextSize = 20
-    title.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
-    title.BackgroundTransparency = 1
-    title.Position = UDim2.fromScale(0.41, 0.0543)
-    title.Size = UDim2.fromOffset(83, 28)
-    title.Parent = main
+     -- Check if title label creation was successful
+    if not title then
+        warn("Blek Library Warning: Failed to create title TextLabel. UI may be incomplete.")
+    else
+        title.Name = "title"
+        title.Font = Enum.Font.Gotham
+        title.Text = windowName
+        title.TextColor3 = Color3.fromRGB(255, 165, 0)
+        title.TextSize = 20
+        title.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+        title.BackgroundTransparency = 1
+        title.Position = UDim2.fromScale(0.41, 0.0543)
+        title.Size = UDim2.fromOffset(83, 28)
+        title.Parent = main
+    end
 
     local uICorner = Instance.new("UICorner")
-    uICorner.Name = "uICorner"
-    uICorner.Parent = main
+     -- Check if UICorner creation was successful
+    if not uICorner then
+         warn("Blek Library Warning: Failed to create main UICorner. UI styling may be affected.")
+    else
+        uICorner.Name = "uICorner"
+        uICorner.Parent = main
+    end
 
     local tabContainer = Instance.new("Frame")
-    tabContainer.Name = "tabContainer"
-    tabContainer.BackgroundColor3 = Color3.fromRGB(33, 33, 33)
-    tabContainer.Position = UDim2.fromScale(0.0342, 0.188)
-    tabContainer.Size = UDim2.fromOffset(454, 30)
+     -- Check if tab container creation was successful
+     if not tabContainer then
+         warn("Blek Library Warning: Failed to create tabContainer Frame. Tab functionality may be broken.")
+     else
+        tabContainer.Name = "tabContainer"
+        tabContainer.BackgroundColor3 = Color3.fromRGB(33, 33, 33)
+        tabContainer.Position = UDim2.fromScale(0.0342, 0.188)
+        tabContainer.Size = UDim2.fromOffset(454, 30)
+     end
 
     local uICorner1 = Instance.new("UICorner")
-    uICorner1.Name = "uICorner1"
-    uICorner1.CornerRadius = UDim.new(0, 6)
-    uICorner1.Parent = tabContainer
+     -- Check if UICorner creation was successful
+     if not uICorner1 then
+          warn("Blek Library Warning: Failed to create tabContainer UICorner. Tab container styling may be affected.")
+     else
+        uICorner1.Name = "uICorner1"
+        uICorner1.CornerRadius = UDim.new(0, 6)
+        if tabContainer then uICorner1.Parent = tabContainer end
+     end
 
     local uIListLayout = Instance.new("UIListLayout")
-    uIListLayout.Name = "uIListLayout"
-    uIListLayout.Padding = UDim.new(0, 8)
-    uIListLayout.FillDirection = Enum.FillDirection.Horizontal
-    uIListLayout.SortOrder = Enum.SortOrder.LayoutOrder
-    uIListLayout.Parent = tabContainer
+      -- Check if UIListLayout creation was successful
+     if not uIListLayout then
+           warn("Blek Library Warning: Failed to create tabContainer UIListLayout. Tab arrangement may be broken.")
+     else
+        uIListLayout.Name = "uIListLayout"
+        uIListLayout.Padding = UDim.new(0, 8)
+        uIListLayout.FillDirection = Enum.FillDirection.Horizontal
+        uIListLayout.SortOrder = Enum.SortOrder.LayoutOrder
+        if tabContainer then uIListLayout.Parent = tabContainer end
+     end
 
     local uIPadding = Instance.new("UIPadding")
-    uIPadding.Name = "uIPadding"
-    uIPadding.PaddingLeft = UDim.new(0, 7)
-    uIPadding.PaddingTop = UDim.new(0, 4)
-    uIPadding.Parent = tabContainer
+      -- Check if UIPadding creation was successful
+     if not uIPadding then
+            warn("Blek Library Warning: Failed to create tabContainer UIPadding. Tab spacing may be incorrect.")
+     else
+        uIPadding.Name = "uIPadding"
+        uIPadding.PaddingLeft = UDim.new(0, 7)
+        uIPadding.PaddingTop = UDim.new(0, 4)
+         if tabContainer then uIPadding.Parent = tabContainer end
+     end
 
     local shadow = Instance.new("ImageLabel")
-    shadow.Name = "shadow"
-    shadow.Image = "rbxassetid://297774371"
-    shadow.ImageColor3 = Color3.fromRGB(15, 15, 15)
-    shadow.ImageTransparency = 0.3
-    shadow.SliceCenter = Rect.new(20, 20, 280, 280)
-    shadow.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
-    shadow.BackgroundTransparency = 1
-    shadow.Position = UDim2.fromScale(0.224, 0.272)
-    shadow.Selectable = true
-    shadow.Size = UDim2.fromOffset(529, 331)
-    shadow.ZIndex = -1
-    shadow.Parent = dark_UI
+      -- Check if shadow creation was successful
+     if not shadow then
+         warn("Blek Library Warning: Failed to create shadow ImageLabel. UI shadow may be missing.")
+     else
+        shadow.Name = "shadow"
+        shadow.Image = "rbxassetid://297774371"
+        shadow.ImageColor3 = Color3.fromRGB(15, 15, 15)
+        shadow.ImageTransparency = 0.3
+        shadow.SliceCenter = Rect.new(20, 20, 280, 280)
+        shadow.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+        shadow.BackgroundTransparency = 1
+        shadow.Position = UDim2.fromScale(0.224, 0.272)
+        shadow.Selectable = true
+        shadow.Size = UDim2.fromOffset(529, 331)
+        shadow.ZIndex = -1
+        shadow.Parent = dark_UI
+     end
 
-    tabContainer.Parent = main
-    main.Parent = dark_UI
-    main.AnchorPoint = Vector2.new(0.5,0.5)
-    shadow.AnchorPoint = Vector2.new(0.5,0.5)
+    if tabContainer and main then tabContainer.Parent = main end
+    if main then main.Parent = dark_UI end
+    if main then main.AnchorPoint = Vector2.new(0.5,0.5) end
+    if shadow then shadow.AnchorPoint = Vector2.new(0.5,0.5) end
 
-    main.Position = UDim2.new(0.5,0,0.5,0)
-    shadow.Position = UDim2.new(0.5,0,0.5,0)
+    if main then main.Position = UDim2.new(0.5,0,0.5,0) end
+    if shadow then shadow.Position = UDim2.new(0.5,0,0.5,0) end
 
     local tabHandler = {}
-    tabHandler.MainFrame = main -- Ensure MainFrame is accessible here
+    if main then tabHandler.MainFrame = main end -- Ensure MainFrame is accessible here only if main exists
 
     function tabHandler:Exit()
-        dark_UI:Destroy()
+        if dark_UI then dark_UI:Destroy() end -- Safely destroy dark_UI
     end
 
     function tabHandler:Tab(name)
-        -- Error handling for Tab function
+        -- Robust Error handling for Tab function
         if type(name) ~= "string" or name == "" then
-            error("tabHandler:Tab expects a non-empty string for the tab name.")
+            warn("Blek Library Warning: tabHandler:Tab expects a non-empty string for the tab name. Tab will not be created.")
+            return {} -- Return empty table for chaining safety
         end
+        if not main then
+             warn("Blek Library Warning: Cannot create tab '" .. name .. "'. Main frame is missing.")
+             return {} -- Return empty table for chaining safety
+        end
+
         --// Creating the yttab
         local main1 = Instance.new("TextButton")
+        -- Check if tab button creation was successful
+        if not main1 then
+             warn("Blek Library Warning: Failed to create tab button '" .. name .. "'. Tab will not be fully functional.")
+             return {} -- Return empty table for chaining safety
+        end
         main1.Name = name
         main1.Font = Enum.Font.Gotham
         main1.Text = name
@@ -122,21 +203,35 @@ function Library:Create(table)
         main1.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
         main1.BackgroundTransparency = 1
         main1.Size = UDim2.fromOffset(10, 24)
-        main1.Parent = tabContainer
+        if tabContainer then main1.Parent = tabContainer end
 
         --// Creating the container
         local container = Instance.new("Frame")
+         -- Check if container creation was successful
+        if not container then
+            warn("Blek Library Warning: Failed to create container for tab '" .. name .. "'. Elements cannot be added.")
+            return {} -- Return empty table for chaining safety
+        end
         container.Name = "container"
         container.BackgroundColor3 = Color3.fromRGB(33, 33, 33)
         container.Position = UDim2.fromScale(0.0342, 0.31)
         container.Size = UDim2.fromOffset(454, 183)
         
         local uICorner2 = Instance.new("UICorner")
-        uICorner2.Name = "uICorner2"
-        uICorner2.CornerRadius = UDim.new(0, 6)
-        uICorner2.Parent = container
+         if not uICorner2 then
+             warn("Blek Library Warning: Failed to create container UICorner for tab '" .. name .. "'. Container styling may be affected.")
+         else
+            uICorner2.Name = "uICorner2"
+            uICorner2.CornerRadius = UDim.new(0, 6)
+            if container then uICorner2.Parent = container end
+         end
         
         local holder = Instance.new("ScrollingFrame")
+         if not holder then
+             warn("Blek Library Warning: Failed to create holder ScrollingFrame for tab '" .. name .. "'. Elements cannot be scrolled.")
+             if container then container:Destroy() end -- Clean up container if holder creation fails
+             return {} -- Return empty table for chaining safety
+         end
         holder.Name = "holder"
         holder.ScrollBarImageColor3 = Color3.fromRGB(76, 76, 76)
         holder.ScrollBarThickness = 2
@@ -149,89 +244,134 @@ function Library:Create(table)
         holder.Size = UDim2.fromOffset(452, 182)
 
         local uIPadding1 = Instance.new("UIPadding")
-        uIPadding1.Name = "uIPadding1"
-        uIPadding1.PaddingLeft = UDim.new(0, 5)
-        uIPadding1.PaddingTop = UDim.new(0, 7)
-        uIPadding1.Parent = holder
+         if not uIPadding1 then
+              warn("Blek Library Warning: Failed to create holder UIPadding for tab '" .. name .. "'. Element spacing may be incorrect.")
+         else
+            uIPadding1.Name = "uIPadding1"
+            uIPadding1.PaddingLeft = UDim.new(0, 5)
+            uIPadding1.PaddingTop = UDim.new(0, 7)
+            if holder then uIPadding1.Parent = holder end
+         end
 
         local uIListLayout1 = Instance.new("UIListLayout")
-        uIListLayout1.Name = "uIListLayout1"
-        uIListLayout1.Padding = UDim.new(0, 3)
-        uIListLayout1.SortOrder = Enum.SortOrder.LayoutOrder
-        uIListLayout1.Parent = holder
+          if not uIListLayout1 then
+              warn("Blek Library Warning: Failed to create holder UIListLayout for tab '" .. name .. "'. Element arrangement may be broken.")
+          else
+            uIListLayout1.Name = "uIListLayout1"
+            uIListLayout1.Padding = UDim.new(0, 3)
+            uIListLayout1.SortOrder = Enum.SortOrder.LayoutOrder
+            if holder then uIListLayout1.Parent = holder end
+          end
 
         local uICorner11 = Instance.new("UICorner")
-        uICorner11.Name = "uICorner11"
-        uICorner11.CornerRadius = UDim.new(0, 6)
-        uICorner11.Parent = holder
+         if not uICorner11 then
+             warn("Blek Library Warning: Failed to create holder UICorner for tab '" .. name .. "'. Holder styling may be affected.")
+         else
+            uICorner11.Name = "uICorner11"
+            uICorner11.CornerRadius = UDim.new(0, 6)
+            if holder then uICorner11.Parent = holder end
+         end
 
-        holder.Parent = container
-        container.Parent = main
-        container.Visible = false
+        if holder then holder.Parent = container end
+        if container then container.Parent = main end
+        if container then container.Visible = false end
 
         --// Event
-        main1.MouseButton1Click:Connect(function()
-            for _,v in pairs(game.CoreGui:FindFirstChild('dark_UI').main:GetChildren()) do
-                if v.Name == "container" then
-                    v.Visible = false
+        if main1 and container and game.CoreGui:FindFirstChild('dark_UI') then -- Check if instances exist before connecting
+            main1.MouseButton1Click:Connect(function()
+                local darkUI = game.CoreGui:FindFirstChild('dark_UI')
+                if darkUI and darkUI.main then
+                    for _,v in pairs(darkUI.main:GetChildren()) do
+                        if v.Name == "container" then
+                            v.Visible = false
+                        end
+                    end
+                    if darkUI.main.tabContainer then
+                         for _,v in pairs(darkUI.main.tabContainer:GetChildren()) do
+                             if v:IsA('TextButton') then
+                                 game:GetService('TweenService'):Create(v, TweenInfo.new(0.3), {TextTransparency = 0.5}):Play()
+                             end
+                         end
+                    end
                 end
-            end
-            for _,v in pairs(game.CoreGui['dark_UI'].main.tabContainer:GetChildren()) do
-                if v:IsA('TextButton') then
-                    game:GetService('TweenService'):Create(v, TweenInfo.new(0.3), {TextTransparency = 0.5}):Play()
-                end
-            end
-            container.Visible = true
-            game:GetService('TweenService'):Create(main1, TweenInfo.new(0.3), {TextTransparency = 0}):Play()
-        end)
+                container.Visible = true
+                 if game:GetService('TweenService') and main1 then
+                    game:GetService('TweenService'):Create(main1, TweenInfo.new(0.3), {TextTransparency = 0}):Play()
+                 end
+            end)
+        end
 
         --// Elements
         local ElementHandler = {}
         function ElementHandler:Label(text)
             -- Error handling for Label function
             if type(text) ~= "string" then
-                warn("ElementHandler:Label expects a string for text.")
-                text = tostring(text) -- Attempt conversion
+                 warn("Blek Library Warning: ElementHandler:Label expects a string for text. Attempting conversion.")
+                 text = tostring(text) -- Attempt conversion
+            end
+            if not holder then
+                 warn("Blek Library Warning: Cannot create Label '" .. text .. "'. Holder frame is missing.")
+                 return -- Cannot return element if creation fails
             end
             local label = Instance.new("Frame")
+            -- Check if label creation was successful
+            if not label then
+                warn("Blek Library Warning: Failed to create Label frame '" .. text .. "'.")
+                return -- Cannot return element if creation fails
+            end
             label.Name = "label"
             label.BackgroundColor3 = Color3.fromRGB(38, 38, 38)
             label.Size = UDim2.fromOffset(441, 32)
-            label.Parent = holder
+            if holder then label.Parent = holder end
     
             local uICorner3 = Instance.new("UICorner")
-            uICorner3.Name = "uICorner3"
-            uICorner3.CornerRadius = UDim.new(0, 6)
-            uICorner3.Parent = label
+            if not uICorner3 then
+                warn("Blek Library Warning: Failed to create Label UICorner for '" .. text .. "'. Styling may be affected.")
+            else
+                uICorner3.Name = "uICorner3"
+                uICorner3.CornerRadius = UDim.new(0, 6)
+                if label then uICorner3.Parent = label end
+            end
 
             local textLabel = Instance.new("TextLabel")
-            textLabel.Name = "textLabel"
-            textLabel.Font = Enum.Font.Gotham
-            textLabel.Text = text
-            textLabel.TextColor3 = Color3.fromRGB(195, 195, 195)
-            textLabel.TextSize = 13
-            textLabel.TextStrokeColor3 = Color3.fromRGB(195, 195, 195)
-            textLabel.TextXAlignment = Enum.TextXAlignment.Left
-            textLabel.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
-            textLabel.BackgroundTransparency = 1
-            textLabel.Position = UDim2.fromScale(0.0181, 0)
-            textLabel.Size = UDim2.fromOffset(1, 32)
-            textLabel.Parent = label
+             if not textLabel then
+                 warn("Blek Library Warning: Failed to create Label TextLabel for '" .. text .. "'. Text will not be displayed.")
+             else
+                textLabel.Name = "textLabel"
+                textLabel.Font = Enum.Font.Gotham
+                textLabel.Text = text
+                textLabel.TextColor3 = Color3.fromRGB(195, 195, 195)
+                textLabel.TextSize = 13
+                textLabel.TextStrokeColor3 = Color3.fromRGB(195, 195, 195)
+                textLabel.TextXAlignment = Enum.TextXAlignment.Left
+                textLabel.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+                textLabel.BackgroundTransparency = 1
+                textLabel.Position = UDim2.fromScale(0.0181, 0)
+                textLabel.Size = UDim2.fromOffset(1, 32)
+                if label then textLabel.Parent = label end
+             end
         end
 
         function ElementHandler:Button(text, callback)
-            -- Error handling for Button function
+            -- Robust Error handling for Button function
             if type(text) ~= "string" then
-                 warn("ElementHandler:Button expects a string for text.")
+                 warn("Blek Library Warning: ElementHandler:Button expects a string for text. Attempting conversion.")
                  text = tostring(text) -- Attempt conversion
             end
             if type(callback) ~= "function" then
-                warn("ElementHandler:Button expects a function for callback.")
+                warn("Blek Library Warning: ElementHandler:Button expects a function for callback. Button may not be interactive.")
                 callback = function() end -- Provide a default empty function
             end
-            text = text or "Button"
+            if not holder then
+                warn("Blek Library Warning: Cannot create Button '" .. text .. "'. Holder frame is missing.")
+                return -- Cannot return element if creation fails
+            end
 
             local button = Instance.new("TextButton")
+             if not button then
+                 warn("Blek Library Warning: Failed to create Button instance '" .. text .. "'.")
+                 return -- Cannot return element if creation fails
+             end
             button.Name = "button"
             button.BackgroundColor3 = Color3.fromRGB(38, 38, 38)
             button.Position = UDim2.fromScale(0, 0.135)
@@ -240,69 +380,90 @@ function Library:Create(table)
             button.AutoButtonColor = false
 
             local uICorner12 = Instance.new("UICorner")
-            uICorner12.Name = "uICorner12"
-            uICorner12.CornerRadius = UDim.new(0, 6)
-            uICorner12.Parent = button
+             if not uICorner12 then
+                 warn("Blek Library Warning: Failed to create Button UICorner for '" .. text .. "'. Styling may be affected.")
+             else
+                uICorner12.Name = "uICorner12"
+                uICorner12.CornerRadius = UDim.new(0, 6)
+                if button then uICorner12.Parent = button end
+             end
 
             local textLabel5 = Instance.new("TextLabel")
-            textLabel5.Name = "textLabel5"
-            textLabel5.Font = Enum.Font.Gotham
-            textLabel5.Text = text
-            textLabel5.TextColor3 = Color3.fromRGB(195, 195, 195)
-            textLabel5.TextSize = 13
-            textLabel5.TextStrokeColor3 = Color3.fromRGB(195, 195, 195)
-            textLabel5.TextXAlignment = Enum.TextXAlignment.Left
-            textLabel5.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
-            textLabel5.BackgroundTransparency = 1
-            textLabel5.Position = UDim2.fromScale(0.0181, 0)
-            textLabel5.Size = UDim2.fromOffset(1, 32)
-            textLabel5.Parent = button
+             if not textLabel5 then
+                 warn("Blek Library Warning: Failed to create Button TextLabel for '" .. text .. "'. Text will not be displayed.")
+             else
+                textLabel5.Name = "textLabel5"
+                textLabel5.Font = Enum.Font.Gotham
+                textLabel5.Text = text
+                textLabel5.TextColor3 = Color3.fromRGB(195, 195, 195)
+                textLabel5.TextSize = 13
+                textLabel5.TextStrokeColor3 = Color3.fromRGB(195, 195, 195)
+                textLabel5.TextXAlignment = Enum.TextXAlignment.Left
+                textLabel5.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+                textLabel5.BackgroundTransparency = 1
+                textLabel5.Position = UDim2.fromScale(0.0181, 0)
+                textLabel5.Size = UDim2.fromOffset(1, 32)
+                if button then textLabel5.Parent = button end
+             end
 
             local imageLabel = Instance.new("ImageLabel")
-            imageLabel.Name = "imageLabel"
-            imageLabel.Image = "http://www.roblox.com/asset/?id=9584292194"
-            imageLabel.ImageColor3 = Color3.fromRGB(195, 195, 195)
-            imageLabel.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
-            imageLabel.BackgroundTransparency = 1
-            imageLabel.Position = UDim2.fromScale(0.943, 0.219)
-            imageLabel.Size = UDim2.fromOffset(18, 18)
-            imageLabel.Parent = button
+             if not imageLabel then
+                  warn("Blek Library Warning: Failed to create Button ImageLabel for '" .. text .. "'. Icon may be missing.")
+             else
+                imageLabel.Name = "imageLabel"
+                imageLabel.Image = "http://www.roblox.com/asset/?id=9584292194"
+                imageLabel.ImageColor3 = Color3.fromRGB(195, 195, 195)
+                imageLabel.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+                imageLabel.BackgroundTransparency = 1
+                imageLabel.Position = UDim2.fromScale(0.943, 0.219)
+                imageLabel.Size = UDim2.fromOffset(18, 18)
+                if button then imageLabel.Parent = button end
+             end
 
-            button.Parent = holder
+            if button and holder then button.Parent = holder end
 
-            button.MouseEnter:Connect(function()
-                game:GetService('TweenService'):Create(button, TweenInfo.new(0.3), {BackgroundColor3 = Color3.fromRGB(43,43,43)}):Play()
-            end)
+            if button then
+                button.MouseEnter:Connect(function()
+                    game:GetService('TweenService'):Create(button, TweenInfo.new(0.3), {BackgroundColor3 = Color3.fromRGB(43,43,43)}):Play()
+                end)
 
-            button.MouseLeave:Connect(function()
-                game:GetService('TweenService'):Create(button, TweenInfo.new(0.3), {BackgroundColor3 = Color3.fromRGB(38,38,38)}):Play()
-            end)
+                button.MouseLeave:Connect(function()
+                    game:GetService('TweenService'):Create(button, TweenInfo.new(0.3), {BackgroundColor3 = Color3.fromRGB(38,38,38)}):Play()
+                end)
 
-            button.MouseButton1Click:Connect(function()
-                pcall(callback) -- Use pcall for safer callback execution
-            end)
+                button.MouseButton1Click:Connect(function()
+                    pcall(callback) -- Use pcall for safer callback execution
+                end)
+            end
         end
 
         function ElementHandler:Slider(text, default, min, max, callback)
-             -- Error handling for Slider function
+             -- Robust Error handling for Slider function
             if type(text) ~= "string" then
-                 warn("ElementHandler:Slider expects a string for text.")
+                 warn("Blek Library Warning: ElementHandler:Slider expects a string for text. Attempting conversion.")
                  text = tostring(text) -- Attempt conversion
             end
             if type(default) ~= "number" or type(min) ~= "number" or type(max) ~= "number" then
-                 warn("ElementHandler:Slider expects numbers for default, min, and max.")
+                 warn("Blek Library Warning: ElementHandler:Slider expects numbers for default, min, and max. Using defaults (0, 0, 100).")
                  -- Attempt to use default values or convert if possible
                  default = tonumber(default) or 0
                  min = tonumber(min) or 0
                  max = tonumber(max) or 100
             end
             if type(callback) ~= "function" then
-                 warn("ElementHandler:Slider expects a function for callback.")
+                 warn("Blek Library Warning: ElementHandler:Slider expects a function for callback. Slider may not be interactive.")
                  callback = function() end -- Provide a default empty function
             end
-            text = text or "Slider"
+             if not holder then
+                warn("Blek Library Warning: Cannot create Slider '" .. text .. "'. Holder frame is missing.")
+                return -- Cannot return element if creation fails
+            end
 
             local slider = Instance.new("TextButton")
+             if not slider then
+                 warn("Blek Library Warning: Failed to create Slider instance '" .. text .. "'.")
+                 return -- Cannot return element if creation fails
+             end
             slider.Name = "slider"
             slider.BackgroundColor3 = Color3.fromRGB(38, 38, 38)
             slider.Size = UDim2.fromOffset(441, 32)
@@ -310,99 +471,145 @@ function Library:Create(table)
             slider.AutoButtonColor = false
 
             local uICorner4 = Instance.new("UICorner")
-            uICorner4.Name = "uICorner4"
-            uICorner4.CornerRadius = UDim.new(0, 6)
-            uICorner4.Parent = slider
+             if not uICorner4 then
+                 warn("Blek Library Warning: Failed to create Slider UICorner for '" .. text .. "'. Styling may be affected.")
+             else
+                uICorner4.Name = "uICorner4"
+                uICorner4.CornerRadius = UDim.new(0, 6)
+                if slider then uICorner4.Parent = slider end
+             end
 
             local textLabel1 = Instance.new("TextLabel")
-            textLabel1.Name = "textLabel1"
-            textLabel1.Font = Enum.Font.Gotham
-            textLabel1.Text = text
-            textLabel1.TextColor3 = Color3.fromRGB(195, 195, 195)
-            textLabel1.TextSize = 13
-            textLabel1.TextStrokeColor3 = Color3.fromRGB(195, 195, 195)
-            textLabel1.TextXAlignment = Enum.TextXAlignment.Left
-            textLabel1.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
-            textLabel1.BackgroundTransparency = 1
-            textLabel1.Position = UDim2.fromScale(0.0181, 0)
-            textLabel1.Size = UDim2.fromOffset(1, 32)
-            textLabel1.Parent = slider
+             if not textLabel1 then
+                 warn("Blek Library Warning: Failed to create Slider TextLabel for '" .. text .. "'. Text will not be displayed.")
+             else
+                textLabel1.Name = "textLabel1"
+                textLabel1.Font = Enum.Font.Gotham
+                textLabel1.Text = text
+                textLabel1.TextColor3 = Color3.fromRGB(195, 195, 195)
+                textLabel1.TextSize = 13
+                textLabel1.TextStrokeColor3 = Color3.fromRGB(195, 195, 195)
+                textLabel1.TextXAlignment = Enum.TextXAlignment.Left
+                textLabel1.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+                textLabel1.BackgroundTransparency = 1
+                textLabel1.Position = UDim2.fromScale(0.0181, 0)
+                textLabel1.Size = UDim2.fromOffset(1, 32)
+                if slider then textLabel1.Parent = slider end
+             end
 
             local frame = Instance.new("Frame")
-            frame.Name = "frame"
-            frame.BackgroundColor3 = Color3.fromRGB(33, 33, 33)
-            frame.Position = UDim2.fromScale(0.753, 0.375)
-            frame.Size = UDim2.fromOffset(102, 8)
+             if not frame then
+                  warn("Blek Library Warning: Failed to create Slider inner frame for '" .. text .. "'. Slider functionality may be broken.")
+             else
+                frame.Name = "frame"
+                frame.BackgroundColor3 = Color3.fromRGB(33, 33, 33)
+                frame.Position = UDim2.fromScale(0.753, 0.375)
+                frame.Size = UDim2.fromOffset(102, 8)
+             end
 
             local uICorner5 = Instance.new("UICorner")
-            uICorner5.Name = "uICorner5"
-            uICorner5.CornerRadius = UDim.new(0, 3)
-            uICorner5.Parent = frame
+             if not uICorner5 then
+                  warn("Blek Library Warning: Failed to create Slider inner frame UICorner for '" .. text .. "'. Styling may be affected.")
+             else
+                uICorner5.Name = "uICorner5"
+                uICorner5.CornerRadius = UDim.new(0, 3)
+                if frame then uICorner5.Parent = frame end
+             end
 
             local frame1 = Instance.new("Frame")
-            frame1.Name = "frame1"
-            frame1.BackgroundColor3 = Color3.fromRGB(45, 45, 45)
-            frame1.Position = UDim2.fromScale(-0.00207, 0)
-            frame1.Size = UDim2.fromOffset(44, 8)
+             if not frame1 then
+                 warn("Blek Library Warning: Failed to create Slider value frame for '" .. text .. "'. Slider functionality may be broken.")
+             else
+                frame1.Name = "frame1"
+                frame1.BackgroundColor3 = Color3.fromRGB(45, 45, 45)
+                frame1.Position = UDim2.fromScale(-0.00207, 0)
+                frame1.Size = UDim2.fromOffset(44, 8)
+             end
 
             local uICorner6 = Instance.new("UICorner")
-            uICorner6.Name = "uICorner6"
-            uICorner6.CornerRadius = UDim.new(0, 3)
-            uICorner6.Parent = frame1
+            if not uICorner6 then
+                 warn("Blek Library Warning: Failed to create Slider value frame UICorner for '" .. text .. "'. Styling may be affected.")
+            else
+                uICorner6.Name = "uICorner6"
+                uICorner6.CornerRadius = UDim.new(0, 3)
+                 if frame1 then uICorner6.Parent = frame1 end
+            end
 
-            frame1.Parent = frame
+            if frame1 and frame then frame1.Parent = frame end
 
-            frame.Parent = slider
+            if frame and slider then frame.Parent = slider end
 
             local textLabel2 = Instance.new("TextLabel")
-            textLabel2.Name = "textLabel2"
-            textLabel2.Font = Enum.Font.Gotham
-            textLabel2.Text = "7"
-            textLabel2.TextColor3 = Color3.fromRGB(195, 195, 195)
-            textLabel2.TextSize = 13
-            textLabel2.TextStrokeColor3 = Color3.fromRGB(195, 195, 195)
-            textLabel2.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
-            textLabel2.BackgroundTransparency = 1
-            textLabel2.Position = UDim2.fromScale(0.653, 0)
-            textLabel2.Size = UDim2.fromOffset(44, 32)
-            textLabel2.Parent = slider
+             if not textLabel2 then
+                  warn("Blek Library Warning: Failed to create Slider value text label for '" .. text .. "'. Value may not be displayed.")
+             else
+                textLabel2.Name = "textLabel2"
+                textLabel2.Font = Enum.Font.Gotham
+                textLabel2.Text = "7"
+                textLabel2.TextColor3 = Color3.fromRGB(195, 195, 195)
+                textLabel2.TextSize = 13
+                textLabel2.TextStrokeColor3 = Color3.fromRGB(195, 195, 195)
+                textLabel2.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+                textLabel2.BackgroundTransparency = 1
+                textLabel2.Position = UDim2.fromScale(0.653, 0)
+                textLabel2.Size = UDim2.fromOffset(44, 32)
+                 if slider then textLabel2.Parent = slider end
+             end
 
-            slider.Parent = holder
-            textLabel2.Text = tostring(default)
+            if slider and holder then slider.Parent = holder end
+            if textLabel2 then textLabel2.Text = tostring(default) end
 
             local hovered = false
             local down = false
 
-            slider.MouseEnter:Connect(function()
-                hovered = true
-                game:GetService('TweenService'):Create(slider, TweenInfo.new(0.3), {BackgroundColor3 = Color3.fromRGB(43,43,43)}):Play()
-            end)
+            if slider then
+                slider.MouseEnter:Connect(function()
+                    hovered = true
+                    if game:GetService('TweenService') and slider then
+                        game:GetService('TweenService'):Create(slider, TweenInfo.new(0.3), {BackgroundColor3 = Color3.fromRGB(43,43,43)}):Play()
+                    end
+                end)
 
-            slider.MouseLeave:Connect(function()
-                if not down then
-                    game:GetService('TweenService'):Create(slider, TweenInfo.new(0.3), {BackgroundColor3 = Color3.fromRGB(38,38,38)}):Play()
-                end
-            end)
+                slider.MouseLeave:Connect(function()
+                    if not down then
+                         if game:GetService('TweenService') and slider then
+                            game:GetService('TweenService'):Create(slider, TweenInfo.new(0.3), {BackgroundColor3 = Color3.fromRGB(38,38,38)}):Play()
+                         end
+                    end
+                end)
+            end
     
-            game:GetService('UserInputService').InputEnded:connect(function(key)
-                if key.UserInputType == Enum.UserInputType.MouseButton1 then
-                    down = false
-                    game:GetService('TweenService'):Create(slider, TweenInfo.new(0.3), {BackgroundColor3 = Color3.fromRGB(38,38,38)}):Play()
-                end
-            end)
+            if game:GetService('UserInputService') then
+                game:GetService('UserInputService').InputEnded:connect(function(key)
+                    if key.UserInputType == Enum.UserInputType.MouseButton1 then
+                        down = false
+                         if game:GetService('TweenService') and slider then
+                             game:GetService('TweenService'):Create(slider, TweenInfo.new(0.3), {BackgroundColor3 = Color3.fromRGB(38,38,38)}):Play()
+                         end
+                    end
+                end)
+            end
     
-            slider.MouseButton1Down:connect(function()
-                game:GetService('TweenService'):Create(slider, TweenInfo.new(0.3), {BackgroundColor3 = Color3.fromRGB(47,47,47)}):Play()
-                down = true
-                while RunService.RenderStepped:wait() and down do
-                    local percentage = math.clamp((Mouse.X - frame1.AbsolutePosition.X) / (frame1.AbsoluteSize.X), 0, 1)
-                    local value = ((max - min) * percentage) + min
-                    value = math.floor(value)
-                    textLabel2.Text = value
-                    local tween = game:GetService('TweenService'):Create(frame1, TweenInfo.new(0.06), {Size = UDim2.fromScale(percentage, 1)}):Play()
-                    pcall(callback, value) -- Use pcall for safer callback execution
-                end
-            end)
+            if slider and frame1 and Mouse then -- Ensure necessary objects exist for drag functionality
+                slider.MouseButton1Down:connect(function()
+                    if game:GetService('TweenService') and slider then
+                         game:GetService('TweenService'):Create(slider, TweenInfo.new(0.3), {BackgroundColor3 = Color3.fromRGB(47,47,47)}):Play()
+                    end
+                    down = true
+                    while RunService.RenderStepped:wait() and down do
+                        local percentage = math.clamp((Mouse.X - frame1.AbsolutePosition.X) / (frame1.AbsoluteSize.X), 0, 1)
+                        local value = ((max - min) * percentage) + min
+                        value = math.floor(value)
+                         if textLabel2 then textLabel2.Text = value end
+                         if game:GetService('TweenService') and frame1 then
+                            local tween = game:GetService('TweenService'):Create(frame1, TweenInfo.new(0.06), {Size = UDim2.fromScale(percentage, 1)}):Play()
+                         end
+                        pcall(callback, value) -- Use pcall for safer callback execution
+                    end
+                end)
+            else
+                 warn("Blek Library Warning: Slider drag functionality disabled due to missing dependencies (Slider, frame1, or Mouse).")
+            end
         end
 
         function ElementHandler:Toggle(text, callback)
