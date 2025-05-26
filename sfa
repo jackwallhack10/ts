@@ -44,6 +44,7 @@ function Library:Create(table)
     titleLayout.Padding = UDim.new(0, 10) -- Space between titles
     titleLayout.HorizontalAlignment = Enum.HorizontalAlignment.Center
     titleLayout.VerticalAlignment = Enum.VerticalAlignment.Center
+    titleLayout.SortOrder = Enum.SortOrder.LayoutOrder
     titleLayout.Parent = titleContainer
 
     local title = Instance.new("TextLabel")
