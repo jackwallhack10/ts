@@ -55,6 +55,7 @@ function Library:Create(table)
     title.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
     title.BackgroundTransparency = 1
     title.AutomaticSize = Enum.AutomaticSize.X -- Allow text to define size
+    title.LayoutOrder = 1 -- Ensure this appears first
     title.Parent = titleContainer -- Parent to the container
 
     -- New Premium title
@@ -67,6 +68,7 @@ function Library:Create(table)
     premiumTitle.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
     premiumTitle.BackgroundTransparency = 1
     premiumTitle.AutomaticSize = Enum.AutomaticSize.X
+    premiumTitle.LayoutOrder = 2 -- Ensure this appears second
     premiumTitle.Parent = titleContainer -- Parent to the container
 
     local uICorner = Instance.new("UICorner")
