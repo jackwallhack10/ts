@@ -114,6 +114,7 @@ function Library:Create(table)
     shadow.Position = UDim2.new(0.5,0,0.5,0)
 
     local tabHandler = {}
+    tabHandler.MainFrame = main -- Make the main frame accessible
 
     function tabHandler:Exit()
         dark_UI:Destroy()
