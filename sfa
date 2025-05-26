@@ -169,7 +169,7 @@ function Library:Create(table)
     if shadow then shadow.Position = UDim2.new(0.5,0,0.5,0) end
 
     local tabHandler = {}
-    if main then tabHandler.MainFrame = main end -- Ensure MainFrame is accessible here only if main exists
+    tabHandler.MainFrame = main -- Ensure MainFrame is accessible here
 
     function tabHandler:Exit()
         if dark_UI then dark_UI:Destroy() end -- Safely destroy dark_UI
@@ -800,8 +800,5 @@ function Library:Create(table)
 
     return tabHandler
 end
-
--- Add MainFrame to the returned table
-tabHandler.MainFrame = main
 
 return Library
