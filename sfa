@@ -19,21 +19,6 @@ local LocalPlayer = Players.LocalPlayer
 local Mouse = LocalPlayer:GetMouse()
 local HTTPService = game:GetService("HttpService")
 
--- Helper function to convert Hex to Color3
-local function HexToColor3(hex)
-    if type(hex) ~= "string" or not hex:match("^#?%x%x%x%x%x%x$") then
-        warn("Invalid hex color string:", hex)
-        return nil
-    end
-    if hex:sub(1, 1) == "#" then
-        hex = hex:sub(2)
-    end
-    local r = tonumber(hex:sub(1, 2), 16) / 255
-    local g = tonumber(hex:sub(3, 4), 16) / 255
-    local b = tonumber(hex:sub(5, 6), 16) / 255
-    return Color3.fromRGB(r * 255, g * 255, b * 255) -- Use fromRGB to get correct 0-255 range conversion
-end
-
 function Library:Create(table)
     -- Error handling for Create function
     if type(table) ~= "table" or type(table.Name) ~= "string" then
@@ -565,94 +550,6 @@ function Library:Create(table)
 
             textBox.FocusLost:Connect(function()
                 pcall(callback, textBox.Text) -- Use pcall for safer callback execution
-            end)
-        end
-
-        function ElementHandler:ColorPicker(text, callback)
-            -- Error handling for ColorPicker function
-            if type(text) ~= "string" then
-                 warn("ElementHandler:ColorPicker expects a string for text.")
-                 text = tostring(text) -- Attempt conversion
-            end
-             if type(callback) ~= "function" then
-                 warn("ElementHandler:ColorPicker expects a function for callback.")
-                 callback = function() end -- Provide a default empty function
-            end
-
-            local colorPicker = Instance.new("Frame")
-            colorPicker.Name = "colorPicker"
-            colorPicker.BackgroundColor3 = Color3.fromRGB(38, 38, 38)
-            colorPicker.Size = UDim2.fromOffset(441, 32)
-
-            local uICorner = Instance.new("UICorner")
-            uICorner.Name = "uICorner"
-            uICorner.CornerRadius = UDim.new(0, 6)
-            uICorner.Parent = colorPicker
-
-            local textLabel = Instance.new("TextLabel")
-            textLabel.Name = "textLabel"
-            textLabel.Font = Enum.Font.Gotham
-            textLabel.Text = text
-            textLabel.TextColor3 = Color3.fromRGB(195, 195, 195)
-            textLabel.TextSize = 13
-            textLabel.TextStrokeColor3 = Color3.fromRGB(195, 195, 195)
-            textLabel.TextXAlignment = Enum.TextXAlignment.Left
-            textLabel.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
-            textLabel.BackgroundTransparency = 1
-            textLabel.Position = UDim2.fromScale(0.0181, 0)
-            textLabel.Size = UDim2.fromOffset(1, 32)
-            textLabel.Parent = colorPicker
-
-            local colorTextBox = Instance.new("TextBox")
-            colorTextBox.Name = "colorTextBox"
-            colorTextBox.Font = Enum.Font.SourceSans
-            colorTextBox.PlaceholderText = "#RRGGBB"
-            colorTextBox.Text = "#FFFFFF" -- Default color
-            colorTextBox.TextColor3 = Color3.fromRGB(195, 195, 195)
-            colorTextBox.TextSize = 12
-            colorTextBox.BackgroundColor3 = Color3.fromRGB(33, 33, 33)
-            colorTextBox.Position = UDim2.fromScale(0.6, 0.188) -- Adjusted position to make space for color indicator
-            colorTextBox.Size = UDim2.fromOffset(80, 19) -- Adjusted size
-            colorTextBox.ClearTextOnFocus = false
-
-            local uICornerTB = Instance.new("UICorner")
-            uICornerTB.Name = "uICornerTB"
-            uICornerTB.CornerRadius = UDim.new(0, 6)
-            uICornerTB.Parent = colorTextBox
-
-            local colorIndicator = Instance.new("Frame")
-            colorIndicator.Name = "colorIndicator"
-            colorIndicator.Size = UDim2.new(0, 24, 0, 24)
-            colorIndicator.Position = UDim2.fromScale(0.85, 0.125) -- Position next to textbox
-            colorIndicator.BackgroundColor3 = HexToColor3(colorTextBox.Text) or Color3.fromRGB(255,255,255)
-            colorIndicator.Parent = colorPicker
-
-             local uICornerCI = Instance.new("UICorner")
-            uICornerCI.Name = "uICornerCI"
-            uICornerCI.CornerRadius = UDim.new(0, 4) -- Slightly smaller corner radius
-            uICornerCI.Parent = colorIndicator
-
-            colorTextBox.Parent = colorPicker
-            colorPicker.Parent = holder
-
-            colorPicker.MouseEnter:Connect(function()
-                game:GetService('TweenService'):Create(colorPicker, TweenInfo.new(0.15), {BackgroundColor3 = Color3.fromRGB(43,43,43)}):Play()
-            end)
-
-            colorPicker.MouseLeave:Connect(function()
-                 game:GetService('TweenService'):Create(colorPicker, TweenInfo.new(0.15), {BackgroundColor3 = Color3.fromRGB(38,38,38)}):Play()
-            end)
-
-            colorTextBox.FocusLost:Connect(function(enterPressed)
-                local hexColor = colorTextBox.Text
-                local color3 = HexToColor3(hexColor)
-                if color3 then
-                    colorIndicator.BackgroundColor3 = color3
-                    pcall(callback, color3, hexColor) -- Pass both Color3 and hex string
-                else
-                    -- Optionally revert textbox text or show an error to the user
-                     warn("Invalid hex color entered: ", hexColor)
-                end
             end)
         end
 
