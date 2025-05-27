@@ -1040,10 +1040,17 @@
             end
         end)
 
-        return tabHandler
+        -- Instead of returning tabHandler, return a table with methods and the title
+        return {
+            Tab = tabHandler.Tab,
+            Exit = tabHandler.Exit,
+            TitleLabel = title,
+            MainFrame = main -- Also return the main frame for potential future use
+        }
     end
 
-    return {Library = Library, TitleLabel = title}
+    -- Ensure the script returns the Library table itself
+    return Library
 end
 
 return Library
