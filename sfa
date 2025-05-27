@@ -250,7 +250,6 @@ function Library:Create(table)
         dropdownButton.Size = UDim2.new(1, 0, 1, 0)
         dropdownButton.TextXAlignment = Enum.TextXAlignment.Left
         dropdownButton.TextScaled = true
-        dropdownButton.MinimumSize = Vector2.new(0,20)
 
         local uICorner = Instance.new("UICorner")
         uICorner.CornerRadius = UDim.new(0, 6)
@@ -313,7 +312,6 @@ function Library:Create(table)
                 optionButton.Size = UDim2.new(1, 0, 0, 30)
                 optionButton.TextXAlignment = Enum.TextXAlignment.Left
                 optionButton.TextScaled = true
-                optionButton.MinimumSize = Vector2.new(0,20)
                 optionButton.Parent = dropdownList
 
                 optionButton.MouseEnter:Connect(function()
