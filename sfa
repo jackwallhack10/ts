@@ -83,17 +83,6 @@
         close.Size = UDim2.fromOffset(16, 16)
         close.Parent = topBar
         
-        local search = Instance.new("ImageButton")
-        search.Name = "search"
-        search.Image = "http://www.roblox.com/asset/?id=9701781161"
-        search.ImageColor3 = Color3.fromRGB(126, 126, 126)
-        search.ScaleType = Enum.ScaleType.Fit
-        search.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
-        search.BackgroundTransparency = 1
-        search.Position = UDim2.fromScale(0.891, 0.265)
-        search.Size = UDim2.fromOffset(14, 14)
-        search.Parent = topBar
-
         topBar.Parent = main
 
         local tabContainer = Instance.new("Frame")
@@ -220,28 +209,6 @@
             arizon:Destroy()
         end)
 
-        --// Search Events
-        search.MouseEnter:Connect(function()
-            game:GetService('TweenService'):Create(search, TweenInfo.new(0.2), {ImageColor3 = Color3.fromRGB(163, 163, 163)}):Play()
-        end)
-
-        search.MouseLeave:Connect(function()
-            game:GetService('TweenService'):Create(search, TweenInfo.new(0.2), {ImageColor3 = Color3.fromRGB(126, 126, 126)}):Play()
-        end)
-
-        search.MouseButton1Click:Connect(function()
-            for _,v in pairs(main:GetChildren()) do
-                if v.Name == "container" then
-                    if v['search1'].Visible then
-                        v['search1'].Visible = false
-                    else
-                        v['search1'].Visible = true
-                    end
-                end
-            end
-        end)
-
-
         local tabHandler = {}
 
         function tabHandler:Exit()
@@ -283,55 +250,6 @@
             uIListLayout.Padding = UDim.new(0, 4)
             uIListLayout.SortOrder = Enum.SortOrder.LayoutOrder
             uIListLayout.Parent = container
-
-            local search1 = Instance.new("Frame")
-            search1.Name = "search1"
-            search1.BackgroundColor3 = Color3.fromRGB(30, 30, 30)
-            search1.BorderSizePixel = 0
-            search1.LayoutOrder = -1
-            search1.Size = UDim2.fromOffset(361, 36)
-            search1.Visible = false
-
-            local imageLabel = Instance.new("ImageLabel")
-            imageLabel.Name = "imageLabel"
-            imageLabel.Image = "http://www.roblox.com/asset/?id=9634226499"
-            imageLabel.ImageColor3 = Color3.fromRGB(117, 117, 117)
-            imageLabel.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
-            imageLabel.BackgroundTransparency = 1
-            imageLabel.Position = UDim2.fromScale(0.0249, 0.278)
-            imageLabel.Size = UDim2.fromOffset(15, 15)
-            imageLabel.Parent = search1
-
-            local textBox1 = Instance.new("TextBox")
-            textBox1.Name = "textBox1"
-            textBox1.Font = Enum.Font.Gotham
-            textBox1.PlaceholderColor3 = Color3.fromRGB(125, 125, 125)
-            textBox1.PlaceholderText = "search.."
-            textBox1.Text = ""
-            textBox1.TextColor3 = Color3.fromRGB(188, 188, 188)
-            textBox1.TextSize = 12
-            textBox1.TextXAlignment = Enum.TextXAlignment.Left
-            textBox1.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
-            textBox1.BackgroundTransparency = 1
-            textBox1.Position = UDim2.fromScale(-0.00264, 0)
-            textBox1.Size = UDim2.fromOffset(361, 36)
-
-            local uIPadding1 = Instance.new("UIPadding")
-            uIPadding1.Name = "uIPadding1"
-            uIPadding1.PaddingLeft = UDim.new(0, 30)
-            uIPadding1.Parent = textBox1
-
-            textBox1.Parent = search1
-
-            local frame2 = Instance.new("Frame")
-            frame2.Name = "frame2"
-            frame2.BackgroundColor3 = Color3.fromRGB(53, 53, 53)
-            frame2.BorderSizePixel = 0
-            frame2.Position = UDim2.fromScale(0, 0.98)
-            frame2.Size = UDim2.fromOffset(361, 1)
-            frame2.Parent = search1
-
-            search1.Parent = container
 
             container.Parent = main
             container.Visible = false
