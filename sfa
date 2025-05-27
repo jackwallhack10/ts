@@ -244,7 +244,6 @@ function Library:Create(table)
         dropdownButton.BackgroundColor3 = Color3.fromRGB(32, 32, 32)
         dropdownButton.Size = UDim2.fromOffset(380, 36)
         dropdownButton.TextXAlignment = Enum.TextXAlignment.Left
-        dropdownButton.TextInsets = UDim2.new(0, 10, 0, 0)
 
         local uICorner = Instance.new("UICorner")
         uICorner.CornerRadius = UDim.new(0, 6)
@@ -297,7 +296,6 @@ function Library:Create(table)
                 optionButton.BackgroundColor3 = Color3.fromRGB(40, 40, 40)
                 optionButton.Size = UDim2.new(1, 0, 0, 30)
                 optionButton.TextXAlignment = Enum.TextXAlignment.Left
-                optionButton.TextInsets = UDim2.new(0, 5, 0, 0)
                 optionButton.Parent = dropdownList
 
                 optionButton.MouseEnter:Connect(function()
