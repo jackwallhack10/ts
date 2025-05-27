@@ -41,28 +41,50 @@
         uICorner1.CornerRadius = UDim.new(0, 6)
         uICorner1.Parent = topBar
 
+        local uIListLayout4 = Instance.new("UIListLayout")
+        uIListLayout4.Name = "uIListLayout4"
+        uIListLayout4.FillDirection = Enum.FillDirection.Horizontal
+        uIListLayout4.VerticalAlignment = Enum.VerticalAlignment.Center
+        uIListLayout4.Padding = UDim.new(0, 5)
+        uIListLayout4.Parent = topBar
+
+        local uIPadding3 = Instance.new("UIPadding")
+        uIPadding3.Name = "uIPadding3"
+        uIPadding3.PaddingLeft = UDim.new(0, 8)
+        uIPadding3.Parent = topBar
+
         local menu = Instance.new("ImageButton")
         menu.Name = "menu"
         menu.Image = "http://www.roblox.com/asset/?id=9633864839"
         menu.ImageTransparency = 0.4
         menu.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
         menu.BackgroundTransparency = 1
-        menu.Position = UDim2.fromScale(0.0249, 0.25)
         menu.Size = UDim2.fromOffset(16, 18)
         menu.Parent = topBar
 
         local title = Instance.new("TextLabel")
         title.Name = "title"
         title.Font = Enum.Font.Gotham
-        title.Text = table.Name
+        title.Text = "GhostWare"
         title.TextColor3 = Color3.fromRGB(195, 195, 195)
         title.TextSize = 12
         title.TextXAlignment = Enum.TextXAlignment.Left
         title.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
         title.BackgroundTransparency = 1
-        title.Position = UDim2.fromScale(0.0861, 0.25)
         title.Size = UDim2.fromOffset(83, 18)
         title.Parent = topBar
+
+        local premiumLabel = Instance.new("TextLabel")
+        premiumLabel.Name = "premiumLabel"
+        premiumLabel.Font = Enum.Font.Gotham
+        premiumLabel.Text = "Premium"
+        premiumLabel.TextColor3 = Color3.fromRGB(0, 255, 0) -- Green color
+        premiumLabel.TextSize = 10
+        premiumLabel.TextXAlignment = Enum.TextXAlignment.Left
+        premiumLabel.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+        premiumLabel.BackgroundTransparency = 1
+        premiumLabel.Size = UDim2.fromOffset(50, 18) -- Adjust size as needed
+        premiumLabel.Parent = topBar
 
         local frame = Instance.new("Frame")
         frame.Name = "frame"
