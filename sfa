@@ -54,7 +54,7 @@
         local title = Instance.new("TextLabel")
         title.Name = "title"
         title.Font = Enum.Font.Gotham
-        title.Text = table.Name
+        title.Text = table.Name .. (table.Version and " v" .. table.Version or "")
         title.TextColor3 = Color3.fromRGB(255, 165, 0)
         title.TextSize = 12
         title.TextXAlignment = Enum.TextXAlignment.Left
