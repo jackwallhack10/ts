@@ -18,21 +18,21 @@ local TabLayout = Instance.new("UIListLayout")
 
 local Library = {
     Colors = {
-        Body = Color3.fromRGB(35, 35, 35);
-        Section = Color3.fromRGB(40, 40, 40);
-        CheckboxChecked = Color3.fromRGB(255, 255, 255);
-        CheckboxUnchecked = Color3.fromRGB(50, 50, 50);
-        Button = Color3.fromRGB(45, 45, 45);
-        ColorPickerMarker = Color3.fromRGB(150, 150, 150);
-        SliderBackground = Color3.fromRGB(50, 50, 50);
-        Slider = Color3.fromRGB(255, 255, 255);
-        Dropdown = Color3.fromRGB(45, 45, 45);
-        DropdownButton = Color3.fromRGB(35, 35, 35);
-        DropdownButtonHover = Color3.fromRGB(45, 45, 45);
-        Underline = Color3.fromRGB(255, 255, 255);
-        Border = Color3.fromRGB(0, 0, 0);
-        Text = Color3.fromRGB(255, 255, 255);
-        PlaceholderText = Color3.fromRGB(255, 255, 255);
+        Body = Color3.fromRGB(40, 40, 40);
+        Section = Color3.fromRGB(45, 45, 45);
+        CheckboxChecked = Color3.fromRGB(80, 180, 255);
+        CheckboxUnchecked = Color3.fromRGB(55, 55, 55);
+        Button = Color3.fromRGB(50, 50, 50);
+        ColorPickerMarker = Color3.fromRGB(180, 180, 180);
+        SliderBackground = Color3.fromRGB(55, 55, 55);
+        Slider = Color3.fromRGB(80, 180, 255);
+        Dropdown = Color3.fromRGB(50, 50, 50);
+        DropdownButton = Color3.fromRGB(40, 40, 40);
+        DropdownButtonHover = Color3.fromRGB(60, 60, 60);
+        Underline = Color3.fromRGB(80, 180, 255);
+        Border = Color3.fromRGB(30, 30, 30);
+        Text = Color3.fromRGB(230, 230, 230);
+        PlaceholderText = Color3.fromRGB(180, 180, 180);
     };
 
     Settings = {
@@ -43,7 +43,7 @@ local Library = {
         ColorPickerTweenTime = 0.5;
         DropdownTweenTime = 0.5;
         DropdownButtonColorHoverTweenTime = 0.5;
-        MainTextFont = Enum.Font.Code;
+        MainTextFont = Enum.Font.GothamSemibold;
         UIToggleKey = Enum.KeyCode.RightControl;
         TweenEasingStyle = Enum.EasingStyle.Quart;
     }
@@ -57,9 +57,13 @@ Holder.Name = "Holder"
 Holder.Parent = LibraryUI
 Holder.BackgroundColor3 = Color3.new(0, 0, 0)
 Holder.BackgroundTransparency = 1
-Holder.BorderColor3 = Color3.new(0, 0, 0)
+Holder.BorderColor3 = Library.Colors.Border
 Holder.BorderSizePixel = 0
 Holder.Size = UDim2.new(0, 100, 0, 100)
+
+local HolderCorner = Instance.new("UICorner")
+HolderCorner.CornerRadius = UDim.new(0, 8)
+HolderCorner.Parent = Holder
 
 TabPadding.Name = "TabPadding"
 TabPadding.Parent = Holder
@@ -69,7 +73,7 @@ TabPadding.PaddingTop = UDim.new(0, 50)
 TabLayout.Name = "TabLayout"
 TabLayout.Parent = Holder
 TabLayout.SortOrder = Enum.SortOrder.LayoutOrder
-TabLayout.Padding = UDim.new(0, 5)
+TabLayout.Padding = UDim.new(0, 8)
 
 UserInputService.InputBegan:Connect(function(input, gameProcessedEvent)
     if gameProcessedEvent then return end
@@ -96,15 +100,19 @@ function Library:CreateTab(tabtitle, tabdescription)
     TabName.Text = tabtitle
     TabName.TextTransparency = 1
     TabName.BackgroundColor3 = Library.Colors.Body
-    TabName.BackgroundTransparency = 1
+    TabName.BackgroundTransparency = 0
     TabName.BorderColor3 = Library.Colors.Border
     TabName.BorderSizePixel = 0
     TabName.Position = UDim2.new(0.150000006, 0, 0.5, 0)
-    TabName.Size = UDim2.new(0, 200, 0, 32)
+    TabName.Size = UDim2.new(0, 200, 0, 36)
     TabName.AutoButtonColor = false
     TabName.Font = Library.Settings.MainTextFont
     TabName.TextColor3 = Library.Colors.Text
     TabName.TextSize = Library.Settings.MainTextSize
+
+    local TabNameCorner = Instance.new("UICorner")
+    TabNameCorner.CornerRadius = UDim.new(0, 6)
+    TabNameCorner.Parent = TabName
 
     TabNameBody.Name = (tabtitle .. "TabBody")
     TabNameBody.Parent = TabName
@@ -133,6 +141,7 @@ function Library:CreateTab(tabtitle, tabdescription)
     BodyLayout.Name = "BodyLayout"
     BodyLayout.Parent = TabNameBody
     BodyLayout.SortOrder = Enum.SortOrder.LayoutOrder
+    BodyLayout.Padding = UDim.new(0, 5)
 
     local TextBounds = game:GetService("TextService"):GetTextSize(tabdescription, Library.Settings.MainTextSize, Library.Settings.MainTextFont, Vector2.new(math.huge, math.huge))
 
@@ -170,14 +179,13 @@ function Library:CreateTab(tabtitle, tabdescription)
 
     function TabIntro()
         TweenService:Create(TabName, TweenInfo.new(1, Library.Settings.TweenEasingStyle, Enum.EasingDirection.Out), {TextTransparency = 0}):Play()
-        TweenService:Create(TabName, TweenInfo.new(1, Library.Settings.TweenEasingStyle, Enum.EasingDirection.Out), {BackgroundTransparency = 0}):Play()
     end
 
 
     TabName.MouseButton1Down:Connect(function()
         RippleEffect(TabName)
-        TweenService:Create(TabUnderline, TweenInfo.new(0.50, Library.Settings.TweenEasingStyle, Enum.EasingDirection.Out), {Position = UDim2.new(0.5, 0, 0.938000023, 0), Size = UDim2.new(0, 0, 0, 2)}):Play()
-        TweenService:Create(DescriptionHolder, TweenInfo.new(0.50, Library.Settings.TweenEasingStyle, Enum.EasingDirection.Out), {Position = UDim2.new(1.08000004, 0, 0, 0), Size = UDim2.new(0, 0, 0, 32)}):Play()
+        TweenService:Create(TabUnderline, TweenInfo.new(0.50, Library.Settings.TweenEasingStyle, Enum.EasingDirection.Out), {Position = UDim2.new(0.5, 0, 1, 0), Size = UDim2.new(0, 0, 0, 2)}):Play()
+        TweenService:Create(DescriptionHolder, TweenInfo.new(0.50, Library.Settings.TweenEasingStyle, Enum.EasingDirection.Out), {Position = UDim2.new(1.08000004, 0, 0, 0), Size = UDim2.new(0, 0, 0, 36)}):Play()
 
         if not IsATabOpen then
             IsATabOpen = true
@@ -192,16 +200,16 @@ function Library:CreateTab(tabtitle, tabdescription)
             if IsATabOpen then
                 return false
             elseif not IsATabOpen then
-                TweenService:Create(TabUnderline, TweenInfo.new(0.50, Library.Settings.TweenEasingStyle, Enum.EasingDirection.Out), {Position = UDim2.new(0, 0, 0.9375, 0), Size = UDim2.new(0, 200, 0, 2)}):Play()
-                TweenService:Create(DescriptionHolder, TweenInfo.new(0.50, Library.Settings.TweenEasingStyle, Enum.EasingDirection.Out), {Position = UDim2.new(1.08000004, 0, 0, 0), Size = UDim2.new(0, TextBounds.X + 15, 0, 32)}):Play()
+                TweenService:Create(TabUnderline, TweenInfo.new(0.50, Library.Settings.TweenEasingStyle, Enum.EasingDirection.Out), {Position = UDim2.new(0, 0, 1, 0), Size = UDim2.new(1, 0, 0, 2)}):Play()
+                TweenService:Create(DescriptionHolder, TweenInfo.new(0.50, Library.Settings.TweenEasingStyle, Enum.EasingDirection.Out), {Position = UDim2.new(1.08000004, 0, 0, 0), Size = UDim2.new(0, TextBounds.X + 15, 0, 36)}):Play()
             end
         end
     end)
 
     TabName.InputEnded:Connect(function(input)
         if input.UserInputType == Enum.UserInputType.MouseMovement then
-            TweenService:Create(TabUnderline, TweenInfo.new(0.50, Library.Settings.TweenEasingStyle, Enum.EasingDirection.Out), {Position = UDim2.new(0.5, 0, 0.938000023, 0), Size = UDim2.new(0, 0, 0, 2)}):Play()
-            TweenService:Create(DescriptionHolder, TweenInfo.new(0.50, Library.Settings.TweenEasingStyle, Enum.EasingDirection.Out), {Position = UDim2.new(1.08000004, 0, 0, 0), Size = UDim2.new(0, 0, 0, 32)}):Play()
+            TweenService:Create(TabUnderline, TweenInfo.new(0.50, Library.Settings.TweenEasingStyle, Enum.EasingDirection.Out), {Position = UDim2.new(0.5, 0, 1, 0), Size = UDim2.new(0, 0, 0, 2)}):Play()
+            TweenService:Create(DescriptionHolder, TweenInfo.new(0.50, Library.Settings.TweenEasingStyle, Enum.EasingDirection.Out), {Position = UDim2.new(1.08000004, 0, 0, 0), Size = UDim2.new(0, 0, 0, 36)}):Play()
         end
     end)
 
@@ -222,18 +230,26 @@ function Library:CreateTab(tabtitle, tabdescription)
             RippleHolder.BorderColor3 = Library.Colors.Border
             RippleHolder.BorderSizePixel = 0
             RippleHolder.ClipsDescendants = true
-            RippleHolder.Size = UDim2.new(0, 200, 0, 32)
+            RippleHolder.Size = UDim2.new(1, 0, 1, 0)
+
+            local RippleHolderCorner = Instance.new("UICorner")
+            RippleHolderCorner.CornerRadius = UDim.new(0, 6)
+            RippleHolderCorner.Parent = RippleHolder
 
             RippleEffect.Name = "RippleEffect"
             RippleEffect.Parent = RippleHolder
             RippleEffect.BackgroundTransparency = 1
             RippleEffect.BorderSizePixel = 0
             RippleEffect.Image = "rbxassetid://2708891598"
-            RippleEffect.ImageColor3 = Color3.fromRGB(255, 255, 255)
+            RippleEffect.ImageColor3 = Color3.fromRGB(200, 200, 200)
             RippleEffect.ImageTransparency = 0.8
             RippleEffect.ScaleType = Enum.ScaleType.Fit
 
-            RippleEffect.Position = UDim2.new((Mouse.X - RippleEffect.AbsolutePosition.X) / button.AbsoluteSize.X, 0, (Mouse.Y - RippleEffect.AbsolutePosition.Y) / button.AbsoluteSize.Y, 0)
+            local buttonAbsolutePosition = button.AbsolutePosition
+            local mouseAbsolutePosition = Mouse.AbsolutePosition
+            local relativePosition = mouseAbsolutePosition - buttonAbsolutePosition
+
+            RippleEffect.Position = UDim2.new(relativePosition.X / button.AbsoluteSize.X, 0, relativePosition.Y / button.AbsoluteSize.Y, 0)
             TweenService:Create(RippleEffect, TweenInfo.new(Library.Settings.RippleTweenTime, Library.Settings.TweenEasingStyle, Enum.EasingDirection.Out), {Position = UDim2.new(-5.5, 0, -5.5, 0), Size = UDim2.new(12, 0, 12, 0)}):Play()
 
             wait(0.5)
@@ -252,20 +268,25 @@ function Library:CreateTab(tabtitle, tabdescription)
         SectionLabel.BackgroundColor3 = Library.Colors.Section
         SectionLabel.BorderColor3 = Library.Colors.Border
         SectionLabel.BorderSizePixel = 0
-        SectionLabel.Size = UDim2.new(0, 200, 0, 30)
+        SectionLabel.Size = UDim2.new(1, 0, 0, 30)
         SectionLabel.Font = Library.Settings.MainTextFont
-        SectionLabel.Text = sectionname
+        SectionLabel.Text = "   " .. sectionname
         SectionLabel.TextColor3 = Library.Colors.Text
         SectionLabel.TextSize = Library.Settings.MainTextSize
+        SectionLabel.TextXAlignment = Enum.TextXAlignment.Left
+
+        local SectionLabelCorner = Instance.new("UICorner")
+        SectionLabelCorner.CornerRadius = UDim.new(0, 4)
+        SectionLabelCorner.Parent = SectionLabel
 
         TabName.MouseButton1Down:Connect(function()
             if not IsATabOpen then
-                ExtendBodySize(30)
+                ExtendBodySize(30 + BodyLayout.Padding.Offset)
 
                 TweenService:Create(SectionLabel, TweenInfo.new(Library.Settings.MainTweenTime, Library.Settings.TweenEasingStyle, Enum.EasingDirection.Out), {BackgroundTransparency = 0}):Play()
                 TweenService:Create(SectionLabel, TweenInfo.new(Library.Settings.MainTweenTime, Library.Settings.TweenEasingStyle, Enum.EasingDirection.Out), {TextTransparency = 0}):Play()
             elseif IsATabOpen then
-                UnExtendBodySize(30)
+                UnExtendBodySize(30 + BodyLayout.Padding.Offset)
 
                 TweenService:Create(SectionLabel, TweenInfo.new(Library.Settings.MainTweenTime, Library.Settings.TweenEasingStyle, Enum.EasingDirection.Out), {BackgroundTransparency = 1}):Play()
                 TweenService:Create(SectionLabel, TweenInfo.new(Library.Settings.MainTweenTime, Library.Settings.TweenEasingStyle, Enum.EasingDirection.Out), {TextTransparency = 1}):Play()
@@ -279,6 +300,7 @@ function Library:CreateTab(tabtitle, tabdescription)
         local CheckboxButton = Instance.new("ImageButton")
         local ToggleAnimation = Instance.new("Frame")
 
+        local Enabled = false
 
         CheckboxHolder.Name = (checkboxname .. "CheckboxHolder")
         CheckboxHolder.Parent = TabNameBody
@@ -286,7 +308,11 @@ function Library:CreateTab(tabtitle, tabdescription)
         CheckboxHolder.BackgroundTransparency = 1
         CheckboxHolder.BorderColor3 = Library.Colors.Border
         CheckboxHolder.BorderSizePixel = 0
-        CheckboxHolder.Size = UDim2.new(0, 200, 0, 30)
+        CheckboxHolder.Size = UDim2.new(1, 0, 0, 30)
+
+        local CheckboxHolderCorner = Instance.new("UICorner")
+        CheckboxHolderCorner.CornerRadius = UDim.new(0, 4)
+        CheckboxHolderCorner.Parent = CheckboxHolder
 
         CheckboxTitleText.Name = "CheckboxTitleText"
         CheckboxTitleText.Parent = CheckboxHolder
@@ -294,38 +320,50 @@ function Library:CreateTab(tabtitle, tabdescription)
         CheckboxTitleText.BackgroundTransparency = 1
         CheckboxTitleText.BorderColor3 = Library.Colors.Border
         CheckboxTitleText.BorderSizePixel = 0
-        CheckboxTitleText.Position = UDim2.new(0.0350000001, 0, 0.112999983, 0)
-        CheckboxTitleText.Size = UDim2.new(0, 146, 0, 25)
+        CheckboxTitleText.Position = UDim2.new(0.04, 0, 0.1, 0)
+        CheckboxTitleText.Size = UDim2.new(0, 150, 0.8, 0)
         CheckboxTitleText.Font = Library.Settings.MainTextFont
         CheckboxTitleText.Text = checkboxname
-        CheckboxTitleText.TextColor3 = Color3.new(1, 1, 1)
+        CheckboxTitleText.TextColor3 = Library.Colors.Text
         CheckboxTitleText.TextSize = Library.Settings.MainTextSize
         CheckboxTitleText.TextXAlignment = Enum.TextXAlignment.Left
 
         CheckboxButton.Name = "CheckboxButton"
         CheckboxButton.Parent = CheckboxHolder
-        CheckboxButton.BackgroundColor3 = Library.Colors.Body
-        CheckboxButton.BorderColor3 = Color3.new(0.164706, 0.164706, 0.164706)
-        CheckboxButton.Position = UDim2.new(0.829999983, 0, 0.116999999, 0)
-        CheckboxButton.Size = UDim2.new(0, 25, 0, 24)
+        CheckboxButton.BackgroundColor3 = Library.Colors.CheckboxUnchecked
+        CheckboxButton.BorderColor3 = Library.Colors.Border
+        CheckboxButton.BorderSizePixel = 0
+        CheckboxButton.Position = UDim2.new(1, -30, 0.1, 0)
+        CheckboxButton.Size = UDim2.new(0, 20, 0.8, 0)
         CheckboxButton.AutoButtonColor = false
-        CheckboxButton.Image = "rbxassetid://1202200114"
+        CheckboxButton.Image = ""
+        CheckboxButton.ImageTransparency = 1
+
+        local CheckboxButtonCorner = Instance.new("UICorner")
+        CheckboxButtonCorner.CornerRadius = UDim.new(0, 4)
+        CheckboxButtonCorner.Parent = CheckboxButton
 
         ToggleAnimation.Name = "ToggleAnimation"
-        ToggleAnimation.Parent = CheckboxHolder
-        ToggleAnimation.BackgroundColor3 = Library.Colors.Body
+        ToggleAnimation.Parent = CheckboxButton
+        ToggleAnimation.BackgroundColor3 = Library.Colors.CheckboxChecked
         ToggleAnimation.BorderColor3 = Library.Colors.Border
         ToggleAnimation.BorderSizePixel = 0
-        ToggleAnimation.Position = UDim2.new(0.829999983, 0, 0.116999999, 0)
-        ToggleAnimation.Size = UDim2.new(0, 25, 0, 24)
+        ToggleAnimation.Position = UDim2.new(0, 0, 0, 0)
+        ToggleAnimation.Size = UDim2.new(0, 0, 1, 0)
+
+        local ToggleAnimationCorner = Instance.new("UICorner")
+        ToggleAnimationCorner.CornerRadius = UDim.new(0, 4)
+        ToggleAnimationCorner.Parent = ToggleAnimation
 
         CheckboxButton.MouseButton1Down:Connect(function()
             Enabled = not Enabled
 
             if Enabled then
-                TweenService:Create(ToggleAnimation, TweenInfo.new(Library.Settings.CheckboxTweenTime, Library.Settings.TweenEasingStyle, Enum.EasingDirection.Out), {Position =  UDim2.new(0.955, 0 , 0.117, 0), Size = UDim2.new(0, 0, 0, 24)}):Play()
+                TweenService:Create(ToggleAnimation, TweenInfo.new(Library.Settings.CheckboxTweenTime, Library.Settings.TweenEasingStyle, Enum.EasingDirection.Out), {Size = UDim2.new(1, 0, 1, 0)}):Play()
+                TweenService:Create(CheckboxButton, TweenInfo.new(Library.Settings.CheckboxTweenTime, Library.Settings.TweenEasingStyle, Enum.EasingDirection.Out), {BackgroundColor3 = Library.Colors.CheckboxChecked}):Play()
             elseif not Enabled then
-                TweenService:Create(ToggleAnimation, TweenInfo.new(Library.Settings.CheckboxTweenTime, Library.Settings.TweenEasingStyle, Enum.EasingDirection.Out), {Position =  UDim2.new(0.83, 0 , 0.117, 0), Size = UDim2.new(0, 25, 0, 24)}):Play()
+                TweenService:Create(ToggleAnimation, TweenInfo.new(Library.Settings.CheckboxTweenTime, Library.Settings.TweenEasingStyle, Enum.EasingDirection.Out), {Size = UDim2.new(0, 0, 1, 0)}):Play()
+                TweenService:Create(CheckboxButton, TweenInfo.new(Library.Settings.CheckboxTweenTime, Library.Settings.TweenEasingStyle, Enum.EasingDirection.Out), {BackgroundColor3 = Library.Colors.CheckboxUnchecked}):Play()
             end
 
             action(Enabled)
@@ -333,20 +371,19 @@ function Library:CreateTab(tabtitle, tabdescription)
 
         TabName.MouseButton1Down:Connect(function()
             if not IsATabOpen then
-                ExtendBodySize(30)
+                ExtendBodySize(30 + BodyLayout.Padding.Offset)
 
-                TweenService:Create(ToggleAnimation, TweenInfo.new(Library.Settings.MainTweenTime, Library.Settings.TweenEasingStyle, Enum.EasingDirection.Out), {BackgroundTransparency = 0}):Play()
+                TweenService:Create(CheckboxHolder, TweenInfo.new(Library.Settings.MainTweenTime, Library.Settings.TweenEasingStyle, Enum.EasingDirection.Out), {BackgroundTransparency = 0}):Play()
                 TweenService:Create(CheckboxTitleText, TweenInfo.new(Library.Settings.MainTweenTime, Library.Settings.TweenEasingStyle, Enum.EasingDirection.Out), {TextTransparency = 0}):Play()
                 TweenService:Create(CheckboxButton, TweenInfo.new(Library.Settings.MainTweenTime, Library.Settings.TweenEasingStyle, Enum.EasingDirection.Out), {BackgroundTransparency = 0}):Play()
-                TweenService:Create(CheckboxButton, TweenInfo.new(Library.Settings.MainTweenTime, Library.Settings.TweenEasingStyle, Enum.EasingDirection.Out), {ImageTransparency = 0}):Play()
-                TweenService:Create(CheckboxButton, TweenInfo.new(Library.Settings.MainTweenTime, Library.Settings.TweenEasingStyle, Enum.EasingDirection.Out), {ImageTransparency = 0}):Play()
+                TweenService:Create(ToggleAnimation, TweenInfo.new(Library.Settings.MainTweenTime, Library.Settings.TweenEasingStyle, Enum.EasingDirection.Out), {BackgroundTransparency = 0}):Play()
             elseif IsATabOpen then
-                UnExtendBodySize(30)
+                UnExtendBodySize(30 + BodyLayout.Padding.Offset)
 
-                TweenService:Create(ToggleAnimation, TweenInfo.new(Library.Settings.MainTweenTime, Library.Settings.TweenEasingStyle, Enum.EasingDirection.Out), {BackgroundTransparency = 1}):Play()
+                TweenService:Create(CheckboxHolder, TweenInfo.new(Library.Settings.MainTweenTime, Library.Settings.TweenEasingStyle, Enum.EasingDirection.Out), {BackgroundTransparency = 1}):Play()
                 TweenService:Create(CheckboxTitleText, TweenInfo.new(Library.Settings.MainTweenTime, Library.Settings.TweenEasingStyle, Enum.EasingDirection.Out), {TextTransparency = 1}):Play()
                 TweenService:Create(CheckboxButton, TweenInfo.new(Library.Settings.MainTweenTime, Library.Settings.TweenEasingStyle, Enum.EasingDirection.Out), {BackgroundTransparency = 1}):Play()
-                TweenService:Create(CheckboxButton, TweenInfo.new(Library.Settings.MainTweenTime, Library.Settings.TweenEasingStyle, Enum.EasingDirection.Out), {ImageTransparency = 1}):Play()
+                TweenService:Create(ToggleAnimation, TweenInfo.new(Library.Settings.MainTweenTime, Library.Settings.TweenEasingStyle, Enum.EasingDirection.Out), {BackgroundTransparency = 1}):Play()
             end
         end)
     end
@@ -360,12 +397,16 @@ function Library:CreateTab(tabtitle, tabdescription)
         Button.BorderColor3 = Library.Colors.Border
         Button.BorderSizePixel = 0
         Button.ClipsDescendants = true
-        Button.Size = UDim2.new(0, 200, 0, 30)
+        Button.Size = UDim2.new(1, 0, 0, 30)
         Button.AutoButtonColor = false
         Button.Font = Library.Settings.MainTextFont
         Button.Text = buttonname
         Button.TextColor3 = Library.Colors.Text
         Button.TextSize = Library.Settings.MainTextSize
+
+        local ButtonCorner = Instance.new("UICorner")
+        ButtonCorner.CornerRadius = UDim.new(0, 4)
+        ButtonCorner.Parent = Button
 
         Button.MouseButton1Down:Connect(function()
             action()
@@ -374,12 +415,12 @@ function Library:CreateTab(tabtitle, tabdescription)
 
         TabName.MouseButton1Down:Connect(function()
             if not IsATabOpen then
-                ExtendBodySize(30)
+                ExtendBodySize(30 + BodyLayout.Padding.Offset)
 
                 TweenService:Create(Button, TweenInfo.new(Library.Settings.MainTweenTime, Library.Settings.TweenEasingStyle, Enum.EasingDirection.Out), {TextTransparency = 0}):Play()
                 TweenService:Create(Button, TweenInfo.new(Library.Settings.MainTweenTime, Library.Settings.TweenEasingStyle, Enum.EasingDirection.Out), {BackgroundTransparency = 0}):Play()
             elseif IsATabOpen then
-                UnExtendBodySize(30)
+                UnExtendBodySize(30 + BodyLayout.Padding.Offset)
 
                 TweenService:Create(Button, TweenInfo.new(Library.Settings.MainTweenTime, Library.Settings.TweenEasingStyle, Enum.EasingDirection.Out), {TextTransparency = 1}):Play()
                 TweenService:Create(Button, TweenInfo.new(Library.Settings.MainTweenTime, Library.Settings.TweenEasingStyle, Enum.EasingDirection.Out), {BackgroundTransparency = 1}):Play()
@@ -410,7 +451,11 @@ function Library:CreateTab(tabtitle, tabdescription)
         ColorPickerHolder.BackgroundTransparency = 1
         ColorPickerHolder.BorderColor3 = Library.Colors.Border
         ColorPickerHolder.BorderSizePixel = 0
-        ColorPickerHolder.Size = UDim2.new(0, 200, 0, 30)
+        ColorPickerHolder.Size = UDim2.new(1, 0, 0, 30)
+
+        local ColorPickerHolderCorner = Instance.new("UICorner")
+        ColorPickerHolderCorner.CornerRadius = UDim.new(0, 4)
+        ColorPickerHolderCorner.Parent = ColorPickerHolder
 
         ColorPickerTitleText.Name = "ColorPickerTitleText"
         ColorPickerTitleText.Parent = ColorPickerHolder
@@ -418,11 +463,11 @@ function Library:CreateTab(tabtitle, tabdescription)
         ColorPickerTitleText.BackgroundTransparency = 1
         ColorPickerTitleText.BorderColor3 = Library.Colors.Border
         ColorPickerTitleText.BorderSizePixel = 0
-        ColorPickerTitleText.Position = UDim2.new(0.0350000001, 0, 0.112999983, 0)
-        ColorPickerTitleText.Size = UDim2.new(0, 146, 0, 25)
+        ColorPickerTitleText.Position = UDim2.new(0.04, 0, 0.1, 0)
+        ColorPickerTitleText.Size = UDim2.new(0, 150, 0.8, 0)
         ColorPickerTitleText.Font = Library.Settings.MainTextFont
         ColorPickerTitleText.Text = colorpickername
-        ColorPickerTitleText.TextColor3 = Color3.new(1, 1, 1)
+        ColorPickerTitleText.TextColor3 = Library.Colors.Text
         ColorPickerTitleText.TextSize = Library.Settings.MainTextSize
         ColorPickerTitleText.TextXAlignment = Enum.TextXAlignment.Left
 
@@ -431,13 +476,17 @@ function Library:CreateTab(tabtitle, tabdescription)
         ColorPickerButton.BackgroundColor3 = colorpickerpresetcolor or Color3.fromRGB(255, 255, 255);
         ColorPickerButton.BorderColor3 = Library.Colors.Border
         ColorPickerButton.BorderSizePixel = 0
-        ColorPickerButton.Position = UDim2.new(0.829999983, 0, 0.116999999, 0)
-        ColorPickerButton.Size = UDim2.new(0, 25, 0, 24)
+        ColorPickerButton.Position = UDim2.new(1, -30, 0.1, 0)
+        ColorPickerButton.Size = UDim2.new(0, 20, 0.8, 0)
         ColorPickerButton.AutoButtonColor = false
         ColorPickerButton.Font = Library.Settings.MainTextFont
         ColorPickerButton.Text = ""
-        ColorPickerButton.TextColor3 = Color3.new(255, 255, 255)
+        ColorPickerButton.TextColor3 = Library.Colors.Text
         ColorPickerButton.TextSize = Library.Settings.MainTextSize
+
+        local ColorPickerButtonCorner = Instance.new("UICorner")
+        ColorPickerButtonCorner.CornerRadius = UDim.new(0, 4)
+        ColorPickerButtonCorner.Parent = ColorPickerButton
 
         local Red, Green, Blue = ColorPickerButton.BackgroundColor3.r * 255, ColorPickerButton.BackgroundColor3.g * 255, ColorPickerButton.BackgroundColor3.b * 255;
 
@@ -447,8 +496,12 @@ function Library:CreateTab(tabtitle, tabdescription)
         ColorPickerMain.BorderColor3 = Library.Colors.Border
         ColorPickerMain.BorderSizePixel = 0
         ColorPickerMain.ClipsDescendants = true
-        ColorPickerMain.Position = UDim2.new(0.995000005, 1, 0.116666667, 0)
+        ColorPickerMain.Position = UDim2.new(1, -230, 1, 0)
         ColorPickerMain.Size = UDim2.new(0, 200, 0, 0)
+
+        local ColorPickerMainCorner = Instance.new("UICorner")
+        ColorPickerMainCorner.CornerRadius = UDim.new(0, 6)
+        ColorPickerMainCorner.Parent = ColorPickerMain
 
         ColorPallete.Name = "ColorPallete"
         ColorPallete.Parent = ColorPickerMain
@@ -456,10 +509,14 @@ function Library:CreateTab(tabtitle, tabdescription)
         ColorPallete.BackgroundTransparency = 1
         ColorPallete.BorderColor3 = Library.Colors.Border
         ColorPallete.BorderSizePixel = 0
-        ColorPallete.Position = UDim2.new(0, 5, 0, 4)
-        ColorPallete.Size = UDim2.new(0, 149, 0, 151)
+        ColorPallete.Position = UDim2.new(0, 10, 0, 10)
+        ColorPallete.Size = UDim2.new(1, -50, 0, 150)
         ColorPallete.ZIndex = 2
         ColorPallete.Image = "rbxassetid://4477380641"
+
+        local ColorPalleteCorner = Instance.new("UICorner")
+        ColorPalleteCorner.CornerRadius = UDim.new(0, 4)
+        ColorPalleteCorner.Parent = ColorPallete
 
         ColorPalleteMarker.Name = "ColorPalleteMarker"
         ColorPalleteMarker.Parent = ColorPallete
@@ -468,22 +525,26 @@ function Library:CreateTab(tabtitle, tabdescription)
         ColorPalleteMarker.BorderColor3 = Library.Colors.Border
         ColorPalleteMarker.BorderSizePixel = 0
         ColorPalleteMarker.Position = UDim2.new(colorpickerpresetcolor and select(1, Color3.toHSV(colorpickerpresetcolor)) or 0, 0, colorpickerpresetcolor and 1 - select(2, Color3.toHSV(colorpickerpresetcolor)) or 0, 0)
-        ColorPalleteMarker.Size = UDim2.new(0, 0, 0.200000003, 0)
-        ColorPalleteMarker.ZIndex = 2
+        ColorPalleteMarker.Size = UDim2.new(0, 20, 0, 20)
+        ColorPalleteMarker.ZIndex = 3
         ColorPalleteMarker.Image = "rbxassetid://4409133510"
         ColorPalleteMarker.ScaleType = Enum.ScaleType.Crop
 
         ColorBrightness.Name = "ColorBrightness"
         ColorBrightness.Parent = ColorPickerMain
-        ColorBrightness.AnchorPoint = Vector2.new(1, 0)
+        ColorBrightness.AnchorPoint = Vector2.new(0, 0)
         ColorBrightness.BackgroundColor3 = Library.Colors.Border
         ColorBrightness.BorderColor3 = Library.Colors.Border
         ColorBrightness.BorderSizePixel = 0
-        ColorBrightness.Position = UDim2.new(0, 195, 0, 4)
-        ColorBrightness.Size = UDim2.new(0, 34, 0, 151)
+        ColorBrightness.Position = UDim2.new(1, -30, 0, 10)
+        ColorBrightness.Size = UDim2.new(0, 20, 0, 150)
         ColorBrightness.ZIndex = 2
         ColorBrightness.Image = "rbxassetid://4477380092"
         ColorBrightness.ScaleType = Enum.ScaleType.Crop
+
+        local ColorBrightnessCorner = Instance.new("UICorner")
+        ColorBrightnessCorner.CornerRadius = UDim.new(0, 4)
+        ColorBrightnessCorner.Parent = ColorBrightness
 
         ColorBrightnessMarker.Name = "ColorBrightnessMarker"
         ColorBrightnessMarker.Parent = ColorBrightness
@@ -491,9 +552,9 @@ function Library:CreateTab(tabtitle, tabdescription)
         ColorBrightnessMarker.BackgroundColor3 = Library.Colors.ColorPickerMarker
         ColorBrightnessMarker.BorderColor3 = Library.Colors.Border
         ColorBrightnessMarker.BorderSizePixel = 0
-        ColorBrightnessMarker.Position = UDim2.new(0, 0, 0.013245035, 0)
-        ColorBrightnessMarker.Size = UDim2.new(1, 0, 0.0280000009, 0)
-        ColorBrightnessMarker.ZIndex = 2
+        ColorBrightnessMarker.Position = UDim2.new(0, 0, 0.5, 0)
+        ColorBrightnessMarker.Size = UDim2.new(1, 0, 0, 5)
+        ColorBrightnessMarker.ZIndex = 3
 
         ColorRed.Name = "ColorRed"
         ColorRed.Parent = ColorPickerMain
@@ -501,11 +562,11 @@ function Library:CreateTab(tabtitle, tabdescription)
         ColorRed.BackgroundTransparency = 1
         ColorRed.BorderColor3 = Library.Colors.Border
         ColorRed.BorderSizePixel = 0
-        ColorRed.Position = UDim2.new(0, 5, 0, 155)
-        ColorRed.Size = UDim2.new(0, 55, 0, 20)
+        ColorRed.Position = UDim2.new(0, 10, 0, 165)
+        ColorRed.Size = UDim2.new(0, 60, 0, 20)
         ColorRed.Font = Library.Settings.MainTextFont
         ColorRed.Text = ("R: " .. math.floor(Red))
-        ColorRed.TextColor3 = Color3.new(1, 1, 1)
+        ColorRed.TextColor3 = Library.Colors.Text
         ColorRed.TextSize = Library.Settings.MainTextSize
         ColorRed.TextXAlignment = Enum.TextXAlignment.Left
 
@@ -515,11 +576,11 @@ function Library:CreateTab(tabtitle, tabdescription)
         ColorGreen.BackgroundTransparency = 1
         ColorGreen.BorderColor3 = Library.Colors.Border
         ColorGreen.BorderSizePixel = 0
-        ColorGreen.Position = UDim2.new(0, 72, 0, 155)
-        ColorGreen.Size = UDim2.new(0, 55, 0, 20)
+        ColorGreen.Position = UDim2.new(0, 75, 0, 165)
+        ColorGreen.Size = UDim2.new(0, 60, 0, 20)
         ColorGreen.Font = Library.Settings.MainTextFont
         ColorGreen.Text = ("G: " .. math.floor(Green))
-        ColorGreen.TextColor3 = Color3.new(1, 1, 1)
+        ColorGreen.TextColor3 = Library.Colors.Text
         ColorGreen.TextSize = Library.Settings.MainTextSize
         ColorGreen.TextXAlignment = Enum.TextXAlignment.Left
 
@@ -529,20 +590,19 @@ function Library:CreateTab(tabtitle, tabdescription)
         ColorBlue.BackgroundTransparency = 1
         ColorBlue.BorderColor3 = Library.Colors.Border
         ColorBlue.BorderSizePixel = 0
-        ColorBlue.Position = UDim2.new(0, 145, 0, 155)
-        ColorBlue.Size = UDim2.new(0, 55, 0, 20)
+        ColorBlue.Position = UDim2.new(0, 140, 0, 165)
+        ColorBlue.Size = UDim2.new(0, 60, 0, 20)
         ColorBlue.Font = Library.Settings.MainTextFont
         ColorBlue.Text = ("B: " .. math.floor(Blue))
-        ColorBlue.TextColor3 = Color3.new(1, 1, 1)
+        ColorBlue.TextColor3 = Library.Colors.Text
         ColorBlue.TextSize = Library.Settings.MainTextSize
         ColorBlue.TextXAlignment = Enum.TextXAlignment.Left
 
         ColorPickerButton.MouseButton1Click:Connect(function()
             if not ColorPickerMainOpen then
-                TabNameBody.ClipsDescendants = false
                 ColorPickerMainOpen = true
 
-                TweenService:Create(ColorPickerMain, TweenInfo.new(Library.Settings.ColorPickerTweenTime, Library.Settings.TweenEasingStyle, Enum.EasingDirection.Out), {Size = UDim2.new(0, 200, 0, 175)}):Play()
+                TweenService:Create(ColorPickerMain, TweenInfo.new(Library.Settings.ColorPickerTweenTime, Library.Settings.TweenEasingStyle, Enum.EasingDirection.Out), {Size = UDim2.new(0, 200, 0, 200)}):Play()
             elseif ColorPickerMainOpen then
                 ColorPickerMainOpen = false
                 HSD = false
@@ -551,6 +611,18 @@ function Library:CreateTab(tabtitle, tabdescription)
                 TweenService:Create(ColorPickerMain, TweenInfo.new(Library.Settings.ColorPickerTweenTime, Library.Settings.TweenEasingStyle, Enum.EasingDirection.Out), {Size = UDim2.new(0, 200, 0, 0)}):Play()
             end
         end)
+
+        local function updateColor(hue, saturation, value)
+            local newColor = Color3.fromHSV(hue, saturation, value)
+            ColorPickerButton.BackgroundColor3 = newColor
+
+            Red, Green, Blue = newColor.r * 255, newColor.g * 255, newColor.b * 255;
+            ColorRed.Text = ("R: " .. math.floor(Red))
+            ColorGreen.Text = ("G: " .. math.floor(Green))
+            ColorBlue.Text = ("B: " .. math.floor(Blue))
+
+            action(newColor)
+        end
 
         ColorPallete.InputBegan:Connect(function(input)
             if input.UserInputType == Enum.UserInputType.MouseButton1 then
@@ -577,48 +649,49 @@ function Library:CreateTab(tabtitle, tabdescription)
         end)
 
         game:GetService("UserInputService").InputChanged:Connect(function(input)
-            if HSD and input.UserInputType == Enum.UserInputType.MouseMovement then
-                Red, Green, Blue = ColorPickerButton.BackgroundColor3.r * 255, ColorPickerButton.BackgroundColor3.g * 255, ColorPickerButton.BackgroundColor3.b * 255;
+            if input.UserInputType == Enum.UserInputType.MouseMovement then
+                local currentHue, currentSaturation, currentValue = Color3.toHSV(ColorPickerButton.BackgroundColor3)
 
-                ColorRed.Text = ("R: " .. math.floor(Red))
-                ColorGreen.Text = ("G: " .. math.floor(Green))
-                ColorBlue.Text = ("B: " .. math.floor(Blue))
+                if HSD then
+                    local palletePos = ColorPallete.AbsolutePosition
+                    local palleteSize = ColorPallete.AbsoluteSize
+                    local relativePos = input.Position - palletePos
+                    local clampedX = math.clamp(relativePos.X / palleteSize.X, 0, 1)
+                    local clampedY = math.clamp(relativePos.Y / palleteSize.Y, 0, 1)
 
-                ColorPalleteMarker.Position = UDim2.new(math.clamp((input.Position.X - ColorPallete.AbsolutePosition.X) / ColorPallete.AbsoluteSize.X, 0, 1), 0, math.clamp((input.Position.Y - ColorPallete.AbsolutePosition.Y) / ColorPallete.AbsoluteSize.Y, 0, 1), 0)
+                    ColorPalleteMarker.Position = UDim2.new(clampedX, 0, clampedY, 0)
 
-                ColorPickerButton.BackgroundColor3 = Color3.fromHSV(ColorPalleteMarker.Position.X.Scale, 1 - ColorPalleteMarker.Position.Y.Scale, 1 - ColorBrightnessMarker.Position.Y.Scale)
+                    updateColor(clampedX, 1 - clampedY, currentValue)
 
-                action(ColorPickerButton.BackgroundColor3)
-            elseif VD and input.UserInputType == Enum.UserInputType.MouseMovement then
-                Red, Green, Blue = ColorPickerButton.BackgroundColor3.r * 255, ColorPickerButton.BackgroundColor3.g * 255, ColorPickerButton.BackgroundColor3.b * 255;
+                elseif VD then
+                    local brightnessPos = ColorBrightness.AbsolutePosition
+                    local brightnessSize = ColorBrightness.AbsoluteSize
+                    local relativePos = input.Position - brightnessPos
+                    local clampedY = math.clamp(relativePos.Y / brightnessSize.Y, 0, 1)
 
-                ColorRed.Text = ("R: " .. math.floor(Red))
-                ColorGreen.Text = ("G: " .. math.floor(Green))
-                ColorBlue.Text = ("B: " .. math.floor(Blue))
+                    ColorBrightnessMarker.Position = UDim2.new(0, 0, clampedY, 0)
 
-                ColorBrightnessMarker.Position = UDim2.new(0, 0, math.clamp((input.Position.Y - ColorBrightness.AbsolutePosition.Y) / ColorBrightness.AbsoluteSize.Y, 0, 1), 0)
-
-                ColorPickerButton.BackgroundColor3 = Color3.fromHSV(ColorPalleteMarker.Position.X.Scale, 1 - ColorPalleteMarker.Position.Y.Scale, 1 - ColorBrightnessMarker.Position.Y.Scale)
-
-                action(ColorPickerButton.BackgroundColor3)
+                    updateColor(currentHue, currentSaturation, 1 - clampedY)
+                end
             end
         end)
 
         TabName.MouseButton1Down:Connect(function()
             if not IsATabOpen then
-                ExtendBodySize(30)
+                ExtendBodySize(30 + BodyLayout.Padding.Offset)
 
+                TweenService:Create(ColorPickerHolder, TweenInfo.new(Library.Settings.MainTweenTime, Library.Settings.TweenEasingStyle, Enum.EasingDirection.Out), {BackgroundTransparency = 0}):Play()
                 TweenService:Create(ColorPickerTitleText, TweenInfo.new(Library.Settings.MainTweenTime, Library.Settings.TweenEasingStyle, Enum.EasingDirection.Out), {TextTransparency = 0}):Play()
                 TweenService:Create(ColorPickerButton, TweenInfo.new(Library.Settings.MainTweenTime, Library.Settings.TweenEasingStyle, Enum.EasingDirection.Out), {BackgroundTransparency = 0}):Play()
             elseif IsATabOpen then
-                UnExtendBodySize(30)
+                UnExtendBodySize(30 + BodyLayout.Padding.Offset)
 
                 ColorPickerMainOpen = false
                 HSD = false
                 VD = false
-                TabNameBody.ClipsDescendants = true
 
                 TweenService:Create(ColorPickerMain, TweenInfo.new(Library.Settings.ColorPickerTweenTime, Library.Settings.TweenEasingStyle, Enum.EasingDirection.Out), {Size = UDim2.new(0, 200, 0, 0)}):Play()
+                TweenService:Create(ColorPickerHolder, TweenInfo.new(Library.Settings.MainTweenTime, Library.Settings.TweenEasingStyle, Enum.EasingDirection.Out), {BackgroundTransparency = 1}):Play()
                 TweenService:Create(ColorPickerTitleText, TweenInfo.new(Library.Settings.MainTweenTime, Library.Settings.TweenEasingStyle, Enum.EasingDirection.Out), {TextTransparency = 1}):Play()
                 TweenService:Create(ColorPickerButton, TweenInfo.new(Library.Settings.MainTweenTime, Library.Settings.TweenEasingStyle, Enum.EasingDirection.Out), {BackgroundTransparency = 1}):Play()
             end
@@ -641,7 +714,11 @@ function Library:CreateTab(tabtitle, tabdescription)
         SliderHolder.BackgroundTransparency = 1
         SliderHolder.BorderColor3 = Library.Colors.Border
         SliderHolder.BorderSizePixel = 0
-        SliderHolder.Size = UDim2.new(0, 200, 0, 35)
+        SliderHolder.Size = UDim2.new(1, 0, 0, 35)
+
+        local SliderHolderCorner = Instance.new("UICorner")
+        SliderHolderCorner.CornerRadius = UDim.new(0, 4)
+        SliderHolderCorner.Parent = SliderHolder
 
         SliderBackground.Name = (slidername .. "SliderBackground")
         SliderBackground.Parent = SliderHolder
@@ -649,16 +726,16 @@ function Library:CreateTab(tabtitle, tabdescription)
         SliderBackground.BorderColor3 = Library.Colors.Border
         SliderBackground.BorderSizePixel = 0
         SliderBackground.ClipsDescendants = true
-        SliderBackground.Position = UDim2.new(0.0450000018, 0, 0.646000028, 0)
-        SliderBackground.Size = UDim2.new(0, 182, 0, 5)
+        SliderBackground.Position = UDim2.new(0.04, 0, 0.6, 0)
+        SliderBackground.Size = UDim2.new(0.92, 0, 0, 5)
 
         SlidingSlider.Name = (slidername .. "SlidingSlider")
         SlidingSlider.Parent = SliderBackground
         SlidingSlider.BackgroundColor3 = Library.Colors.Slider
         SlidingSlider.BorderColor3 = Library.Colors.Border
         SlidingSlider.BorderSizePixel = 0
-        SlidingSlider.Position = UDim2.new(-0.00445053587, 0, 0, 0)
-        SlidingSlider.Size = UDim2.new((startvalue or 0) / maximumvalue, 0, 0, 5)
+        SlidingSlider.Position = UDim2.new(0, 0, 0, 0)
+        SlidingSlider.Size = UDim2.new((startvalue or 0) / maximumvalue, 0, 1, 0)
 
         SliderTitleText.Name = (slidername .. "SliderTitleText")
         SliderTitleText.Parent = SliderHolder
@@ -666,8 +743,8 @@ function Library:CreateTab(tabtitle, tabdescription)
         SliderTitleText.BackgroundTransparency = 1
         SliderTitleText.BorderColor3 = Library.Colors.Border
         SliderTitleText.BorderSizePixel = 0
-        SliderTitleText.Position = UDim2.new(0.0350000001, 0, 0.112999983, 0)
-        SliderTitleText.Size = UDim2.new(0, 146, 0, 14)
+        SliderTitleText.Position = UDim2.new(0.04, 0, 0.1, 0)
+        SliderTitleText.Size = UDim2.new(0.7, 0, 0, 14)
         SliderTitleText.Font = Library.Settings.MainTextFont
         SliderTitleText.Text = slidername
         SliderTitleText.TextColor3 = Library.Colors.Text
@@ -680,8 +757,8 @@ function Library:CreateTab(tabtitle, tabdescription)
         SliderValueText.BackgroundTransparency = 1
         SliderValueText.BorderColor3 = Library.Colors.Border
         SliderValueText.BorderSizePixel = 0
-        SliderValueText.Position = UDim2.new(0.829999983, 0, 0.11300005, 0)
-        SliderValueText.Size = UDim2.new(0, 25, 0, 14)
+        SliderValueText.Position = UDim2.new(1, -50, 0.1, 0)
+        SliderValueText.Size = UDim2.new(0, 40, 0, 14)
         SliderValueText.Font = Library.Settings.MainTextFont
         SliderValueText.Text = tostring(startvalue or PreciseSliderValue and tonumber(string.format("%.2f", startvalue)))
         SliderValueText.TextColor3 = Library.Colors.Text
@@ -689,14 +766,11 @@ function Library:CreateTab(tabtitle, tabdescription)
         SliderValueText.TextXAlignment = Enum.TextXAlignment.Right
 
         local function Sliding(input)
-            local Pos = UDim2.new(math.clamp((input.Position.X - SliderBackground.AbsolutePosition.X) / SliderBackground.AbsoluteSize.X, 0, 1), 0, 1, 0)
-            SlidingSlider.Size = Pos
+            local Pos = UDim2.new(math.clamp((input.Position.X - SliderBackground.AbsolutePosition.X) / SliderBackground.AbsoluteSize.X, 0, 1), 0, 0, 0)
+            SlidingSlider.Size = UDim2.new(Pos.X.Scale, 0, 1, 0)
 
-            local NonSliderPreciseValue = math.floor(((Pos.X.Scale * maximumvalue) / maximumvalue) * (maximumvalue - minimumvalue) + minimumvalue)
-            local SliderPreciseValue = ((Pos.X.Scale * maximumvalue) / maximumvalue) * (maximumvalue - minimumvalue) + minimumvalue
-
-            local Value = (PreciseSliderValue and SliderPreciseValue or NonSliderPreciseValue)
-            Value = tonumber(string.format("%.2f", Value))
+            local rawValue = Pos.X.Scale * (maximumvalue - minimumvalue) + minimumvalue
+            local Value = PreciseSliderValue and tonumber(string.format("%.2f", rawValue)) or math.floor(rawValue)
 
 			SliderValueText.Text = tostring(Value)
 			action(Value)
@@ -705,6 +779,7 @@ function Library:CreateTab(tabtitle, tabdescription)
 		SliderBackground.InputBegan:Connect(function(input)
 			if input.UserInputType == Enum.UserInputType.MouseButton1 then
 				Dragging = true
+                Sliding(input)
 			end
 		end)
 		
@@ -714,12 +789,6 @@ function Library:CreateTab(tabtitle, tabdescription)
 			end
         end)
 		
-		SliderBackground.InputBegan:Connect(function(input)
-			if input.UserInputType == Enum.UserInputType.MouseButton1 then
-				Sliding(input)
-			end
-		end)
-	
 		game:GetService("UserInputService").InputChanged:Connect(function(input)
 			if Dragging and input.UserInputType == Enum.UserInputType.MouseMovement then
 				Sliding(input)
@@ -728,15 +797,17 @@ function Library:CreateTab(tabtitle, tabdescription)
         
         TabName.MouseButton1Down:Connect(function()
             if not IsATabOpen then
-                ExtendBodySize(35)
+                ExtendBodySize(35 + BodyLayout.Padding.Offset)
 
+                TweenService:Create(SliderHolder, TweenInfo.new(Library.Settings.MainTweenTime, Library.Settings.TweenEasingStyle, Enum.EasingDirection.Out), {BackgroundTransparency = 0}):Play()
                 TweenService:Create(SliderTitleText, TweenInfo.new(Library.Settings.MainTweenTime, Library.Settings.TweenEasingStyle, Enum.EasingDirection.Out), {TextTransparency = 0}):Play()
                 TweenService:Create(SliderValueText, TweenInfo.new(Library.Settings.MainTweenTime, Library.Settings.TweenEasingStyle, Enum.EasingDirection.Out), {TextTransparency = 0}):Play()
                 TweenService:Create(SliderBackground, TweenInfo.new(Library.Settings.MainTweenTime, Library.Settings.TweenEasingStyle, Enum.EasingDirection.Out), {BackgroundTransparency = 0}):Play()
                 TweenService:Create(SlidingSlider, TweenInfo.new(Library.Settings.MainTweenTime, Library.Settings.TweenEasingStyle, Enum.EasingDirection.Out), {BackgroundTransparency = 0}):Play()
             elseif IsATabOpen then
-                UnExtendBodySize(35)
+                UnExtendBodySize(35 + BodyLayout.Padding.Offset)
 
+                TweenService:Create(SliderHolder, TweenInfo.new(Library.Settings.MainTweenTime, Library.Settings.TweenEasingStyle, Enum.EasingDirection.Out), {BackgroundTransparency = 1}):Play()
                 TweenService:Create(SliderTitleText, TweenInfo.new(Library.Settings.MainTweenTime, Library.Settings.TweenEasingStyle, Enum.EasingDirection.Out), {TextTransparency = 1}):Play()
                 TweenService:Create(SliderValueText, TweenInfo.new(Library.Settings.MainTweenTime, Library.Settings.TweenEasingStyle, Enum.EasingDirection.Out), {TextTransparency = 1}):Play()
                 TweenService:Create(SliderBackground, TweenInfo.new(Library.Settings.MainTweenTime, Library.Settings.TweenEasingStyle, Enum.EasingDirection.Out), {BackgroundTransparency = 1}):Play()
@@ -761,45 +832,60 @@ function Library:CreateTab(tabtitle, tabdescription)
         DropdownHolder.BackgroundTransparency = 1
         DropdownHolder.BorderColor3 = Library.Colors.Border
         DropdownHolder.BorderSizePixel = 0
-        DropdownHolder.Size = UDim2.new(0, 200, 0, 30)
+        DropdownHolder.Size = UDim2.new(1, 0, 0, 30)
+
+        local DropdownHolderCorner = Instance.new("UICorner")
+        DropdownHolderCorner.CornerRadius = UDim.new(0, 4)
+        DropdownHolderCorner.Parent = DropdownHolder
 
         SelectedOption.Name = (dropdownname .. "SelectedOption")
         SelectedOption.Parent = DropdownHolder
         SelectedOption.BackgroundColor3 = Library.Colors.Dropdown
         SelectedOption.BorderColor3 = Library.Colors.Border
         SelectedOption.BorderSizePixel = 0
-        SelectedOption.Size = UDim2.new(0, 200, 0, 30)
+        SelectedOption.Size = UDim2.new(1, 0, 1, 0)
         SelectedOption.Font = Library.Settings.MainTextFont
-        SelectedOption.Text = dropdownlistoptions[dropdownlistpresetnumber]
+        SelectedOption.Text = "   " .. dropdownlistoptions[dropdownlistpresetnumber]
         SelectedOption.TextColor3 = Library.Colors.Text
         SelectedOption.TextSize = Library.Settings.MainTextSize
+        SelectedOption.TextXAlignment = Enum.TextXAlignment.Left
+
+        local SelectedOptionCorner = Instance.new("UICorner")
+        SelectedOptionCorner.CornerRadius = UDim.new(0, 4)
+        SelectedOptionCorner.Parent = SelectedOption
 
         DropdownButton.Name = (dropdownname .. "DropdownButton")
-        DropdownButton.Parent = DropdownHolder
+        DropdownButton.Parent = SelectedOption
         DropdownButton.BackgroundColor3 = Library.Colors.Border
         DropdownButton.BackgroundTransparency = 1
         DropdownButton.BorderColor3 = Library.Colors.Border
         DropdownButton.BorderSizePixel = 0
-        DropdownButton.Position = UDim2.new(0.829999983, 0, 0, 0)
-        DropdownButton.Size = UDim2.new(0, 34, 0, 30)
+        DropdownButton.Position = UDim2.new(1, -30, 0, 0)
+        DropdownButton.Size = UDim2.new(0, 30, 1, 0)
         DropdownButton.ZIndex = 2
         DropdownButton.Font = Library.Settings.MainTextFont
         DropdownButton.Text = "v"
         DropdownButton.TextColor3 = Library.Colors.Text
         DropdownButton.TextSize = Library.Settings.MainTextSize
+        DropdownButton.Rotation = 0
 
         DropdownMain.Name = (dropdownname .. "DropdownMain")
         DropdownMain.Parent = DropdownHolder
-        DropdownMain.BackgroundColor3 = Color3.new(0.137255, 0.137255, 0.137255)
+        DropdownMain.BackgroundColor3 = Library.Colors.Dropdown
         DropdownMain.BorderColor3 = Library.Colors.Border
         DropdownMain.BorderSizePixel = 0
         DropdownMain.ClipsDescendants = true
-        DropdownMain.Position = UDim2.new(0.995000005, 1, -0.0166666675, 0)
-        DropdownMain.Size = UDim2.new(0, 185, 0, DropdownYSize)
+        DropdownMain.Position = UDim2.new(0, 0, 1, 0)
+        DropdownMain.Size = UDim2.new(1, 0, 0, DropdownYSize)
+
+        local DropdownMainCorner = Instance.new("UICorner")
+        DropdownMainCorner.CornerRadius = UDim.new(0, 6)
+        DropdownMainCorner.Parent = DropdownMain
 
         SelectionOrganizer.Name = (dropdownname .. "SelectionOrganizer")
         SelectionOrganizer.Parent = DropdownMain
         SelectionOrganizer.SortOrder = Enum.SortOrder.LayoutOrder
+        SelectionOrganizer.Padding = UDim.new(0, 2)
 
         for i, v in pairs(dropdownlistoptions) do
             local DropdownListOptionButton = Instance.new("TextButton")
@@ -809,14 +895,19 @@ function Library:CreateTab(tabtitle, tabdescription)
             DropdownListOptionButton.BackgroundColor3 = Library.Colors.DropdownButton
             DropdownListOptionButton.BorderColor3 = Library.Colors.Border
             DropdownListOptionButton.BorderSizePixel = 0
-            DropdownListOptionButton.Size = UDim2.new(0, 185, 0, 30)
+            DropdownListOptionButton.Size = UDim2.new(1, 0, 0, 30)
             DropdownListOptionButton.AutoButtonColor = false
             DropdownListOptionButton.Font = Library.Settings.MainTextFont
-            DropdownListOptionButton.Text = v;
+            DropdownListOptionButton.Text = "   " .. v;
             DropdownListOptionButton.TextColor3 = Library.Colors.Text
             DropdownListOptionButton.TextSize = Library.Settings.MainTextSize
+            DropdownListOptionButton.TextXAlignment = Enum.TextXAlignment.Left
 
-            DropdownYSize = DropdownYSize + 30
+            local DropdownListOptionButtonCorner = Instance.new("UICorner")
+            DropdownListOptionButtonCorner.CornerRadius = UDim.new(0, 4)
+            DropdownListOptionButtonCorner.Parent = DropdownListOptionButton
+
+            DropdownYSize = DropdownYSize + 30 + SelectionOrganizer.Padding.Offset
 
             DropdownListOptionButton.InputBegan:Connect(function(input)
                 if input.UserInputType == Enum.UserInputType.MouseMovement then
@@ -833,9 +924,9 @@ function Library:CreateTab(tabtitle, tabdescription)
             DropdownListOptionButton.MouseButton1Click:Connect(function()
                 action(v)
 
-                SelectedOption.Text = v;
+                SelectedOption.Text = "   " .. v;
                 
-                TweenService:Create(DropdownMain, TweenInfo.new(Library.Settings.DropdownTweenTime, Library.Settings.TweenEasingStyle, Enum.EasingDirection.Out), {Size = UDim2.new(0, 185, 0, 0)}):Play()
+                TweenService:Create(DropdownMain, TweenInfo.new(Library.Settings.DropdownTweenTime, Library.Settings.TweenEasingStyle, Enum.EasingDirection.Out), {Size = UDim2.new(1, 0, 0, 0)}):Play()
                 TweenService:Create(DropdownButton, TweenInfo.new(Library.Settings.DropdownTweenTime, Library.Settings.TweenEasingStyle, Enum.EasingDirection.Out), {Rotation = 0}):Play()
                 TweenService:Create(SelectedOption, TweenInfo.new(Library.Settings.DropdownTweenTime, Library.Settings.TweenEasingStyle, Enum.EasingDirection.Out), {TextColor3 = Library.Colors.Text}):Play()
     
@@ -845,16 +936,14 @@ function Library:CreateTab(tabtitle, tabdescription)
 
         DropdownButton.MouseButton1Click:Connect(function()
             if IsDropdownOpen then
-                TweenService:Create(DropdownMain, TweenInfo.new(Library.Settings.DropdownTweenTime, Library.Settings.TweenEasingStyle, Enum.EasingDirection.Out), {Size = UDim2.new(0, 185, 0, 0)}):Play()
+                TweenService:Create(DropdownMain, TweenInfo.new(Library.Settings.DropdownTweenTime, Library.Settings.TweenEasingStyle, Enum.EasingDirection.Out), {Size = UDim2.new(1, 0, 0, 0)}):Play()
                 TweenService:Create(DropdownButton, TweenInfo.new(Library.Settings.DropdownTweenTime, Library.Settings.TweenEasingStyle, Enum.EasingDirection.Out), {Rotation = 0}):Play()
                 TweenService:Create(SelectedOption, TweenInfo.new(Library.Settings.DropdownTweenTime, Library.Settings.TweenEasingStyle, Enum.EasingDirection.Out), {TextColor3 = Library.Colors.Text}):Play()
     
                 IsDropdownOpen = false
             elseif not IsDropdownOpen then
-                TabNameBody.ClipsDescendants = false
-
-                TweenService:Create(DropdownMain, TweenInfo.new(Library.Settings.DropdownTweenTime, Library.Settings.TweenEasingStyle, Enum.EasingDirection.Out), {Size = UDim2.new(0, 185, 0, DropdownYSize)}):Play()
-                TweenService:Create(DropdownButton, TweenInfo.new(Library.Settings.DropdownTweenTime, Library.Settings.TweenEasingStyle, Enum.EasingDirection.Out), {Rotation = -90}):Play()
+                TweenService:Create(DropdownMain, TweenInfo.new(Library.Settings.DropdownTweenTime, Library.Settings.TweenEasingStyle, Enum.EasingDirection.Out), {Size = UDim2.new(1, 0, 0, DropdownYSize)}):Play()
+                TweenService:Create(DropdownButton, TweenInfo.new(Library.Settings.DropdownTweenTime, Library.Settings.TweenEasingStyle, Enum.EasingDirection.Out), {Rotation = -180}):Play()
                 TweenService:Create(SelectedOption, TweenInfo.new(Library.Settings.DropdownTweenTime, Library.Settings.TweenEasingStyle, Enum.EasingDirection.Out), {TextColor3 = Color3.fromRGB(150, 150, 150)}):Play() 
     
                 IsDropdownOpen = true   
@@ -863,20 +952,21 @@ function Library:CreateTab(tabtitle, tabdescription)
 
         TabName.MouseButton1Down:Connect(function()
             if not IsATabOpen then
-                ExtendBodySize(30)
+                ExtendBodySize(30 + BodyLayout.Padding.Offset)
 
+                TweenService:Create(DropdownHolder, TweenInfo.new(Library.Settings.MainTweenTime, Library.Settings.TweenEasingStyle, Enum.EasingDirection.Out), {BackgroundTransparency = 0}):Play()
                 TweenService:Create(SelectedOption, TweenInfo.new(Library.Settings.MainTweenTime, Library.Settings.TweenEasingStyle, Enum.EasingDirection.Out), {TextTransparency = 0}):Play()
                 TweenService:Create(SelectedOption, TweenInfo.new(Library.Settings.MainTweenTime, Library.Settings.TweenEasingStyle, Enum.EasingDirection.Out), {BackgroundTransparency = 0}):Play()
                 TweenService:Create(DropdownButton, TweenInfo.new(Library.Settings.MainTweenTime, Library.Settings.TweenEasingStyle, Enum.EasingDirection.Out), {TextTransparency = 0}):Play()
             elseif IsATabOpen then
-                UnExtendBodySize(30)
+                UnExtendBodySize(30 + BodyLayout.Padding.Offset)
 
-                TabNameBody.ClipsDescendants = true
                 IsDropdownOpen = false
 
-                TweenService:Create(DropdownMain, TweenInfo.new(Library.Settings.DropdownTweenTime, Library.Settings.TweenEasingStyle, Enum.EasingDirection.Out), {Size = UDim2.new(0, 185, 0, 0)}):Play()
+                TweenService:Create(DropdownMain, TweenInfo.new(Library.Settings.DropdownTweenTime, Library.Settings.TweenEasingStyle, Enum.EasingDirection.Out), {Size = UDim2.new(1, 0, 0, 0)}):Play()
                 TweenService:Create(DropdownButton, TweenInfo.new(Library.Settings.DropdownTweenTime, Library.Settings.TweenEasingStyle, Enum.EasingDirection.Out), {Rotation = 0}):Play()
                 TweenService:Create(SelectedOption, TweenInfo.new(Library.Settings.DropdownTweenTime, Library.Settings.TweenEasingStyle, Enum.EasingDirection.Out), {TextColor3 = Library.Colors.Text}):Play()
+                TweenService:Create(DropdownHolder, TweenInfo.new(Library.Settings.MainTweenTime, Library.Settings.TweenEasingStyle, Enum.EasingDirection.Out), {BackgroundTransparency = 1}):Play()
                 TweenService:Create(SelectedOption, TweenInfo.new(Library.Settings.MainTweenTime, Library.Settings.TweenEasingStyle, Enum.EasingDirection.Out), {TextTransparency = 1}):Play()
                 TweenService:Create(SelectedOption, TweenInfo.new(Library.Settings.MainTweenTime, Library.Settings.TweenEasingStyle, Enum.EasingDirection.Out), {BackgroundTransparency = 1}):Play()
                 TweenService:Create(DropdownButton, TweenInfo.new(Library.Settings.MainTweenTime, Library.Settings.TweenEasingStyle, Enum.EasingDirection.Out), {TextTransparency = 1}):Play()
