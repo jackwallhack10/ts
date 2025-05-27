@@ -392,7 +392,7 @@
                     end)
                 end
 
-                function elementHandler:Slider(title,min,max,start,inc,callback)
+                function elementHandler:Slider(title,min,maxValue,start,inc,callback)
                     local slider = Instance.new("Frame")
                     slider.Name = "slider"
                     slider.BackgroundColor3 = Color3.fromRGB(32, 32, 32)
@@ -468,10 +468,10 @@
 
                     local function move(Input)
                         local XSize = math.clamp((Input.Position.X - SliderMain.bar.AbsolutePosition.X) / SliderMain.bar.AbsoluteSize.X, 0, 1)
-                        local Increment = inc and (max / ((max - min) / (inc * 4))) or (max >= 50 and max / ((max - min) / 4)) or (max >= 25 and max / ((max - min) / 2)) or (max / (max - min))
-                        local SizeRounded = UDim2.new((math.round(XSize * ((max / Increment) * 4)) / ((max / Increment) * 4)), 0, 1, 0) 
+                        local Increment = inc and (maxValue / ((maxValue - min) / (inc * 4))) or (maxValue >= 50 and maxValue / ((maxValue - min) / 4)) or (maxValue >= 25 and maxValue / ((maxValue - min) / 2)) or (maxValue / (maxValue - min))
+                        local SizeRounded = UDim2.new((math.round(XSize * ((maxValue / Increment) * 4)) / ((maxValue / Increment) * 4)), 0, 1, 0) 
                         TweenService:Create(progressBar,TweenInfo.new(0.15, Enum.EasingStyle.Quad, Enum.EasingDirection.Out),{Size = SizeRounded}):Play() 
-                        local Val = math.round((((SizeRounded.X.Scale * max) / max) * (max - min) + min) * 20) / 20
+                        local Val = math.round((((SizeRounded.X.Scale * maxValue) / maxValue) * (maxValue - min) + min) * 20) / 20
                         value.Text = tostring(Val)
                         Slider.Value = Val
                         callback(Slider.Value)
@@ -481,9 +481,9 @@
                     game:GetService("UserInputService").InputChanged:Connect(function(input) if dragging and input.UserInputType == Enum.UserInputType.MouseMovement then move(input) end end)
 
                     function Slider:Set(val)
-                        local a = tostring(val and (val / max) * (max - min) + min) or 0
+                        local a = tostring(val and (val / maxValue) * (maxValue - min) + min) or 0
                         value.Text = tostring(a)
-                        progressBar.Size = UDim2.new((val or 0) / max, 0, 1, 0)
+                        progressBar.Size = UDim2.new((val or 0) / maxValue, 0, 1, 0)
                         Slider.Value = val
                         return callback(Slider.Value)
                     end	
