@@ -484,7 +484,7 @@
             while task.wait(0.1) do
                 for _,v in pairs(main:GetChildren()) do
                     if v.Name == "container" then
-                        updateCanvasSize(v, v.section.uIListLayout1, v.section.uIPadding)
+                        updateCanvasSize(v, v.uIListLayout, v.uIPadding)
                     end
                 end
             end
