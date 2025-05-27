@@ -651,6 +651,83 @@
                         end
                     end)
                 end
+
+                function elementHandler:ColorPicker(title, callback)
+                    title = title or "ColorPicker"
+                    callback = callback or function() end
+
+                    local colorPicker = Instance.new("TextButton")
+                    colorPicker.Name = "colorPicker"
+                    colorPicker.Font = Enum.Font.SourceSans
+                    colorPicker.Text = ""
+                    colorPicker.TextColor3 = Color3.fromRGB(0, 0, 0)
+                    colorPicker.TextSize = 14
+                    colorPicker.AutoButtonColor = false
+                    colorPicker.BackgroundColor3 = Color3.fromRGB(32, 32, 32)
+                    colorPicker.LayoutOrder = -1
+                    colorPicker.Size = UDim2.fromOffset(342, 32)
+
+                    local uICorner13 = Instance.new("UICorner")
+                    uICorner13.Name = "uICorner13"
+                    uICorner13.CornerRadius = UDim.new(0, 5)
+                    uICorner13.Parent = colorPicker
+
+                    local title7 = Instance.new("TextLabel")
+                    title7.Name = "title7"
+                    title7.Font = Enum.Font.Gotham
+                    title7.Text = title
+                    title7.TextColor3 = Color3.fromRGB(195, 195, 195)
+                    title7.TextSize = 11
+                    title7.TextXAlignment = Enum.TextXAlignment.Left
+                    title7.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+                    title7.BackgroundTransparency = 1
+                    title7.LayoutOrder = -1
+                    title7.Position = UDim2.fromScale(0.0188, 0.219)
+                    title7.Size = UDim2.fromOffset(83, 18)
+                    title7.Parent = colorPicker
+
+                    local colorDisplay = Instance.new("Frame")
+                    colorDisplay.Name = "colorDisplay"
+                    colorDisplay.BackgroundColor3 = Color3.fromRGB(255, 0, 0)
+                    colorDisplay.Position = UDim2.fromScale(0.912, 0.188)
+                    colorDisplay.Size = UDim2.fromOffset(20, 20)
+
+                    local uICorner14 = Instance.new("UICorner")
+                    uICorner14.Name = "uICorner14"
+                    uICorner14.CornerRadius = UDim.new(0, 5)
+                    uICorner14.Parent = colorDisplay
+
+                    colorDisplay.Parent = colorPicker
+
+                    colorPicker.Parent = section
+
+                    local colors = {
+                        Color3.fromRGB(255, 0, 0),
+                        Color3.fromRGB(0, 255, 0),
+                        Color3.fromRGB(0, 0, 255),
+                        Color3.fromRGB(255, 255, 0),
+                        Color3.fromRGB(0, 255, 255),
+                        Color3.fromRGB(255, 0, 255),
+                        Color3.fromRGB(255, 255, 255),
+                        Color3.fromRGB(0, 0, 0)
+                    }
+                    local currentColorIndex = 1
+
+                    colorPicker.MouseEnter:Connect(function()
+                        game:GetService('TweenService'):Create(colorPicker, TweenInfo.new(0.2), {BackgroundColor3 = Color3.fromRGB(36,36,36)}):Play()
+                    end)
+        
+                    colorPicker.MouseLeave:Connect(function()
+                        game:GetService('TweenService'):Create(colorPicker, TweenInfo.new(0.2), {BackgroundColor3 = Color3.fromRGB(32, 32, 32)}):Play()
+                    end)
+
+                    colorPicker.MouseButton1Click:Connect(function()
+                        currentColorIndex = currentColorIndex % #colors + 1
+                        local selectedColor = colors[currentColorIndex]
+                        colorDisplay.BackgroundColor3 = selectedColor
+                        callback(selectedColor)
+                    end)
+                end
                 
                 function elementHandler:Dropdown(text,list,def,callback)
                     local dropdown = Instance.new("Frame")
@@ -966,4 +1043,7 @@
         return tabHandler
     end
 
-    return Library
+    return {Library = Library, TitleLabel = title}
+end
+
+return Library
