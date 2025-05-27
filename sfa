@@ -11,110 +11,139 @@ local Players = game:GetService("Players")
 local LocalPlayer = Players.LocalPlayer
 local Mouse = LocalPlayer:GetMouse()
 
-function Library:Create(table)
-    local main = Instance.new("Frame")
-    main.Name = "main"
-    main.BackgroundColor3 = Color3.fromRGB(24, 24, 24)
-    main.Position = UDim2.fromScale(0.321, 0.341)
-    main.Size = UDim2.fromOffset(400, 300)
-    main.AnchorPoint = Vector2.new(0.5, 0.5)
-
-    local uICorner = Instance.new("UICorner")
-    uICorner.Name = "uICorner"
-    uICorner.CornerRadius = UDim.new(0, 8)
-    uICorner.Parent = main
-
-    local topBar = Instance.new("Frame")
-    topBar.Name = "topBar"
-    topBar.BackgroundColor3 = Color3.fromRGB(28, 28, 28)
-    topBar.Size = UDim2.fromOffset(400, 40)
-
-    local uICorner1 = Instance.new("UICorner")
-    uICorner1.Name = "uICorner1"
-    uICorner1.CornerRadius = UDim.new(0, 8)
-    uICorner1.Parent = topBar
-
-    local title = Instance.new("TextLabel")
-    title.Name = "title"
-    title.Font = Enum.Font.GothamBold
-    title.Text = table.Name
-    title.TextColor3 = Color3.fromRGB(255, 255, 255)
-    title.TextSize = 14
-    title.TextXAlignment = Enum.TextXAlignment.Left
-    title.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
-    title.BackgroundTransparency = 1
-    title.Position = UDim2.fromScale(0.04, 0.25)
-    title.Size = UDim2.fromOffset(200, 20)
-    title.Parent = topBar
-
-    local close = Instance.new("ImageButton")
-    close.Name = "close"
-    close.Image = "rbxassetid://6031094678"
-    close.ImageColor3 = Color3.fromRGB(126, 126, 126)
-    close.ScaleType = Enum.ScaleType.Fit
-    close.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
-    close.BackgroundTransparency = 1
-    close.Position = UDim2.fromScale(0.93, 0.25)
-    close.Size = UDim2.fromOffset(20, 20)
-    close.Parent = topBar
-
-    topBar.Parent = main
-
-    local container = Instance.new("ScrollingFrame")
-    container.Name = "container"
-    container.ScrollBarImageColor3 = Color3.fromRGB(53, 53, 53)
-    container.ScrollBarThickness = 3
-    container.Active = true
-    container.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
-    container.BackgroundTransparency = 1
-    container.BorderSizePixel = 0
-    container.Position = UDim2.fromScale(0, 0.133)
-    container.Size = UDim2.fromOffset(400, 260)
-    container.ZIndex = -1
-
-    local uIListLayout = Instance.new("UIListLayout")
-    uIListLayout.Name = "uIListLayout"
-    uIListLayout.Padding = UDim.new(0, 6)
-    uIListLayout.SortOrder = Enum.SortOrder.LayoutOrder
-    uIListLayout.Parent = container
-
-    local uIPadding = Instance.new("UIPadding")
-    uIPadding.Name = "uIPadding"
-    uIPadding.PaddingLeft = UDim.new(0, 10)
-    uIPadding.PaddingRight = UDim.new(0, 10)
-    uIPadding.PaddingTop = UDim.new(0, 10)
-    uIPadding.Parent = container
-
-    container.Parent = main
-    main.Parent = arizon
-
-    --// Close events
-    close.MouseEnter:Connect(function()
-        game:GetService('TweenService'):Create(close, TweenInfo.new(0.2), {ImageColor3 = Color3.fromRGB(255, 100, 100)}):Play()
-    end)
-
-    close.MouseLeave:Connect(function()
-        game:GetService('TweenService'):Create(close, TweenInfo.new(0.2), {ImageColor3 = Color3.fromRGB(126, 126, 126)}):Play()
-    end)
-
-    close.MouseButton1Click:Connect(function()
-        arizon:Destroy()
-    end)
-
-    --// Drag
-    topBar.MouseEnter:Connect(function()
-        local Input = topBar.InputBegan:connect(function(Key)
-            if Key.UserInputType == Enum.UserInputType.MouseButton1 then
-                local ObjectPosition = Vector2.new(Mouse.X - main.AbsolutePosition.X, Mouse.Y - main.AbsolutePosition.Y)
-                while RunService.RenderStepped:wait() and UserInputService:IsMouseButtonPressed(Enum.UserInputType.MouseButton1) do
-                    local FrameX, FrameY = math.clamp(Mouse.X - ObjectPosition.X, 0, arizon.AbsoluteSize.X - main.AbsoluteSize.X), math.clamp(Mouse.Y - ObjectPosition.Y, 0, arizon.AbsoluteSize.Y - main.AbsoluteSize.Y)
-                    game:GetService('TweenService'):Create(main, TweenInfo.new(0.1), {Position = UDim2.fromOffset(FrameX + (main.Size.X.Offset * main.AnchorPoint.X), FrameY + (main.Size.Y.Offset * main.AnchorPoint.Y))}):Play()
-                end
-            end
-        end)
-    end)
+local success, Library = pcall(function()
 
     local elementHandler = {}
+
+    function Library:Create(table)
+        local createSuccess, main = pcall(function()
+            local main = Instance.new("Frame")
+            main.Name = "main"
+            main.BackgroundColor3 = Color3.fromRGB(24, 24, 24)
+            main.Position = UDim2.fromScale(0.321, 0.341)
+            main.Size = UDim2.fromOffset(400, 300)
+            main.AnchorPoint = Vector2.new(0.5, 0.5)
+
+            local uICorner = Instance.new("UICorner")
+            uICorner.Name = "uICorner"
+            uICorner.CornerRadius = UDim.new(0, 8)
+            uICorner.Parent = main
+
+            local topBar = Instance.new("Frame")
+            topBar.Name = "topBar"
+            topBar.BackgroundColor3 = Color3.fromRGB(28, 28, 28)
+            topBar.Size = UDim2.fromOffset(400, 40)
+
+            local uICorner1 = Instance.new("UICorner")
+            uICorner1.Name = "uICorner1"
+            uICorner1.CornerRadius = UDim.new(0, 8)
+            uICorner1.Parent = topBar
+
+            local title = Instance.new("TextLabel")
+            title.Name = "title"
+            title.Font = Enum.Font.GothamBold
+            title.Text = table.Name
+            title.TextColor3 = Color3.fromRGB(255, 255, 255)
+            title.TextSize = 14
+            title.TextXAlignment = Enum.TextXAlignment.Left
+            title.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+            title.BackgroundTransparency = 1
+            title.Position = UDim2.fromScale(0.04, 0.25)
+            title.Size = UDim2.fromOffset(200, 20)
+            title.Parent = topBar
+
+            local close = Instance.new("ImageButton")
+            close.Name = "close"
+            close.Image = "rbxassetid://6031094678"
+            close.ImageColor3 = Color3.fromRGB(126, 126, 126)
+            close.ScaleType = Enum.ScaleType.Fit
+            close.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+            close.BackgroundTransparency = 1
+            close.Position = UDim2.fromScale(0.93, 0.25)
+            close.Size = UDim2.fromOffset(20, 20)
+            close.Parent = topBar
+
+            topBar.Parent = main
+
+            local container = Instance.new("ScrollingFrame")
+            container.Name = "container"
+            container.ScrollBarImageColor3 = Color3.fromRGB(53, 53, 53)
+            container.ScrollBarThickness = 3
+            container.Active = true
+            container.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+            container.BackgroundTransparency = 1
+            container.BorderSizePixel = 0
+            container.Position = UDim2.fromScale(0, 0.133)
+            container.Size = UDim2.fromOffset(400, 260)
+            container.ZIndex = -1
+
+            local uIListLayout = Instance.new("UIListLayout")
+            uIListLayout.Name = "uIListLayout"
+            uIListLayout.Padding = UDim.new(0, 6)
+            uIListLayout.SortOrder = Enum.SortOrder.LayoutOrder
+            uIListLayout.Parent = container
+
+            local uIPadding = Instance.new("UIPadding")
+            uIPadding.Name = "uIPadding"
+            uIPadding.PaddingLeft = UDim.new(0, 10)
+            uIPadding.PaddingRight = UDim.new(0, 10)
+            uIPadding.PaddingTop = UDim.new(0, 10)
+            uIPadding.Parent = container
+
+            container.Parent = main
+            main.Parent = arizon
+            
+            return main, topBar, close, container
+        end)
+        
+        if not createSuccess then
+             warn("Error during main UI creation in Library:Create: ", main)
+             return nil
+        end
+        
+        local main, topBar, close, container = main
+
+        --// Close events with pcall
+        close.MouseEnter:Connect(function()
+            local success, err = pcall(function()
+                game:GetService('TweenService'):Create(close, TweenInfo.new(0.2), {ImageColor3 = Color3.fromRGB(163, 163, 163)}):Play()
+            end)
+            if not success then warn("Error in Close MouseEnter: ", err) end
+        end)
+
+        close.MouseLeave:Connect(function()
+            local success, err = pcall(function()
+                game:GetService('TweenService'):Create(close, TweenInfo.new(0.2), {ImageColor3 = Color3.fromRGB(126, 126, 126)}):Play()
+            end)
+            if not success then warn("Error in Close MouseLeave: ", err) end
+        end)
+
+        close.MouseButton1Click:Connect(function()
+            local success, err = pcall(function()
+                arizon:Destroy()
+            end)
+            if not success then warn("Error in Close MouseButton1Click: ", err) end
+        end)
+
+        --// Drag with pcall
+        topBar.MouseEnter:Connect(function()
+             local success, err = pcall(function()
+                local Input = topBar.InputBegan:connect(function(Key)
+                    if Key.UserInputType == Enum.UserInputType.MouseButton1 then
+                        local ObjectPosition = Vector2.new(Mouse.X - main.AbsolutePosition.X, Mouse.Y - main.AbsolutePosition.Y)
+                        while RunService.RenderStepped:wait() and UserInputService:IsMouseButtonPressed(Enum.UserInputType.MouseButton1) do
+                            local FrameX, FrameY = math.clamp(Mouse.X - ObjectPosition.X, 0, arizon.AbsoluteSize.X - main.AbsoluteSize.X), math.clamp(Mouse.Y - ObjectPosition.Y, 0, arizon.AbsoluteSize.Y - main.AbsoluteSize.Y)
+                            game:GetService('TweenService'):Create(main, TweenInfo.new(0.1), {Position = UDim2.fromOffset(FrameX + (main.Size.X.Offset * main.AnchorPoint.X), FrameY + (main.Size.Y.Offset * main.AnchorPoint.Y))}):Play()
+                        end
+                    end
+                end)
+             end)
+             if not success then warn("Error in Drag MouseEnter: ", err) end
+        end)
+
+        -- Return the element handler which contains functions to add elements
+        return elementHandler
+    end
 
     function elementHandler:Button(title, callback)
         local success, button = pcall(function()
@@ -463,7 +492,16 @@ function Library:Create(table)
         return dropdownContainer, populateDropdown
     end
 
+    -- Add more element types here if needed
+
     return elementHandler
+end)
+
+if not success then
+    warn("Error initializing UI Library: ", Library)
+    -- Return an empty or dummy library if initialization failed
+    Library = {}
+    Library.Create = function() warn("UI Library failed to initialize.") return {} end
 end
 
 return Library 
