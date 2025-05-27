@@ -54,8 +54,8 @@
         local title = Instance.new("TextLabel")
         title.Name = "title"
         title.Font = Enum.Font.Gotham
-        title.Text = table.Name .. (table.Version and " v" .. table.Version or "")
-        title.TextColor3 = Color3.fromRGB(255, 165, 0)
+        title.Text = table.Name
+        title.TextColor3 = Color3.fromRGB(195, 195, 195)
         title.TextSize = 12
         title.TextXAlignment = Enum.TextXAlignment.Left
         title.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
@@ -83,6 +83,17 @@
         close.Size = UDim2.fromOffset(16, 16)
         close.Parent = topBar
         
+        local search = Instance.new("ImageButton")
+        search.Name = "search"
+        search.Image = "http://www.roblox.com/asset/?id=9701781161"
+        search.ImageColor3 = Color3.fromRGB(126, 126, 126)
+        search.ScaleType = Enum.ScaleType.Fit
+        search.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+        search.BackgroundTransparency = 1
+        search.Position = UDim2.fromScale(0.891, 0.265)
+        search.Size = UDim2.fromOffset(14, 14)
+        search.Parent = topBar
+
         topBar.Parent = main
 
         local tabContainer = Instance.new("Frame")
@@ -209,6 +220,28 @@
             arizon:Destroy()
         end)
 
+        --// Search Events
+        search.MouseEnter:Connect(function()
+            game:GetService('TweenService'):Create(search, TweenInfo.new(0.2), {ImageColor3 = Color3.fromRGB(163, 163, 163)}):Play()
+        end)
+
+        search.MouseLeave:Connect(function()
+            game:GetService('TweenService'):Create(search, TweenInfo.new(0.2), {ImageColor3 = Color3.fromRGB(126, 126, 126)}):Play()
+        end)
+
+        search.MouseButton1Click:Connect(function()
+            for _,v in pairs(main:GetChildren()) do
+                if v.Name == "container" then
+                    if v['search1'].Visible then
+                        v['search1'].Visible = false
+                    else
+                        v['search1'].Visible = true
+                    end
+                end
+            end
+        end)
+
+
         local tabHandler = {}
 
         function tabHandler:Exit()
@@ -250,6 +283,55 @@
             uIListLayout.Padding = UDim.new(0, 4)
             uIListLayout.SortOrder = Enum.SortOrder.LayoutOrder
             uIListLayout.Parent = container
+
+            local search1 = Instance.new("Frame")
+            search1.Name = "search1"
+            search1.BackgroundColor3 = Color3.fromRGB(30, 30, 30)
+            search1.BorderSizePixel = 0
+            search1.LayoutOrder = -1
+            search1.Size = UDim2.fromOffset(361, 36)
+            search1.Visible = false
+
+            local imageLabel = Instance.new("ImageLabel")
+            imageLabel.Name = "imageLabel"
+            imageLabel.Image = "http://www.roblox.com/asset/?id=9634226499"
+            imageLabel.ImageColor3 = Color3.fromRGB(117, 117, 117)
+            imageLabel.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+            imageLabel.BackgroundTransparency = 1
+            imageLabel.Position = UDim2.fromScale(0.0249, 0.278)
+            imageLabel.Size = UDim2.fromOffset(15, 15)
+            imageLabel.Parent = search1
+
+            local textBox1 = Instance.new("TextBox")
+            textBox1.Name = "textBox1"
+            textBox1.Font = Enum.Font.Gotham
+            textBox1.PlaceholderColor3 = Color3.fromRGB(125, 125, 125)
+            textBox1.PlaceholderText = "search.."
+            textBox1.Text = ""
+            textBox1.TextColor3 = Color3.fromRGB(188, 188, 188)
+            textBox1.TextSize = 12
+            textBox1.TextXAlignment = Enum.TextXAlignment.Left
+            textBox1.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+            textBox1.BackgroundTransparency = 1
+            textBox1.Position = UDim2.fromScale(-0.00264, 0)
+            textBox1.Size = UDim2.fromOffset(361, 36)
+
+            local uIPadding1 = Instance.new("UIPadding")
+            uIPadding1.Name = "uIPadding1"
+            uIPadding1.PaddingLeft = UDim.new(0, 30)
+            uIPadding1.Parent = textBox1
+
+            textBox1.Parent = search1
+
+            local frame2 = Instance.new("Frame")
+            frame2.Name = "frame2"
+            frame2.BackgroundColor3 = Color3.fromRGB(53, 53, 53)
+            frame2.BorderSizePixel = 0
+            frame2.Position = UDim2.fromScale(0, 0.98)
+            frame2.Size = UDim2.fromOffset(361, 1)
+            frame2.Parent = search1
+
+            search1.Parent = container
 
             container.Parent = main
             container.Visible = false
@@ -392,7 +474,7 @@
                     end)
                 end
 
-                function elementHandler:Slider(title,min,maxValue,start,inc,callback)
+                function elementHandler:Slider(title,min,max,start,inc,callback)
                     local slider = Instance.new("Frame")
                     slider.Name = "slider"
                     slider.BackgroundColor3 = Color3.fromRGB(32, 32, 32)
@@ -468,10 +550,10 @@
 
                     local function move(Input)
                         local XSize = math.clamp((Input.Position.X - SliderMain.bar.AbsolutePosition.X) / SliderMain.bar.AbsoluteSize.X, 0, 1)
-                        local Increment = inc and (maxValue / ((maxValue - min) / (inc * 4))) or (maxValue >= 50 and maxValue / ((maxValue - min) / 4)) or (maxValue >= 25 and maxValue / ((maxValue - min) / 2)) or (maxValue / (maxValue - min))
-                        local SizeRounded = UDim2.new((math.round(XSize * ((maxValue / Increment) * 4)) / ((maxValue / Increment) * 4)), 0, 1, 0) 
+                        local Increment = inc and (max / ((max - min) / (inc * 4))) or (max >= 50 and max / ((max - min) / 4)) or (max >= 25 and max / ((max - min) / 2)) or (max / (max - min))
+                        local SizeRounded = UDim2.new((math.round(XSize * ((max / Increment) * 4)) / ((max / Increment) * 4)), 0, 1, 0) 
                         TweenService:Create(progressBar,TweenInfo.new(0.15, Enum.EasingStyle.Quad, Enum.EasingDirection.Out),{Size = SizeRounded}):Play() 
-                        local Val = math.round((((SizeRounded.X.Scale * maxValue) / maxValue) * (maxValue - min) + min) * 20) / 20
+                        local Val = math.round((((SizeRounded.X.Scale * max) / max) * (max - min) + min) * 20) / 20
                         value.Text = tostring(Val)
                         Slider.Value = Val
                         callback(Slider.Value)
@@ -481,9 +563,9 @@
                     game:GetService("UserInputService").InputChanged:Connect(function(input) if dragging and input.UserInputType == Enum.UserInputType.MouseMovement then move(input) end end)
 
                     function Slider:Set(val)
-                        local a = tostring(val and (val / maxValue) * (maxValue - min) + min) or 0
+                        local a = tostring(val and (val / max) * (max - min) + min) or 0
                         value.Text = tostring(a)
-                        progressBar.Size = UDim2.new((val or 0) / maxValue, 0, 1, 0)
+                        progressBar.Size = UDim2.new((val or 0) / max, 0, 1, 0)
                         Slider.Value = val
                         return callback(Slider.Value)
                     end	
@@ -649,83 +731,6 @@
                             game:GetService('TweenService'):Create(status2, TweenInfo.new(0.2), {BackgroundColor3 = Color3.fromRGB(38, 38, 38)}):Play()
                             game:GetService('TweenService'):Create(uIStroke1, TweenInfo.new(0.2), {Color = Color3.fromRGB(48, 48, 48)}):Play()
                         end
-                    end)
-                end
-
-                function elementHandler:ColorPicker(title, callback)
-                    title = title or "ColorPicker"
-                    callback = callback or function() end
-
-                    local colorPicker = Instance.new("TextButton")
-                    colorPicker.Name = "colorPicker"
-                    colorPicker.Font = Enum.Font.SourceSans
-                    colorPicker.Text = ""
-                    colorPicker.TextColor3 = Color3.fromRGB(0, 0, 0)
-                    colorPicker.TextSize = 14
-                    colorPicker.AutoButtonColor = false
-                    colorPicker.BackgroundColor3 = Color3.fromRGB(32, 32, 32)
-                    colorPicker.LayoutOrder = -1
-                    colorPicker.Size = UDim2.fromOffset(342, 32)
-
-                    local uICorner13 = Instance.new("UICorner")
-                    uICorner13.Name = "uICorner13"
-                    uICorner13.CornerRadius = UDim.new(0, 5)
-                    uICorner13.Parent = colorPicker
-
-                    local title7 = Instance.new("TextLabel")
-                    title7.Name = "title7"
-                    title7.Font = Enum.Font.Gotham
-                    title7.Text = title
-                    title7.TextColor3 = Color3.fromRGB(195, 195, 195)
-                    title7.TextSize = 11
-                    title7.TextXAlignment = Enum.TextXAlignment.Left
-                    title7.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
-                    title7.BackgroundTransparency = 1
-                    title7.LayoutOrder = -1
-                    title7.Position = UDim2.fromScale(0.0188, 0.219)
-                    title7.Size = UDim2.fromOffset(83, 18)
-                    title7.Parent = colorPicker
-
-                    local colorDisplay = Instance.new("Frame")
-                    colorDisplay.Name = "colorDisplay"
-                    colorDisplay.BackgroundColor3 = Color3.fromRGB(255, 0, 0)
-                    colorDisplay.Position = UDim2.fromScale(0.912, 0.188)
-                    colorDisplay.Size = UDim2.fromOffset(20, 20)
-
-                    local uICorner14 = Instance.new("UICorner")
-                    uICorner14.Name = "uICorner14"
-                    uICorner14.CornerRadius = UDim.new(0, 5)
-                    uICorner14.Parent = colorDisplay
-
-                    colorDisplay.Parent = colorPicker
-
-                    colorPicker.Parent = section
-
-                    local colors = {
-                        Color3.fromRGB(255, 0, 0),
-                        Color3.fromRGB(0, 255, 0),
-                        Color3.fromRGB(0, 0, 255),
-                        Color3.fromRGB(255, 255, 0),
-                        Color3.fromRGB(0, 255, 255),
-                        Color3.fromRGB(255, 0, 255),
-                        Color3.fromRGB(255, 255, 255),
-                        Color3.fromRGB(0, 0, 0)
-                    }
-                    local currentColorIndex = 1
-
-                    colorPicker.MouseEnter:Connect(function()
-                        game:GetService('TweenService'):Create(colorPicker, TweenInfo.new(0.2), {BackgroundColor3 = Color3.fromRGB(36,36,36)}):Play()
-                    end)
-        
-                    colorPicker.MouseLeave:Connect(function()
-                        game:GetService('TweenService'):Create(colorPicker, TweenInfo.new(0.2), {BackgroundColor3 = Color3.fromRGB(32, 32, 32)}):Play()
-                    end)
-
-                    colorPicker.MouseButton1Click:Connect(function()
-                        currentColorIndex = currentColorIndex % #colors + 1
-                        local selectedColor = colors[currentColorIndex]
-                        colorDisplay.BackgroundColor3 = selectedColor
-                        callback(selectedColor)
                     end)
                 end
                 
@@ -972,17 +977,7 @@
             end
         end)
 
-        -- Instead of returning tabHandler, return a table with methods and the title
-        return {
-            Tab = tabHandler.Tab,
-            Exit = tabHandler.Exit,
-            TitleLabel = title,
-            MainFrame = main -- Also return the main frame for potential future use
-        }
+        return tabHandler
     end
 
-    -- Ensure the script returns the Library table itself
     return Library
-end
-
-return Library
