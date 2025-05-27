@@ -294,6 +294,12 @@
             uIListLayout.SortOrder = Enum.SortOrder.LayoutOrder
             uIListLayout.Parent = container
 
+            local uIPadding = Instance.new("UIPadding")
+            uIPadding.Name = "uIPadding"
+            uIPadding.PaddingLeft = UDim.new(0, 10)
+            uIPadding.PaddingTop = UDim.new(0, 10)
+            uIPadding.Parent = container
+
             local search1 = Instance.new("Frame")
             search1.Name = "search1"
             search1.BackgroundColor3 = Color3.fromRGB(30, 30, 30)
