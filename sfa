@@ -249,13 +249,16 @@ function Library:Create(table)
         uICorner.CornerRadius = UDim.new(0, 6)
         uICorner.Parent = dropdownButton
 
-        local dropdownList = Instance.new("Frame")
+        local dropdownList = Instance.new("ScrollingFrame")
         dropdownList.Name = "dropdownList"
         dropdownList.BackgroundColor3 = Color3.fromRGB(32, 32, 32)
         dropdownList.Size = UDim2.new(1, 0, 0, 0) -- Will be sized by content
         dropdownList.Position = UDim2.new(0, 0, 1, 0) -- Position below the button
         dropdownList.Visible = false
         dropdownList.BorderSizePixel = 0
+        dropdownList.ScrollBarThickness = 6 -- Added scrollbar thickness
+        dropdownList.ScrollBarImageColor3 = Color3.fromRGB(53, 53, 53) -- Added scrollbar color
+        dropdownList.AutomaticCanvasSize = Enum.AutomaticCanvasSize.Y -- Ensure vertical scrolling
 
         local listLayout = Instance.new("UIListLayout")
         listLayout.Name = "listLayout"
