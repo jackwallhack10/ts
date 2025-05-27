@@ -569,13 +569,16 @@
 
                     local Slider,SliderMain = {Value = start}, slider
                     local dragging = false
+                    
+                    local sliderMin = min
+                    local sliderMax = max
 
                     local function move(Input)
                         local XSize = math.clamp((Input.Position.X - SliderMain.bar.AbsolutePosition.X) / SliderMain.bar.AbsoluteSize.X, 0, 1)
-                        local Increment = inc and (max / ((max - min) / (inc * 4))) or (max >= 50 and max / ((max - min) / 4)) or (max >= 25 and max / ((max - min) / 2)) or (max / (max - min))
-                        local SizeRounded = UDim2.new((math.round(XSize * ((max / Increment) * 4)) / ((max / Increment) * 4)), 0, 1, 0) 
+                        local Increment = inc and (sliderMax / ((sliderMax - sliderMin) / (inc * 4))) or (sliderMax >= 50 and sliderMax / ((sliderMax - sliderMin) / 4)) or (sliderMax >= 25 and sliderMax / ((sliderMax - sliderMin) / 2)) or (sliderMax / (sliderMax - sliderMin))
+                        local SizeRounded = UDim2.new((math.round(XSize * ((sliderMax / Increment) * 4)) / ((sliderMax / Increment) * 4)), 0, 1, 0) 
                         TweenService:Create(progressBar,TweenInfo.new(0.15, Enum.EasingStyle.Quad, Enum.EasingDirection.Out),{Size = SizeRounded}):Play() 
-                        local Val = math.round((((SizeRounded.X.Scale * max) / max) * (max - min) + min) * 20) / 20
+                        local Val = math.round((((SizeRounded.X.Scale * sliderMax) / sliderMax) * (sliderMax - sliderMin) + sliderMin) * 20) / 20
                         value.Text = tostring(Val)
                         Slider.Value = Val
                         callback(Slider.Value)
@@ -585,9 +588,9 @@
                     game:GetService("UserInputService").InputChanged:Connect(function(input) if dragging and input.UserInputType == Enum.UserInputType.MouseMovement then move(input) end end)
 
                     function Slider:Set(val)
-                        local a = tostring(val and (val / max) * (max - min) + min) or 0
+                        local a = tostring(val and (val / sliderMax) * (sliderMax - sliderMin) + sliderMin) or 0
                         value.Text = tostring(a)
-                        progressBar.Size = UDim2.new((val or 0) / max, 0, 1, 0)
+                        progressBar.Size = UDim2.new((val or 0) / sliderMax, 0, 1, 0)
                         Slider.Value = val
                         return callback(Slider.Value)
                     end	
