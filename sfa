@@ -233,6 +233,118 @@ function Library:Create(table)
         end)
     end
 
+    function elementHandler:Dropdown(title, options, defaultOption, callback)
+        local dropdownButton = Instance.new("TextButton")
+        dropdownButton.Name = "dropdownButton"
+        dropdownButton.Font = Enum.Font.SourceSans
+        dropdownButton.Text = title .. ": " .. defaultOption
+        dropdownButton.TextColor3 = Color3.fromRGB(220, 220, 220)
+        dropdownButton.TextSize = 12
+        dropdownButton.AutoButtonColor = false
+        dropdownButton.BackgroundColor3 = Color3.fromRGB(32, 32, 32)
+        dropdownButton.Size = UDim2.fromOffset(380, 36)
+        dropdownButton.TextXAlignment = Enum.TextXAlignment.Left
+        dropdownButton.TextInsets = UDim2.new(0, 10, 0, 0)
+
+        local uICorner = Instance.new("UICorner")
+        uICorner.CornerRadius = UDim.new(0, 6)
+        uICorner.Parent = dropdownButton
+
+        local dropdownList = Instance.new("Frame")
+        dropdownList.Name = "dropdownList"
+        dropdownList.BackgroundColor3 = Color3.fromRGB(32, 32, 32)
+        dropdownList.Size = UDim2.new(1, 0, 0, 0) -- Will be sized by content
+        dropdownList.Position = UDim2.new(0, 0, 1, 0) -- Position below the button
+        dropdownList.Visible = false
+        dropdownList.BorderSizePixel = 0
+
+        local listLayout = Instance.new("UIListLayout")
+        listLayout.Name = "listLayout"
+        listLayout.FillDirection = Enum.FillDirection.Vertical
+        listLayout.Padding = UDim.new(0, 2)
+        listLayout.SortOrder = Enum.SortOrder.LayoutOrder
+        listLayout.Parent = dropdownList
+
+        local listPadding = Instance.new("UIPadding")
+        listPadding.Name = "listPadding"
+        listPadding.PaddingBottom = UDim.new(0, 5)
+        listPadding.PaddingTop = UDim.new(0, 5)
+        listPadding.PaddingLeft = UDim.new(0, 5)
+        listPadding.PaddingRight = UDim.new(0, 5)
+        listPadding.Parent = dropdownList
+
+        dropdownList.Parent = dropdownButton
+
+        local isDropdownOpen = false
+
+        local function populateDropdown(opts)
+            -- Clear existing options
+            for _, child in ipairs(dropdownList:GetChildren()) do
+                if child:IsA("TextButton") then
+                    child:Destroy()
+                end
+            end
+
+            -- Add new options
+            for _, optionText in ipairs(opts) do
+                local optionButton = Instance.new("TextButton")
+                optionButton.Name = "optionButton"
+                optionButton.Font = Enum.Font.SourceSans
+                optionButton.Text = optionText
+                optionButton.TextColor3 = Color3.fromRGB(220, 220, 220)
+                optionButton.TextSize = 12
+                optionButton.AutoButtonColor = false
+                optionButton.BackgroundColor3 = Color3.fromRGB(40, 40, 40)
+                optionButton.Size = UDim2.new(1, 0, 0, 30)
+                optionButton.TextXAlignment = Enum.TextXAlignment.Left
+                optionButton.TextInsets = UDim2.new(0, 5, 0, 0)
+                optionButton.Parent = dropdownList
+
+                optionButton.MouseEnter:Connect(function()
+                    game:GetService('TweenService'):Create(optionButton, TweenInfo.new(0.1), {BackgroundColor3 = Color3.fromRGB(50, 50, 50)}):Play()
+                end)
+
+                optionButton.MouseLeave:Connect(function()
+                    game:GetService('TweenService'):Create(optionButton, TweenInfo.new(0.1), {BackgroundColor3 = Color3.fromRGB(40, 40, 40)}):Play()
+                end)
+
+                optionButton.MouseButton1Click:Connect(function()
+                    dropdownButton.Text = title .. ": " .. optionText
+                    isDropdownOpen = false
+                    dropdownList.Visible = false
+                    if callback then
+                        callback(optionText)
+                    end
+                end)
+            end
+             dropdownList.CanvasSize = UDim2.new(0,0,0, listLayout.AbsoluteContentSize.Y)
+        end
+
+        -- Populate initially
+        populateDropdown(options)
+
+        dropdownButton.MouseButton1Click:Connect(function()
+            isDropdownOpen = not isDropdownOpen
+            dropdownList.Visible = isDropdownOpen
+            if isDropdownOpen then
+                 dropdownList.CanvasSize = UDim2.new(0,0,0, listLayout.AbsoluteContentSize.Y)
+            end
+        end)
+
+        -- Close dropdown when clicking outside
+        game:GetService("UserInputService").InputBegan:Connect(function(input, gameProcessedEvent)
+            if input.UserInputType == Enum.UserInputType.MouseButton1 and not gameProcessedEvent then
+                if isDropdownOpen and not input.Position.X >= dropdownButton.AbsolutePosition.X and input.Position.X <= dropdownButton.AbsolutePosition.X + dropdownButton.AbsoluteSize.X and not input.Position.Y >= dropdownButton.AbsolutePosition.Y and input.Position.Y <= dropdownButton.AbsolutePosition.Y + dropdownButton.AbsoluteSize.Y + dropdownList.AbsoluteSize.Y then
+                     isDropdownOpen = false
+                     dropdownList.Visible = false
+                end
+            end
+        end)
+        
+
+        return dropdownButton, populateDropdown
+    end
+
     return elementHandler
 end
 
