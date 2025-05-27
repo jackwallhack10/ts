@@ -61,8 +61,21 @@ local success, Library = pcall(function()
             title.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
             title.BackgroundTransparency = 1
             title.Position = UDim2.fromScale(0.04, 0.25)
-            title.Size = UDim2.fromOffset(200, 20)
+            title.Size = UDim2.fromOffset(100, 20)
             title.Parent = topBar
+
+            local premium = Instance.new("TextLabel")
+            premium.Name = "premium"
+            premium.Font = Enum.Font.GothamBold
+            premium.Text = "Premium"
+            premium.TextColor3 = Color3.fromRGB(0, 255, 0)
+            premium.TextSize = 14
+            premium.TextXAlignment = Enum.TextXAlignment.Left
+            premium.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+            premium.BackgroundTransparency = 1
+            premium.Position = UDim2.fromScale(0.29, 0.25)
+            premium.Size = UDim2.fromOffset(100, 20)
+            premium.Parent = topBar
 
             local close = Instance.new("ImageButton")
             close.Name = "close"
