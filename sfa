@@ -10,340 +10,328 @@ local UserInputService = game:GetService("UserInputService")
 local Players = game:GetService("Players")
 -- LocalPlayer and Mouse need to be checked inside the pcall as they might not be available immediately
 
-local success, Library = pcall(function()
-    -- Move LocalPlayer and Mouse definition and checks inside the pcall
+local elementHandler = {}
+
+local Library = {}
+
+function Library:Create(table)
+    -- Ensure essential services, LocalPlayer, and Mouse are available
     local LocalPlayer = Players and Players.LocalPlayer -- Use 'and' for nil safety
-    if not LocalPlayer then warn("Library Error: LocalPlayer not available.") return end
+    if not LocalPlayer then warn("Library Error: LocalPlayer not available in Library:Create.") return nil end
 
     local Mouse = LocalPlayer:GetMouse()
-    if not Mouse then warn("Library Error: Mouse not available for LocalPlayer.") return end
+    if not Mouse then warn("Library Error: Mouse not available for LocalPlayer in Library:Create.") return nil end
 
-    -- Add checks for essential services (redundant if defined outside but good practice)
-    if not TweenService then warn("Library Error: TweenService not available.") return end
-    if not RunService then warn("Library Error: RunService not available.") return end
-    if not UserInputService then warn("Library Error: UserInputService not available.") return end
-    if not Players then warn("Library Error: Players service not available.") return end -- This check might be redundant now
+    if not TweenService then warn("Library Error: TweenService not available in Library:Create.") return nil end
+    if not RunService then warn("Library Error: RunService not available in Library:Create.") return nil end
+    if not UserInputService then warn("Library Error: UserInputService not available in Library:Create.") return nil end
+    if not Players then warn("Library Error: Players service not available in Library:Create.") return nil end
 
-    local elementHandler = {}
+    -- Wrap the UI creation in a pcall
+    local uiCreationSuccess, uiElements = pcall(function()
+        local main = Instance.new("Frame")
+        main.Name = "main"
+        main.BackgroundColor3 = Color3.fromRGB(24, 24, 24)
+        main.Position = UDim2.fromScale(0.321, 0.341)
+        main.Size = UDim2.fromOffset(400, 300)
+        main.AnchorPoint = Vector2.new(0.5, 0.5)
 
-    function Library:Create(table)
-        -- Wrap the UI creation in a pcall
-        local uiCreationSuccess, uiElements = pcall(function()
-            local main = Instance.new("Frame")
-            main.Name = "main"
-            main.BackgroundColor3 = Color3.fromRGB(24, 24, 24)
-            main.Position = UDim2.fromScale(0.321, 0.341)
-            main.Size = UDim2.fromOffset(400, 300)
-            main.AnchorPoint = Vector2.new(0.5, 0.5)
+        local uICorner = Instance.new("UICorner")
+        uICorner.Name = "uICorner"
+        uICorner.CornerRadius = UDim.new(0, 8)
+        uICorner.Parent = main
 
-            local uICorner = Instance.new("UICorner")
-            uICorner.Name = "uICorner"
-            uICorner.CornerRadius = UDim.new(0, 8)
-            uICorner.Parent = main
+        local topBar = Instance.new("Frame")
+        topBar.Name = "topBar"
+        topBar.BackgroundColor3 = Color3.fromRGB(28, 28, 28)
+        topBar.Size = UDim2.fromOffset(400, 40)
 
-            local topBar = Instance.new("Frame")
-            topBar.Name = "topBar"
-            topBar.BackgroundColor3 = Color3.fromRGB(28, 28, 28)
-            topBar.Size = UDim2.fromOffset(400, 40)
+        local uICorner1 = Instance.new("UICorner")
+        uICorner1.Name = "uICorner1"
+        uICorner1.CornerRadius = UDim.new(0, 8)
+        uICorner1.Parent = topBar
 
-            local uICorner1 = Instance.new("UICorner")
-            uICorner1.Name = "uICorner1"
-            uICorner1.CornerRadius = UDim.new(0, 8)
-            uICorner1.Parent = topBar
+        local title = Instance.new("TextLabel")
+        title.Name = "title"
+        title.Font = Enum.Font.GothamBold
+        title.Text = table.Name
+        title.TextColor3 = Color3.fromRGB(255, 255, 255)
+        title.TextSize = 14
+        title.TextXAlignment = Enum.TextXAlignment.Left
+        title.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+        title.BackgroundTransparency = 1
+        title.Position = UDim2.fromScale(0.04, 0.25)
+        title.Size = UDim2.fromOffset(100, 20)
+        title.Parent = topBar
 
-            local title = Instance.new("TextLabel")
-            title.Name = "title"
-            title.Font = Enum.Font.GothamBold
-            title.Text = table.Name
-            title.TextColor3 = Color3.fromRGB(255, 255, 255)
-            title.TextSize = 14
-            title.TextXAlignment = Enum.TextXAlignment.Left
-            title.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
-            title.BackgroundTransparency = 1
-            title.Position = UDim2.fromScale(0.04, 0.25)
-            title.Size = UDim2.fromOffset(100, 20)
-            title.Parent = topBar
+        local premium = Instance.new("TextLabel")
+        premium.Name = "premium"
+        premium.Font = Enum.Font.GothamBold
+        premium.Text = "Premium"
+        premium.TextColor3 = Color3.fromRGB(0, 255, 0)
+        premium.TextSize = 14
+        premium.TextXAlignment = Enum.TextXAlignment.Left
+        premium.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+        premium.BackgroundTransparency = 1
+        premium.Position = UDim2.fromScale(0.29, 0.25)
+        premium.Size = UDim2.fromOffset(100, 20)
+        premium.Parent = topBar
 
-            local premium = Instance.new("TextLabel")
-            premium.Name = "premium"
-            premium.Font = Enum.Font.GothamBold
-            premium.Text = "Premium"
-            premium.TextColor3 = Color3.fromRGB(0, 255, 0)
-            premium.TextSize = 14
-            premium.TextXAlignment = Enum.TextXAlignment.Left
-            premium.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
-            premium.BackgroundTransparency = 1
-            premium.Position = UDim2.fromScale(0.29, 0.25)
-            premium.Size = UDim2.fromOffset(100, 20)
-            premium.Parent = topBar
+        local close = Instance.new("ImageButton")
+        close.Name = "close"
+        close.Image = "rbxassetid://6031094678"
+        close.ImageColor3 = Color3.fromRGB(126, 126, 126)
+        close.ScaleType = Enum.ScaleType.Fit
+        close.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+        close.BackgroundTransparency = 1
+        close.Position = UDim2.fromScale(0.93, 0.25)
+        close.Size = UDim2.fromOffset(20, 20)
+        close.Parent = topBar
 
-            local close = Instance.new("ImageButton")
-            close.Name = "close"
-            close.Image = "rbxassetid://6031094678"
-            close.ImageColor3 = Color3.fromRGB(126, 126, 126)
-            close.ScaleType = Enum.ScaleType.Fit
-            close.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
-            close.BackgroundTransparency = 1
-            close.Position = UDim2.fromScale(0.93, 0.25)
-            close.Size = UDim2.fromOffset(20, 20)
-            close.Parent = topBar
+        topBar.Parent = main
 
-            topBar.Parent = main
+        local container = Instance.new("ScrollingFrame")
+        container.Name = "container"
+        container.ScrollBarImageColor3 = Color3.fromRGB(53, 53, 53)
+        container.ScrollBarThickness = 3
+        container.Active = true
+        container.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+        container.BackgroundTransparency = 1
+        container.BorderSizePixel = 0
+        container.Position = UDim2.fromScale(0, 0.133)
+        container.Size = UDim2.fromOffset(400, 260)
+        container.ZIndex = -1
 
-            local container = Instance.new("ScrollingFrame")
-            container.Name = "container"
-            container.ScrollBarImageColor3 = Color3.fromRGB(53, 53, 53)
-            container.ScrollBarThickness = 3
-            container.Active = true
-            container.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
-            container.BackgroundTransparency = 1
-            container.BorderSizePixel = 0
-            container.Position = UDim2.fromScale(0, 0.133)
-            container.Size = UDim2.fromOffset(400, 260)
-            container.ZIndex = -1
+        local uIListLayout = Instance.new("UIListLayout")
+        uIListLayout.Name = "uIListLayout"
+        uIListLayout.Padding = UDim.new(0, 6)
+        uIListLayout.SortOrder = Enum.SortOrder.LayoutOrder
+        uIListLayout.Parent = container
 
-            local uIListLayout = Instance.new("UIListLayout")
-            uIListLayout.Name = "uIListLayout"
-            uIListLayout.Padding = UDim.new(0, 6)
-            uIListLayout.SortOrder = Enum.SortOrder.LayoutOrder
-            uIListLayout.Parent = container
+        local uIPadding = Instance.new("UIPadding")
+        uIPadding.Name = "uIPadding"
+        uIPadding.PaddingLeft = UDim.new(0, 10)
+        uIPadding.PaddingRight = UDim.new(0, 10)
+        uIPadding.PaddingTop = UDim.new(0, 10)
+        uIPadding.Parent = container
 
-            local uIPadding = Instance.new("UIPadding")
-            uIPadding.Name = "uIPadding"
-            uIPadding.PaddingLeft = UDim.new(0, 10)
-            uIPadding.PaddingRight = UDim.new(0, 10)
-            uIPadding.PaddingTop = UDim.new(0, 10)
-            uIPadding.Parent = container
-
-            container.Parent = main
-            main.Parent = arizon
-            
-            return main, topBar, close, container
-        end)
+        container.Parent = main
+        main.Parent = arizon
         
-        -- Handle UI creation errors
-        if not uiCreationSuccess then
-             warn("Error during main UI creation in Library:Create: ", uiElements)
-             return nil -- Return nil if creation failed
-        end
-        
-        local main, topBar, close, container = unpack(uiElements)
+        return main, topBar, close, container
+    end)
+    
+    if not uiCreationSuccess then
+        warn("Error during main UI creation in Library:Create: ", uiElements)
+        return nil -- Return nil if creation failed
+    end
+    
+    local main, topBar, close, container = unpack(uiElements)
 
-        --// Close events with pcall
-        close.MouseEnter:Connect(function()
-            local success, err = pcall(function()
-                game:GetService('TweenService'):Create(close, TweenInfo.new(0.2), {ImageColor3 = Color3.fromRGB(163, 163, 163)}):Play()
-            end)
-            if not success then warn("Error in Close MouseEnter: ", err) end
+    --// Close events with pcall
+    close.MouseEnter:Connect(function()
+        local success, err = pcall(function()
+            game:GetService('TweenService'):Create(close, TweenInfo.new(0.2), {ImageColor3 = Color3.fromRGB(163, 163, 163)}):Play()
         end)
+        if not success then warn("Error in Close MouseEnter: ", err) end
+    end)
 
-        close.MouseLeave:Connect(function()
-            local success, err = pcall(function()
-                game:GetService('TweenService'):Create(close, TweenInfo.new(0.2), {ImageColor3 = Color3.fromRGB(126, 126, 126)}):Play()
-            end)
-            if not success then warn("Error in Close MouseLeave: ", err) end
+    close.MouseLeave:Connect(function()
+        local success, err = pcall(function()
+            game:GetService('TweenService'):Create(close, TweenInfo.new(0.2), {ImageColor3 = Color3.fromRGB(126, 126, 126)}):Play()
         end)
+        if not success then warn("Error in Close MouseLeave: ", err) end
+    end)
 
-        close.MouseButton1Click:Connect(function()
-            local success, err = pcall(function()
-                arizon:Destroy()
-            end)
-            if not success then warn("Error in Close MouseButton1Click: ", err) end
+    close.MouseButton1Click:Connect(function()
+        local success, err = pcall(function()
+            arizon:Destroy()
         end)
+        if not success then warn("Error in Close MouseButton1Click: ", err) end
+    end)
 
-        --// Drag with pcall
-        topBar.MouseEnter:Connect(function()
-             local success, err = pcall(function()
-                local Input = topBar.InputBegan:connect(function(Key)
-                    if Key.UserInputType == Enum.UserInputType.MouseButton1 then
-                        local ObjectPosition = Vector2.new(Mouse.X - main.AbsolutePosition.X, Mouse.Y - main.AbsolutePosition.Y)
-                        while RunService.RenderStepped:wait() and UserInputService:IsMouseButtonPressed(Enum.UserInputType.MouseButton1) do
-                            local FrameX, FrameY = math.clamp(Mouse.X - ObjectPosition.X, 0, arizon.AbsoluteSize.X - main.AbsoluteSize.X), math.clamp(Mouse.Y - ObjectPosition.Y, 0, arizon.AbsoluteSize.Y - main.AbsoluteSize.Y)
-                            game:GetService('TweenService'):Create(main, TweenInfo.new(0.1), {Position = UDim2.fromOffset(FrameX + (main.Size.X.Offset * main.AnchorPoint.X), FrameY + (main.Size.Y.Offset * main.AnchorPoint.Y))}):Play()
-                        end
+    --// Drag with pcall
+    topBar.MouseEnter:Connect(function()
+        local success, err = pcall(function()
+            local Input = topBar.InputBegan:connect(function(Key)
+                if Key.UserInputType == Enum.UserInputType.MouseButton1 then
+                    local ObjectPosition = Vector2.new(Mouse.X - main.AbsolutePosition.X, Mouse.Y - main.AbsolutePosition.Y)
+                    while RunService.RenderStepped:wait() and UserInputService:IsMouseButtonPressed(Enum.UserInputType.MouseButton1) do
+                        local FrameX, FrameY = math.clamp(Mouse.X - ObjectPosition.X, 0, arizon.AbsoluteSize.X - main.AbsoluteSize.X), math.clamp(Mouse.Y - ObjectPosition.Y, 0, arizon.AbsoluteSize.Y - main.AbsoluteSize.Y)
+                        game:GetService('TweenService'):Create(main, TweenInfo.new(0.1), {Position = UDim2.fromOffset(FrameX + (main.Size.X.Offset * main.AnchorPoint.X), FrameY + (main.Size.Y.Offset * main.AnchorPoint.Y))}):Play()
                     end
-                end)
-             end)
-             if not success then warn("Error in Drag MouseEnter: ", err) end
-        end)
-
-        -- Return the element handler which contains functions to add elements
-        return elementHandler
-    end
-
-    function elementHandler:Button(title, callback)
-        local success, button = pcall(function()
-            local button = Instance.new("TextButton")
-            button.Name = "button"
-            button.Font = Enum.Font.SourceSans
-            button.Text = ""
-            button.TextColor3 = Color3.fromRGB(0, 0, 0)
-            button.TextSize = 14
-            button.AutoButtonColor = false
-            button.BackgroundColor3 = Color3.fromRGB(32, 32, 32)
-            button.Size = UDim2.fromOffset(380, 36)
-
-            local uICorner = Instance.new("UICorner")
-            uICorner.CornerRadius = UDim.new(0, 6)
-            uICorner.Parent = button
-
-            local titleLabel = Instance.new("TextLabel")
-            titleLabel.Name = "title"
-            titleLabel.Font = Enum.Font.GothamSemibold
-            titleLabel.Text = title
-            titleLabel.TextColor3 = Color3.fromRGB(220, 220, 220)
-            titleLabel.TextSize = 12
-            titleLabel.TextXAlignment = Enum.TextXAlignment.Left
-            titleLabel.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
-            titleLabel.BackgroundTransparency = 1
-            titleLabel.Position = UDim2.fromScale(0.03, 0.25)
-            titleLabel.Size = UDim2.fromOffset(200, 18)
-            titleLabel.Parent = button
-
-            button.Parent = container
-
-            return button
-        end)
-
-        if not success then
-            warn("Error creating Button: ", button)
-            return nil -- Return nil if creation failed
-        end
-
-        -- Add event connections with pcall
-        button.MouseEnter:Connect(function()
-            local success, err = pcall(function()
-                 game:GetService('TweenService'):Create(button, TweenInfo.new(0.2), {BackgroundColor3 = Color3.fromRGB(38, 38, 38)}):Play()
-                game:GetService('TweenService'):Create(button.title, TweenInfo.new(0.2), {TextColor3 = Color3.fromRGB(255, 255, 255)}):Play()
+                end
             end)
-            if not success then warn("Error in Button MouseEnter: ", err) end
         end)
+        if not success then warn("Error in Drag MouseEnter: ", err) end
+    end)
 
-        button.MouseLeave:Connect(function()
-             local success, err = pcall(function()
-                game:GetService('TweenService'):Create(button, TweenInfo.new(0.2), {BackgroundColor3 = Color3.fromRGB(32, 32, 32)}):Play()
-                game:GetService('TweenService'):Create(button.title, TweenInfo.new(0.2), {TextColor3 = Color3.fromRGB(220, 220, 220)}):Play()
-             end)
-             if not success then warn("Error in Button MouseLeave: ", err) end
-        end)
-
-        button.MouseButton1Click:Connect(function()
-             local success, err = pcall(function()
-                callback()
-             end)
-             if not success then warn("Error in Button MouseButton1Click: ", err) end
-        end)
-        
-
-        return button
-    end
-
-    function elementHandler:Toggle(title, callback)
-        local success, button = pcall(function()
-            local button = Instance.new("TextButton")
-            button.Name = "button"
-            button.Font = Enum.Font.SourceSans
-            button.Text = ""
-            button.TextColor3 = Color3.fromRGB(0, 0, 0)
-            button.TextSize = 14
-            button.AutoButtonColor = false
-            button.BackgroundColor3 = Color3.fromRGB(32, 32, 32)
-            button.Size = UDim2.fromOffset(380, 36)
-
-            local uICorner = Instance.new("UICorner")
-            uICorner.CornerRadius = UDim.new(0, 6)
-            uICorner.Parent = button
-
-            local titleLabel = Instance.new("TextLabel")
-            titleLabel.Name = "title"
-            titleLabel.Font = Enum.Font.GothamSemibold
-            titleLabel.Text = title
-            titleLabel.TextColor3 = Color3.fromRGB(220, 220, 220)
-            titleLabel.TextSize = 12
-            titleLabel.TextXAlignment = Enum.TextXAlignment.Left
-            titleLabel.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
-            titleLabel.BackgroundTransparency = 1
-            titleLabel.Position = UDim2.fromScale(0.03, 0.25)
-            titleLabel.Size = UDim2.fromOffset(200, 18)
-            titleLabel.Parent = button
-
-            local status = Instance.new("Frame")
-            status.Name = "status"
-            status.BackgroundColor3 = Color3.fromRGB(38, 38, 38)
-            status.Position = UDim2.fromScale(0.94, 0.5)
-            status.Size = UDim2.fromOffset(16, 16)
-            status.AnchorPoint = Vector2.new(0.5, 0.5)
-
-            local uICorner2 = Instance.new("UICorner")
-            uICorner2.CornerRadius = UDim.new(0, 6)
-            uICorner2.Parent = status
-
-            local uIStroke = Instance.new("UIStroke")
-            uIStroke.Color = Color3.fromRGB(48, 48, 48)
-            uIStroke.Thickness = 1.5
-            uIStroke.Parent = status
-
-            status.Parent = button
-            button.Parent = container
-
-            return button, status, uIStroke
-        end)
-        
-        if not success then
-            warn("Error creating Toggle: ", button)
-            return nil -- Return nil if creation failed
-        end
-        
-        local button, status, uIStroke = button
-
-        local tog = false
-
-        -- Add event connections with pcall
-        button.MouseEnter:Connect(function()
-            local success, err = pcall(function()
-                game:GetService('TweenService'):Create(button, TweenInfo.new(0.2), {BackgroundColor3 = Color3.fromRGB(38, 38, 38)}):Play()
-                game:GetService('TweenService'):Create(button.title, TweenInfo.new(0.2), {TextColor3 = Color3.fromRGB(255, 255, 255)}):Play()
-            end)
-            if not success then warn("Error in Toggle MouseEnter: ", err) end
-        end)
-
-        button.MouseLeave:Connect(function()
-            local success, err = pcall(function()
-                game:GetService('TweenService'):Create(button, TweenInfo.new(0.2), {BackgroundColor3 = Color3.fromRGB(32, 32, 32)}):Play()
-                game:GetService('TweenService'):Create(button.title, TweenInfo.new(0.2), {TextColor3 = Color3.fromRGB(220, 220, 220)}):Play()
-            end)
-            if not success then warn("Error in Toggle MouseLeave: ", err) end
-        end)
-
-        button.MouseButton1Click:Connect(function()
-            local success, err = pcall(function()
-                 tog = not tog
-                 callback(tog)
-                 if tog then
-                     game:GetService('TweenService'):Create(status, TweenInfo.new(0.2), {BackgroundColor3 = Color3.fromRGB(31, 152, 82)}):Play()
-                     game:GetService('TweenService'):Create(uIStroke, TweenInfo.new(0.2), {Color = Color3.fromRGB(52, 255, 137)}):Play()
-                 else
-                     game:GetService('TweenService'):Create(status, TweenInfo.new(0.2), {BackgroundColor3 = Color3.fromRGB(38, 38, 38)}):Play()
-                     game:GetService('TweenService'):Create(uIStroke, TweenInfo.new(0.2), {Color = Color3.fromRGB(48, 48, 48)}):Play()
-                 end
-            end)
-            if not success then warn("Error in Toggle MouseButton1Click: ", err) end
-        end)
-
-        return button
-    end
-
-    -- Add more element types here if needed
-
-    return elementHandler -- This is the successful return value
-end)
-
-if not success then
-    -- The specific error is now in the 'Library' variable when success is false
-    warn("Error initializing UI Library: ", Library)
-    -- Return an empty or dummy library if initialization failed
-    Library = {}
-    Library.Create = function(...) warn("UI Library failed to initialize due to a previous error: ", Library) return {} end
+    -- Return the element handler which contains functions to add elements
+    return elementHandler
 end
+
+function elementHandler:Button(title, callback)
+    local success, button = pcall(function()
+        local button = Instance.new("TextButton")
+        button.Name = "button"
+        button.Font = Enum.Font.SourceSans
+        button.Text = ""
+        button.TextColor3 = Color3.fromRGB(0, 0, 0)
+        button.TextSize = 14
+        button.AutoButtonColor = false
+        button.BackgroundColor3 = Color3.fromRGB(32, 32, 32)
+        button.Size = UDim2.fromOffset(380, 36)
+
+        local uICorner = Instance.new("UICorner")
+        uICorner.CornerRadius = UDim.new(0, 6)
+        uICorner.Parent = button
+
+        local titleLabel = Instance.new("TextLabel")
+        titleLabel.Name = "title"
+        titleLabel.Font = Enum.Font.GothamSemibold
+        titleLabel.Text = title
+        titleLabel.TextColor3 = Color3.fromRGB(220, 220, 220)
+        titleLabel.TextSize = 12
+        titleLabel.TextXAlignment = Enum.TextXAlignment.Left
+        titleLabel.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+        titleLabel.BackgroundTransparency = 1
+        titleLabel.Position = UDim2.fromScale(0.03, 0.25)
+        titleLabel.Size = UDim2.fromOffset(200, 18)
+        titleLabel.Parent = button
+
+        button.Parent = container
+
+        return button
+    end)
+
+    if not success then
+        warn("Error creating Button: ", button)
+        return nil -- Return nil if creation failed
+    end
+
+    -- Add event connections with pcall
+    button.MouseEnter:Connect(function()
+        local success, err = pcall(function()
+            game:GetService('TweenService'):Create(button, TweenInfo.new(0.2), {BackgroundColor3 = Color3.fromRGB(38, 38, 38)}):Play()
+            game:GetService('TweenService'):Create(button.title, TweenInfo.new(0.2), {TextColor3 = Color3.fromRGB(255, 255, 255)}):Play()
+        end)
+        if not success then warn("Error in Button MouseEnter: ", err) end
+    end)
+
+    button.MouseLeave:Connect(function()
+        local success, err = pcall(function()
+            game:GetService('TweenService'):Create(button, TweenInfo.new(0.2), {BackgroundColor3 = Color3.fromRGB(32, 32, 32)}):Play()
+            game:GetService('TweenService'):Create(button.title, TweenInfo.new(0.2), {TextColor3 = Color3.fromRGB(220, 220, 220)}):Play()
+        end)
+        if not success then warn("Error in Button MouseLeave: ", err) end
+    end)
+
+    button.MouseButton1Click:Connect(function()
+        local success, err = pcall(function()
+            callback()
+        end)
+        if not success then warn("Error in Button MouseButton1Click: ", err) end
+    end)
+    
+
+    return button
+end
+
+function elementHandler:Toggle(title, callback)
+    local success, button = pcall(function()
+        local button = Instance.new("TextButton")
+        button.Name = "button"
+        button.Font = Enum.Font.SourceSans
+        button.Text = ""
+        button.TextColor3 = Color3.fromRGB(0, 0, 0)
+        button.TextSize = 14
+        button.AutoButtonColor = false
+        button.BackgroundColor3 = Color3.fromRGB(32, 32, 32)
+        button.Size = UDim2.fromOffset(380, 36)
+
+        local uICorner = Instance.new("UICorner")
+        uICorner.CornerRadius = UDim.new(0, 6)
+        uICorner.Parent = button
+
+        local titleLabel = Instance.new("TextLabel")
+        titleLabel.Name = "title"
+        titleLabel.Font = Enum.Font.GothamSemibold
+        titleLabel.Text = title
+        titleLabel.TextColor3 = Color3.fromRGB(220, 220, 220)
+        titleLabel.TextSize = 12
+        titleLabel.TextXAlignment = Enum.TextXAlignment.Left
+        titleLabel.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+        titleLabel.BackgroundTransparency = 1
+        titleLabel.Position = UDim2.fromScale(0.03, 0.25)
+        titleLabel.Size = UDim2.fromOffset(200, 18)
+        titleLabel.Parent = button
+
+        local status = Instance.new("Frame")
+        status.Name = "status"
+        status.BackgroundColor3 = Color3.fromRGB(38, 38, 38)
+        status.Position = UDim2.fromScale(0.94, 0.5)
+        status.Size = UDim2.fromOffset(16, 16)
+        status.AnchorPoint = Vector2.new(0.5, 0.5)
+
+        local uICorner2 = Instance.new("UICorner")
+        uICorner2.CornerRadius = UDim.new(0, 6)
+        uICorner2.Parent = status
+
+        local uIStroke = Instance.new("UIStroke")
+        uIStroke.Color = Color3.fromRGB(48, 48, 48)
+        uIStroke.Thickness = 1.5
+        uIStroke.Parent = status
+
+        status.Parent = button
+        button.Parent = container
+
+        return button, status, uIStroke
+    end)
+    
+    if not success then
+        warn("Error creating Toggle: ", button)
+        return nil -- Return nil if creation failed
+    end
+    
+    local button, status, uIStroke = button
+
+    local tog = false
+
+    -- Add event connections with pcall
+    button.MouseEnter:Connect(function()
+        local success, err = pcall(function()
+            game:GetService('TweenService'):Create(button, TweenInfo.new(0.2), {BackgroundColor3 = Color3.fromRGB(38, 38, 38)}):Play()
+            game:GetService('TweenService'):Create(button.title, TweenInfo.new(0.2), {TextColor3 = Color3.fromRGB(255, 255, 255)}):Play()
+        end)
+        if not success then warn("Error in Toggle MouseEnter: ", err) end
+    end)
+
+    button.MouseLeave:Connect(function()
+        local success, err = pcall(function()
+            game:GetService('TweenService'):Create(button, TweenInfo.new(0.2), {BackgroundColor3 = Color3.fromRGB(32, 32, 32)}):Play()
+            game:GetService('TweenService'):Create(button.title, TweenInfo.new(0.2), {TextColor3 = Color3.fromRGB(220, 220, 220)}):Play()
+        end)
+        if not success then warn("Error in Toggle MouseLeave: ", err) end
+    end)
+
+    button.MouseButton1Click:Connect(function()
+        local success, err = pcall(function()
+            tog = not tog
+            callback(tog)
+            if tog then
+                game:GetService('TweenService'):Create(status, TweenInfo.new(0.2), {BackgroundColor3 = Color3.fromRGB(31, 152, 82)}):Play()
+                game:GetService('TweenService'):Create(uIStroke, TweenInfo.new(0.2), {Color = Color3.fromRGB(52, 255, 137)}):Play()
+            else
+                game:GetService('TweenService'):Create(status, TweenInfo.new(0.2), {BackgroundColor3 = Color3.fromRGB(38, 38, 38)}):Play()
+                game:GetService('TweenService'):Create(uIStroke, TweenInfo.new(0.2), {Color = Color3.fromRGB(48, 48, 48)}):Play()
+            end
+        end)
+        if not success then warn("Error in Toggle MouseButton1Click: ", err) end
+    end)
+
+    return button
+end
+
+-- Add more element types here if needed
 
 return Library 
