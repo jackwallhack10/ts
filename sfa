@@ -234,6 +234,11 @@ function Library:Create(table)
     end
 
     function elementHandler:Dropdown(title, options, defaultOption, callback)
+        local dropdownContainer = Instance.new("Frame")
+        dropdownContainer.Name = "dropdownContainer"
+        dropdownContainer.BackgroundTransparency = 1
+        dropdownContainer.Size = UDim2.new(1, 0, 0, 36) -- Same height as a button/toggle
+
         local dropdownButton = Instance.new("TextButton")
         dropdownButton.Name = "dropdownButton"
         dropdownButton.Font = Enum.Font.SourceSans
@@ -242,23 +247,30 @@ function Library:Create(table)
         dropdownButton.TextSize = 12
         dropdownButton.AutoButtonColor = false
         dropdownButton.BackgroundColor3 = Color3.fromRGB(32, 32, 32)
-        dropdownButton.Size = UDim2.fromOffset(380, 36)
+        dropdownButton.Size = UDim2.new(1, 0, 1, 0)
         dropdownButton.TextXAlignment = Enum.TextXAlignment.Left
+        dropdownButton.TextScaled = true
+        dropdownButton.MinimumSize = Vector2.new(0,20)
 
         local uICorner = Instance.new("UICorner")
         uICorner.CornerRadius = UDim.new(0, 6)
         uICorner.Parent = dropdownButton
 
-        local dropdownList = Instance.new("ScrollingFrame")
+        local dropdownList = Instance.new("ScrollingFrame") -- Use ScrollingFrame
         dropdownList.Name = "dropdownList"
         dropdownList.BackgroundColor3 = Color3.fromRGB(32, 32, 32)
-        dropdownList.Size = UDim2.new(1, 0, 0, 0) -- Will be sized by content
-        dropdownList.Position = UDim2.new(0, 0, 1, 0) -- Position below the button
+        dropdownList.Size = UDim2.new(1, 0, 0, 150) -- Fixed height for list (adjust as needed)
+        dropdownList.Position = UDim2.new(0, 0, 1, 2) -- Position below the button with a small gap
         dropdownList.Visible = false
         dropdownList.BorderSizePixel = 0
-        dropdownList.ScrollBarThickness = 6 -- Added scrollbar thickness
-        dropdownList.ScrollBarImageColor3 = Color3.fromRGB(53, 53, 53) -- Added scrollbar color
-        dropdownList.AutomaticCanvasSize = Enum.AutomaticCanvasSize.Y -- Ensure vertical scrolling
+        dropdownList.ZIndex = 10 -- Ensure it appears on top
+        dropdownList.CanvasSize = UDim2.new(0, 0, 0, 0) -- Will be set by AutomaticCanvasSize
+        dropdownList.AutomaticCanvasSize = Enum.AutomaticCanvasSize.Y -- Enable vertical scrolling based on content
+        dropdownList.ScrollBarThickness = 6
+        dropdownList.ScrollBarImageColor3 = Color3.fromRGB(53, 53, 53)
+        dropdownList.VerticalScrollBarInset = Enum.VerticalScrollBarInset.Auto
+        dropdownList.Active = true -- Allow interaction
+        dropdownList.BackgroundTransparency = 0 -- Make background visible
 
         local listLayout = Instance.new("UIListLayout")
         listLayout.Name = "listLayout"
@@ -275,7 +287,8 @@ function Library:Create(table)
         listPadding.PaddingRight = UDim.new(0, 5)
         listPadding.Parent = dropdownList
 
-        dropdownList.Parent = dropdownButton
+        dropdownButton.Parent = dropdownContainer
+        dropdownList.Parent = dropdownContainer
 
         local isDropdownOpen = false
 
@@ -299,6 +312,8 @@ function Library:Create(table)
                 optionButton.BackgroundColor3 = Color3.fromRGB(40, 40, 40)
                 optionButton.Size = UDim2.new(1, 0, 0, 30)
                 optionButton.TextXAlignment = Enum.TextXAlignment.Left
+                optionButton.TextScaled = true
+                optionButton.MinimumSize = Vector2.new(0,20)
                 optionButton.Parent = dropdownList
 
                 optionButton.MouseEnter:Connect(function()
@@ -318,7 +333,7 @@ function Library:Create(table)
                     end
                 end)
             end
-             dropdownList.CanvasSize = UDim2.new(0,0,0, listLayout.AbsoluteContentSize.Y)
+            -- Canvas size is automatically managed by AutomaticCanvasSize
         end
 
         -- Populate initially
@@ -327,23 +342,39 @@ function Library:Create(table)
         dropdownButton.MouseButton1Click:Connect(function()
             isDropdownOpen = not isDropdownOpen
             dropdownList.Visible = isDropdownOpen
-            if isDropdownOpen then
-                 dropdownList.CanvasSize = UDim2.new(0,0,0, listLayout.AbsoluteContentSize.Y)
-            end
+            -- Canvas size is automatically managed by AutomaticCanvasSize
         end)
 
         -- Close dropdown when clicking outside
         game:GetService("UserInputService").InputBegan:Connect(function(input, gameProcessedEvent)
             if input.UserInputType == Enum.UserInputType.MouseButton1 and not gameProcessedEvent then
-                if isDropdownOpen and not input.Position.X >= dropdownButton.AbsolutePosition.X and input.Position.X <= dropdownButton.AbsolutePosition.X + dropdownButton.AbsoluteSize.X and not input.Position.Y >= dropdownButton.AbsolutePosition.Y and input.Position.Y <= dropdownButton.AbsolutePosition.Y + dropdownButton.AbsoluteSize.Y + dropdownList.AbsoluteSize.Y then
+                -- Check if the click is outside the dropdown button and the dropdown list
+                local mousePosition = input.Position
+                local dropdownButtonAbsolute = dropdownButton.AbsolutePosition
+                local dropdownButtonSize = dropdownButton.AbsoluteSize
+                local dropdownListAbsolute = dropdownList.AbsolutePosition
+                local dropdownListSize = dropdownList.AbsoluteSize
+
+                local clickedOutsideButton = 
+                    mousePosition.X < dropdownButtonAbsolute.X or 
+                    mousePosition.X > dropdownButtonAbsolute.X + dropdownButtonSize.X or 
+                    mousePosition.Y < dropdownButtonAbsolute.Y or 
+                    mousePosition.Y > dropdownButtonAbsolute.Y + dropdownButtonSize.Y
+                    
+                local clickedOutsideList = 
+                     mousePosition.X < dropdownListAbsolute.X or 
+                    mousePosition.X > dropdownListAbsolute.X + dropdownListSize.X or 
+                    mousePosition.Y < dropdownListAbsolute.Y or 
+                    mousePosition.Y > dropdownListAbsolute.Y + dropdownListSize.Y
+
+                if isDropdownOpen and clickedOutsideButton and clickedOutsideList then
                      isDropdownOpen = false
                      dropdownList.Visible = false
                 end
             end
         end)
-        
 
-        return dropdownButton, populateDropdown
+        return dropdownContainer, populateDropdown
     end
 
     return elementHandler
