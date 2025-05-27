@@ -13,6 +13,19 @@ local Mouse = LocalPlayer:GetMouse()
 
 local success, Library = pcall(function()
 
+    -- Add checks for essential services and LocalPlayer
+    if not TweenService then warn("Library Error: TweenService not available.") return end
+
+    if not RunService then warn("Library Error: RunService not available.") return end
+
+    if not UserInputService then warn("Library Error: UserInputService not available.") return end
+
+    if not Players then warn("Library Error: Players service not available.") return end
+
+    if not LocalPlayer then warn("Library Error: LocalPlayer not available.") return end
+
+    if not Mouse then warn("Library Error: Mouse not available for LocalPlayer.") return end
+
     local elementHandler = {}
 
     function Library:Create(table)
