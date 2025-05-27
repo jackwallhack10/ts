@@ -338,8 +338,7 @@ local success, Library = pcall(function()
             dropdownList.Visible = false
             dropdownList.BorderSizePixel = 0
             dropdownList.ZIndex = 10 -- Ensure it appears on top
-            dropdownList.CanvasSize = UDim2.new(0, 0, 0, 0) -- Will be set by AutomaticCanvasSize
-            dropdownList.AutomaticCanvasSize = Enum.AutomaticCanvasSize.Y -- Enable vertical scrolling based on content
+            dropdownList.CanvasSize = UDim2.new(0, 0, 0, 0) -- Initialize CanvasSize
             dropdownList.ScrollBarThickness = 6
             dropdownList.ScrollBarImageColor3 = Color3.fromRGB(53, 53, 53)
             dropdownList.VerticalScrollBarInset = Enum.VerticalScrollBarInset.Auto
@@ -434,7 +433,8 @@ local success, Library = pcall(function()
                          if not success then warn("Error in Dropdown option MouseButton1Click: ", err) end
                     end)
                 end
-                -- Canvas size is automatically managed by AutomaticCanvasSize
+                -- Manually update CanvasSize based on content size
+                dropdownList.CanvasSize = UDim2.new(0, 0, 0, listLayout.AbsoluteContentSize.Y)
             end)
             if not success then warn("Error populating dropdown: ", err) end
         end
@@ -448,10 +448,12 @@ local success, Library = pcall(function()
              local success, err = pcall(function()
                 isDropdownOpen = not isDropdownOpen
                 dropdownList.Visible = isDropdownOpen
-                -- Canvas size is automatically managed by AutomaticCanvasSize
+                -- Manually update CanvasSize when opening
                 if isDropdownOpen then
                      -- Repopulate to get latest player list when opening
                      populateDropdown(options)
+                     -- Manually update CanvasSize again after repopulating
+                     dropdownList.CanvasSize = UDim2.new(0, 0, 0, listLayout.AbsoluteContentSize.Y)
                 end
             end)
             if not success then warn("Error in Dropdown MouseButton1Click: ", err) end
