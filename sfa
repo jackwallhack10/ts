@@ -505,3 +505,5 @@ if not success then
 end
 
 return Library 
+
+print("loaded!")
