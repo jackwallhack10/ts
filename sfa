@@ -1,502 +1,230 @@
-    local arizon = Instance.new("ScreenGui")
-    arizon.Name = "arizon"
-    arizon.ZIndexBehavior = Enum.ZIndexBehavior.Sibling
-    arizon.Parent = game.CoreGui
+--!strict
 
-    local Library = {}
-    local TweenService = game:GetService("TweenService")
-    local RunService = game:GetService("RunService")
-    local UserInputService = game:GetService("UserInputService")
-    local Players = game:GetService("Players")
-    local LocalPlayer = Players.LocalPlayer
-    local Mouse = LocalPlayer:GetMouse()
-    local HTTPService = game:GetService("HttpService")
+local Library = {}
 
-    function updateCanvasSize(scroll, list, padding)
-        local size = list.AbsoluteContentSize;
-    
-        size = size + Vector2.new(0, padding.PaddingBottom.Offset + padding.PaddingTop.Offset);
-        scroll.CanvasSize = UDim2.new(0, size.X, 0, size.Y)
+-- Helper function to create a basic frame
+local function createBaseFrame(name, size, position, color, transparency, cornerRadius)
+    local frame = Instance.new("Frame")
+    frame.Name = name or "Frame"
+    frame.Size = size or UDim2.new(0, 200, 0, 100)
+    frame.Position = position or UDim2.fromScale(0.5, 0.5)
+    frame.AnchorPoint = Vector2.new(0.5, 0.5)
+    frame.BackgroundColor3 = color or Color3.fromRGB(40, 40, 40)
+    frame.BackgroundTransparency = transparency or 0
+    frame.BorderSizePixel = 0
+
+    if cornerRadius then
+        local corner = Instance.new("UICorner")
+        corner.CornerRadius = UDim.new(0, cornerRadius)
+        corner.Parent = frame
     end
 
-    function Library:Create(table)
-        local main = Instance.new("Frame")
-        main.Name = "main"
-        main.BackgroundColor3 = Color3.fromRGB(26, 26, 26)
-        main.Position = UDim2.fromScale(0.321, 0.341)
-        main.Size = UDim2.fromOffset(361, 246)
-
-        local uICorner = Instance.new("UICorner")
-        uICorner.Name = "uICorner"
-        uICorner.CornerRadius = UDim.new(0, 6)
-        uICorner.Parent = main
-
-        local topBar = Instance.new("Frame")
-        topBar.Name = "topBar"
-        topBar.BackgroundColor3 = Color3.fromRGB(30, 30, 30)
-        topBar.Size = UDim2.fromOffset(361, 36)
-
-        local uICorner1 = Instance.new("UICorner")
-        uICorner1.Name = "uICorner1"
-        uICorner1.CornerRadius = UDim.new(0, 6)
-        uICorner1.Parent = topBar
-
-        local uIListLayout4 = Instance.new("UIListLayout")
-        uIListLayout4.Name = "uIListLayout4"
-        uIListLayout4.FillDirection = Enum.FillDirection.Horizontal
-        uIListLayout4.VerticalAlignment = Enum.VerticalAlignment.Center
-        uIListLayout4.Padding = UDim.new(0, 5)
-        uIListLayout4.Parent = topBar
-
-        local uIPadding3 = Instance.new("UIPadding")
-        uIPadding3.Name = "uIPadding3"
-        uIPadding3.PaddingLeft = UDim.new(0, 8)
-        uIPadding3.Parent = topBar
-
-        local menu = Instance.new("ImageButton")
-        menu.Name = "menu"
-        menu.Image = "http://www.roblox.com/asset/?id=9633864839"
-        menu.ImageTransparency = 0.4
-        menu.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
-        menu.BackgroundTransparency = 1
-        menu.Size = UDim2.fromOffset(16, 18)
-        menu.Parent = topBar
-
-        local title = Instance.new("TextLabel")
-        title.Name = "title"
-        title.Font = Enum.Font.Gotham
-        title.Text = "GhostWare"
-        title.TextColor3 = Color3.fromRGB(195, 195, 195)
-        title.TextSize = 12
-        title.TextXAlignment = Enum.TextXAlignment.Left
-        title.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
-        title.BackgroundTransparency = 1
-        title.Size = UDim2.fromOffset(83, 18)
-        title.Parent = topBar
-
-        local premiumLabel = Instance.new("TextLabel")
-        premiumLabel.Name = "premiumLabel"
-        premiumLabel.Font = Enum.Font.Gotham
-        premiumLabel.Text = "Premium"
-        premiumLabel.TextColor3 = Color3.fromRGB(0, 255, 0) -- Green color
-        premiumLabel.TextSize = 10
-        premiumLabel.TextXAlignment = Enum.TextXAlignment.Left
-        premiumLabel.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
-        premiumLabel.BackgroundTransparency = 1
-        premiumLabel.Size = UDim2.fromOffset(50, 18) -- Adjust size as needed
-        premiumLabel.Parent = topBar
-
-        local frame = Instance.new("Frame")
-        frame.Name = "frame"
-        frame.BackgroundColor3 = Color3.fromRGB(53, 53, 53)
-        frame.BorderSizePixel = 0
-        frame.Position = UDim2.fromScale(0, 0.98)
-        frame.Size = UDim2.fromOffset(361, 1)
-        frame.Parent = topBar
-
-        local close = Instance.new("ImageButton")
-        close.Name = "close"
-        close.Image = "rbxassetid://6031094678"
-        close.ImageColor3 = Color3.fromRGB(126, 126, 126)
-        close.ScaleType = Enum.ScaleType.Fit
-        close.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
-        close.BackgroundTransparency = 1
-        close.Position = UDim2.fromScale(0.931, 0.25)
-        close.Size = UDim2.fromOffset(16, 16)
-        close.Parent = topBar
-        
-        local search = Instance.new("ImageButton")
-        search.Name = "search"
-        search.Image = "http://www.roblox.com/asset/?id=9701781161"
-        search.ImageColor3 = Color3.fromRGB(126, 126, 126)
-        search.ScaleType = Enum.ScaleType.Fit
-        search.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
-        search.BackgroundTransparency = 1
-        search.Position = UDim2.fromScale(0.891, 0.265)
-        search.Size = UDim2.fromOffset(14, 14)
-        search.Parent = topBar
-
-        topBar.Parent = main
-
-        local tabContainer = Instance.new("Frame")
-        tabContainer.Name = "tabContainer"
-        tabContainer.BackgroundColor3 = Color3.fromRGB(0, 0, 0)
-        tabContainer.BackgroundTransparency = 0.7
-        tabContainer.Size = UDim2.fromOffset(361, 246)
-
-        local frame3 = Instance.new("Frame")
-        frame3.Name = "frame3"
-        frame3.BackgroundColor3 = Color3.fromRGB(30, 30, 30)
-        frame3.BorderSizePixel = 0
-        frame3.Size = UDim2.fromOffset(142, 246)
-
-        local uICorner12 = Instance.new("UICorner")
-        uICorner12.Name = "uICorner12"
-        uICorner12.Parent = frame3
-
-        local close1 = Instance.new("ImageButton")
-        close1.Name = "close1"
-        close1.Image = "rbxassetid://6031094678"
-        close1.ImageColor3 = Color3.fromRGB(126, 126, 126)
-        close1.ScaleType = Enum.ScaleType.Fit
-        close1.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
-        close1.BackgroundTransparency = 1
-        close1.Position = UDim2.fromScale(0.0469, 0.0431)
-        close1.Size = UDim2.fromOffset(16, 16)
-        close1.Parent = frame3
-
-        local frame4 = Instance.new("Frame")
-        frame4.Name = "frame4"
-        frame4.BackgroundColor3 = Color3.fromRGB(53, 53, 53)
-        frame4.BorderSizePixel = 0
-        frame4.Position = UDim2.fromScale(0, 0.146)
-        frame4.Size = UDim2.fromOffset(142, 1)
-        frame4.Parent = frame3
-
-        local holder = Instance.new("ScrollingFrame")
-        holder.Name = "holder"
-        holder.ScrollBarImageColor3 = Color3.fromRGB(100, 100, 100)
-        holder.ScrollBarThickness = 2
-        holder.Active = true
-        holder.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
-        holder.BackgroundTransparency = 1
-        holder.BorderSizePixel = 0
-        holder.Position = UDim2.fromScale(0.00704, 0.146)
-        holder.Size = UDim2.fromOffset(141, 210)
-
-        local uIListLayout2 = Instance.new("UIListLayout")
-        uIListLayout2.Name = "uIListLayout2"
-        uIListLayout2.HorizontalAlignment = Enum.HorizontalAlignment.Center
-        uIListLayout2.SortOrder = Enum.SortOrder.LayoutOrder
-        uIListLayout2.Parent = holder
-
-        local uIPadding2 = Instance.new("UIPadding")
-        uIPadding2.Name = "uIPadding2"
-        uIPadding2.PaddingTop = UDim.new(0, 5)
-        uIPadding2.Parent = holder
-
-        holder.Parent = frame3
-
-        frame3.Parent = tabContainer
-
-        tabContainer.Parent = main
-
-        main.Parent = arizon
-
-        local shadow = Instance.new("ImageLabel")
-        shadow.Name = "shadow"
-        shadow.Image = "rbxassetid://297774371"
-        shadow.ImageColor3 = Color3.fromRGB(15, 15, 15)
-        shadow.ImageTransparency = 0.5
-        shadow.SliceCenter = Rect.new(20, 20, 280, 280)
-        shadow.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
-        shadow.BackgroundTransparency = 1
-        shadow.Position = UDim2.fromScale(0.306, 0.325)
-        shadow.Selectable = true
-        shadow.Size = UDim2.fromOffset(393, 272)
-        shadow.ZIndex = -1
-        shadow.Parent = arizon
-
-        tabContainer.Parent = main
-        main.Parent = arizon
-        main.AnchorPoint = Vector2.new(0.5,0.5)
-        shadow.AnchorPoint = Vector2.new(0.5,0.5)
-
-        main.Position = UDim2.new(0.5,0,0.5,0)
-        shadow.Position = UDim2.new(0.5,0,0.5,0)
-
-        --// Menu Events
-        menu.MouseEnter:Connect(function()
-            game:GetService('TweenService'):Create(menu, TweenInfo.new(0.2), {ImageTransparency = 0}):Play()
-        end)
-
-        menu.MouseLeave:Connect(function()
-            game:GetService('TweenService'):Create(menu, TweenInfo.new(0.2), {ImageTransparency = 0.4}):Play()
-        end)
-
-        menu.MouseButton1Click:Connect(function()
-        end)
-
-        --// Close events
-        close.MouseEnter:Connect(function()
-            game:GetService('TweenService'):Create(close, TweenInfo.new(0.2), {ImageColor3 = Color3.fromRGB(163, 163, 163)}):Play()
-        end)
-
-        close.MouseLeave:Connect(function()
-            game:GetService('TweenService'):Create(close, TweenInfo.new(0.2), {ImageColor3 = Color3.fromRGB(126, 126, 126)}):Play()
-        end)
-
-        close.MouseButton1Click:Connect(function()
-            arizon:Destroy()
-        end)
-
-        --// Search Events
-        search.MouseEnter:Connect(function()
-            game:GetService('TweenService'):Create(search, TweenInfo.new(0.2), {ImageColor3 = Color3.fromRGB(163, 163, 163)}):Play()
-        end)
-
-        search.MouseLeave:Connect(function()
-            game:GetService('TweenService'):Create(search, TweenInfo.new(0.2), {ImageColor3 = Color3.fromRGB(126, 126, 126)}):Play()
-        end)
-
-        search.MouseButton1Click:Connect(function()
-            for _,v in pairs(main:GetChildren()) do
-                if v.Name == "container" then
-                    if v['search1'].Visible then
-                        v['search1'].Visible = false
-                    else
-                        v['search1'].Visible = true
-                    end
-                end
-            end
-        end)
-
-
-        local tabHandler = {}
-
-        function tabHandler:Exit()
-            arizon:Destroy()
-        end
-
-        function tabHandler:Tab(name)
-
-            --// Creating the tab
-            local textButton4 = Instance.new("TextButton")
-            textButton4.Name = "textButton4"
-            textButton4.Font = Enum.Font.Gotham
-            textButton4.Text = name
-            textButton4.TextColor3 = Color3.fromRGB(184, 184, 184)
-            textButton4.TextSize = 12
-            textButton4.TextTransparency = 0.33
-            textButton4.TextXAlignment = Enum.TextXAlignment.Left
-            textButton4.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
-            textButton4.BackgroundTransparency = 1
-            textButton4.Position = UDim2.fromScale(0.0543, 0)
-            textButton4.Size = UDim2.fromOffset(129, 23)
-            textButton4.Parent = holder
-
-            --// Creating the container
-            local container = Instance.new("ScrollingFrame")
-            container.Name = "container"
-            container.ScrollBarImageColor3 = Color3.fromRGB(53, 53, 53)
-            container.ScrollBarThickness = 2
-            container.Active = true
-            container.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
-            container.BackgroundTransparency = 1
-            container.BorderSizePixel = 0
-            container.Position = UDim2.fromScale(0, 0.146)
-            container.Size = UDim2.fromOffset(361, 200)
-            container.ZIndex = -1
-
-            local uIListLayout = Instance.new("UIListLayout")
-            uIListLayout.Name = "uIListLayout"
-            uIListLayout.Padding = UDim.new(0, 4)
-            uIListLayout.SortOrder = Enum.SortOrder.LayoutOrder
-            uIListLayout.Parent = container
-
-            local uIPadding = Instance.new("UIPadding")
-            uIPadding.Name = "uIPadding"
-            uIPadding.PaddingLeft = UDim.new(0, 10)
-            uIPadding.PaddingTop = UDim.new(0, 10)
-            uIPadding.Parent = container
-
-            local search1 = Instance.new("Frame")
-            search1.Name = "search1"
-            search1.BackgroundColor3 = Color3.fromRGB(30, 30, 30)
-            search1.BorderSizePixel = 0
-            search1.LayoutOrder = -1
-            search1.Size = UDim2.fromOffset(361, 36)
-            search1.Visible = false
-
-            local imageLabel = Instance.new("ImageLabel")
-            imageLabel.Name = "imageLabel"
-            imageLabel.Image = "http://www.roblox.com/asset/?id=9634226499"
-            imageLabel.ImageColor3 = Color3.fromRGB(117, 117, 117)
-            imageLabel.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
-            imageLabel.BackgroundTransparency = 1
-            imageLabel.Position = UDim2.fromScale(0.0249, 0.278)
-            imageLabel.Size = UDim2.fromOffset(15, 15)
-            imageLabel.Parent = search1
-
-            local textBox1 = Instance.new("TextBox")
-            textBox1.Name = "textBox1"
-            textBox1.Font = Enum.Font.Gotham
-            textBox1.PlaceholderColor3 = Color3.fromRGB(125, 125, 125)
-            textBox1.PlaceholderText = "search.."
-            textBox1.Text = ""
-            textBox1.TextColor3 = Color3.fromRGB(188, 188, 188)
-            textBox1.TextSize = 12
-            textBox1.TextXAlignment = Enum.TextXAlignment.Left
-            textBox1.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
-            textBox1.BackgroundTransparency = 1
-            textBox1.Position = UDim2.fromScale(-0.00264, 0)
-            textBox1.Size = UDim2.fromOffset(361, 36)
-
-            local uIPadding1 = Instance.new("UIPadding")
-            uIPadding1.Name = "uIPadding1"
-            uIPadding1.PaddingLeft = UDim.new(0, 30)
-            uIPadding1.Parent = textBox1
-
-            textBox1.Parent = search1
-
-            local frame2 = Instance.new("Frame")
-            frame2.Name = "frame2"
-            frame2.BackgroundColor3 = Color3.fromRGB(53, 53, 53)
-            frame2.BorderSizePixel = 0
-            frame2.Position = UDim2.fromScale(0, 0.98)
-            frame2.Size = UDim2.fromOffset(361, 1)
-            frame2.Parent = search1
-
-            search1.Parent = container
-
-            container.Parent = main
-            container.Visible = false
-
-            textButton4.MouseButton1Click:Connect(function()
-                for _,v in pairs(main:GetChildren()) do
-                    if v.Name == "container" then
-                        v.Visible = false
-                    end
-                end
-                for _,v in pairs(holder:GetChildren()) do
-                    if v:IsA('TextButton') then
-                        game:GetService('TweenService'):Create(v, TweenInfo.new(0.3), {TextTransparency = 0.33}):Play()
-                    end
-                end
-                container.Visible = true
-                game:GetService('TweenService'):Create(textButton4, TweenInfo.new(0.3), {TextTransparency = 0}):Play()
-            end)
-
-            local sectionHandler = {}
-
-            function sectionHandler:Section(title)
-                local title1 = Instance.new("TextLabel")
-                title1.Name = "title1"
-                title1.Font = Enum.Font.Gotham
-                title1.Text = title
-                title1.TextColor3 = Color3.fromRGB(195, 195, 195)
-                title1.TextSize = 11
-                title1.TextTransparency = 0.48
-                title1.TextXAlignment = Enum.TextXAlignment.Left
-                title1.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
-                title1.BackgroundTransparency = 1
-                title1.LayoutOrder = -1
-                title1.Position = UDim2.fromScale(0.0188, 0)
-                title1.Size = UDim2.fromOffset(83, 18)
-                title1.Parent = container
-
-                --// ELements
-                local elementHandler = {}
-
-                function elementHandler:Toggle(title, callback)
-                    title = title or "Toggle"
-                    callback = callback or function() end
-
-                    local textButton1 = Instance.new("TextButton")
-                    textButton1.Name = "textButton1"
-                    textButton1.Font = Enum.Font.SourceSans
-                    textButton1.Text = ""
-                    textButton1.TextColor3 = Color3.fromRGB(0, 0, 0)
-                    textButton1.TextSize = 14
-                    textButton1.AutoButtonColor = false
-                    textButton1.BackgroundColor3 = Color3.fromRGB(32, 32, 32)
-                    textButton1.LayoutOrder = -1
-                    textButton1.Size = UDim2.fromOffset(342, 32)
-
-                    local uICorner10 = Instance.new("UICorner")
-                    uICorner10.Name = "uICorner10"
-                    uICorner10.CornerRadius = UDim.new(0, 5)
-                    uICorner10.Parent = textButton1
-
-                    local title6 = Instance.new("TextLabel")
-                    title6.Name = "title6"
-                    title6.Font = Enum.Font.Gotham
-                    title6.Text = title
-                    title6.TextColor3 = Color3.fromRGB(195, 195, 195)
-                    title6.TextSize = 11
-                    title6.TextXAlignment = Enum.TextXAlignment.Left
-                    title6.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
-                    title6.BackgroundTransparency = 1
-                    title6.LayoutOrder = -1
-                    title6.Position = UDim2.fromScale(0.0188, 0.219)
-                    title6.Size = UDim2.fromOffset(83, 18)
-                    title6.Parent = textButton1
-
-                    local status2 = Instance.new("Frame")
-                    status2.Name = "status2"
-                    status2.BackgroundColor3 = Color3.fromRGB(38, 38, 38)
-                    status2.Position = UDim2.fromScale(0.912, 0.188)
-                    status2.Size = UDim2.fromOffset(20, 20)
-
-                    local uICorner11 = Instance.new("UICorner")
-                    uICorner11.Name = "uICorner11"
-                    uICorner11.CornerRadius = UDim.new(0, 5)
-                    uICorner11.Parent = status2
-
-                    local uIStroke1 = Instance.new("UIStroke")
-                    uIStroke1.Name = "uIStroke1"
-                    uIStroke1.Color = Color3.fromRGB(48, 48, 48)
-                    uIStroke1.Parent = status2
-
-                    status2.Parent = textButton1
-
-                    textButton1.Parent = container
-
-                    local tog = false
-
-                    textButton1.MouseEnter:Connect(function()
-                        game:GetService('TweenService'):Create(textButton1, TweenInfo.new(0.2), {BackgroundColor3 = Color3.fromRGB(36,36,36)}):Play()
-                    end)
-        
-                    textButton1.MouseLeave:Connect(function()
-                        game:GetService('TweenService'):Create(textButton1, TweenInfo.new(0.2), {BackgroundColor3 = Color3.fromRGB(32, 32, 32)}):Play()
-                    end)
-
-                    textButton1.MouseButton1Click:Connect(function()
-                        tog = not tog
-                        callback(tog)
-                        if tog then
-                            game:GetService('TweenService'):Create(status2, TweenInfo.new(0.2), {BackgroundColor3 = Color3.fromRGB(31, 152, 82)}):Play()
-                            game:GetService('TweenService'):Create(uIStroke1, TweenInfo.new(0.2), {Color = Color3.fromRGB(52, 255, 137)}):Play()
-                        else
-                            game:GetService('TweenService'):Create(status2, TweenInfo.new(0.2), {BackgroundColor3 = Color3.fromRGB(38, 38, 38)}):Play()
-                            game:GetService('TweenService'):Create(uIStroke1, TweenInfo.new(0.2), {Color = Color3.fromRGB(48, 48, 48)}):Play()
-                        end
-                    end)
-                end
-                
-                return elementHandler
-            end
-
-            return sectionHandler
-        end
-
-        --// Drag - BY MERCURY LIB DEVELOPERS (have permission to use this)
-        topBar.MouseEnter:Connect(function()
-            local Input = topBar.InputBegan:connect(function(Key)
-                if Key.UserInputType == Enum.UserInputType.MouseButton1 then
-                    local ObjectPosition = Vector2.new(Mouse.X - main.AbsolutePosition.X, Mouse.Y - main.AbsolutePosition.Y)
-                    while RunService.RenderStepped:wait() and UserInputService:IsMouseButtonPressed(Enum.UserInputType.MouseButton1) do
-                        local FrameX, FrameY = math.clamp(Mouse.X - ObjectPosition.X, 0, arizon.AbsoluteSize.X - main.AbsoluteSize.X), math.clamp(Mouse.Y - ObjectPosition.Y, 0, arizon.AbsoluteSize.Y - main.AbsoluteSize.Y)
-                        game:GetService('TweenService'):Create(main, TweenInfo.new(0.1), {Position = UDim2.fromOffset(FrameX + (main.Size.X.Offset * main.AnchorPoint.X), FrameY + (main.Size.Y.Offset * main.AnchorPoint.Y))}):Play()
-                        game:GetService('TweenService'):Create(shadow, TweenInfo.new(0.1), {Position = UDim2.fromOffset(FrameX + (main.Size.X.Offset * main.AnchorPoint.X), FrameY + (main.Size.Y.Offset * main.AnchorPoint.Y))}):Play()
-                    end
-                end
-            end)
-        end)
-
-        --// Update containers size
-        spawn(function()
-            while task.wait(0.1) do
-                for _,v in pairs(main:GetChildren()) do
-                    if v.Name == "container" then
-                        updateCanvasSize(v, v.uIListLayout, v.uIPadding)
-                    end
-                end
-            end
-        end)
-
-        return tabHandler
+    return frame
+end
+
+-- Helper function to create a basic text label
+local function createTextLabel(name, text, size, position, color, transparency, textSize, font, xAlignment)
+    local label = Instance.new("TextLabel")
+    label.Name = name or "Label"
+    label.Text = text or "TextLabel"
+    label.Size = size or UDim2.new(1, 0, 1, 0)
+    label.Position = position or UDim2.new(0, 0, 0, 0)
+    label.TextColor3 = color or Color3.fromRGB(200, 200, 200)
+    label.BackgroundTransparency = transparency or 1
+    label.TextSize = textSize or 14
+    label.Font = font or Enum.Font.Gotham
+    label.TextXAlignment = xAlignment or Enum.TextXAlignment.Left
+    label.TextScaled = false
+    label.ClipsDescendants = true
+    return label
+end
+
+-- Main library creation function
+function Library:Create(config)
+    config = config or {}
+    local mainGui = Instance.new("ScreenGui")
+    mainGui.Name = config.Name or "SimpleUI"
+    mainGui.Parent = game.CoreGui
+
+    local mainWindow = createBaseFrame(
+        "MainWindow",
+        config.Size or UDim2.new(0, 300, 0, 400),
+        UDim2.fromScale(0.5, 0.5),
+        Color3.fromRGB(30, 30, 30),
+        0,
+        6
+    )
+    mainWindow.Parent = mainGui
+
+    local titleBar = createBaseFrame("TitleBar", UDim2.new(1, 0, 0, 30), UDim2.new(0, 0, 0, 0), Color3.fromRGB(40, 40, 40), 0, 6)
+    titleBar.Size = UDim2.new(1, 0, 0, 30)
+    titleBar.Position = UDim2.new(0, 0, 0, 0)
+    titleBar.AnchorPoint = Vector2.new(0, 0)
+    titleBar.Parent = mainWindow
+
+    local titleLabel = createTextLabel("TitleLabel", config.Name or "SimpleUI", UDim2.new(1, -40, 1, 0), UDim2.new(0, 10, 0, 0))
+    titleLabel.TextYAlignment = Enum.TextYAlignment.Center
+    titleLabel.Parent = titleBar
+
+    -- Close button
+    local closeButton = createTextLabel("CloseButton", "X", UDim2.new(0, 30, 1, 0), UDim2.new(1, -35, 0, 0), Color3.fromRGB(255, 50, 50))
+    closeButton.TextXAlignment = Enum.TextXAlignment.Center
+    closeButton.TextYAlignment = Enum.TextYAlignment.Center
+    closeButton.Size = UDim2.new(0, 30, 1, 0)
+    closeButton.Position = UDim2.new(1, -35, 0, 0)
+    closeButton.Font = Enum.Font.SourceSansBold
+    closeButton.TextSize = 18
+    closeButton.Parent = titleBar
+
+    local closeButtonHoverTween = game:GetService("TweenService"):Create(closeButton, TweenInfo.new(0.1), {TextColor3 = Color3.fromRGB(255, 100, 100)})
+    local closeButtonLeaveTween = game:GetService("TweenService"):Create(closeButton, TweenInfo.new(0.1), {TextColor3 = Color3.fromRGB(255, 50, 50)})
+
+    closeButton.MouseEnter:Connect(function() closeButtonHoverTween:Play() end)
+    closeButton.MouseLeave:Connect(function() closeButtonLeaveTween:Play() end)
+
+    closeButton.MouseButton1Click:Connect(function()
+        mainGui:Destroy()
+    end)
+
+    -- Content area (This will now hold sections directly)
+    local contentFrame = createBaseFrame("ContentFrame", UDim2.new(1, 0, 1, -30), UDim2.new(0, 0, 0, 30), Color3.fromRGB(50, 50, 50), 0)
+    contentFrame.Size = UDim2.new(1, 0, 1, -30)
+    contentFrame.Position = UDim2.new(0, 0, 0, 30)
+    contentFrame.AnchorPoint = Vector2.new(0, 0)
+    contentFrame.BackgroundTransparency = 1
+    contentFrame.Parent = mainWindow
+
+    local contentLayout = Instance.new("UIListLayout")
+    contentLayout.Name = "ContentLayout"
+    contentLayout.FillDirection = Enum.FillDirection.Vertical
+    contentLayout.HorizontalAlignment = Enum.HorizontalAlignment.Left
+    contentLayout.Padding = UDim.new(0, 5)
+    contentLayout.Parent = contentFrame
+
+    local contentPadding = Instance.new("UIPadding")
+    contentPadding.Name = "ContentPadding"
+    contentPadding.PaddingLeft = UDim.new(0, 10)
+    contentPadding.PaddingRight = UDim.new(0, 10)
+    contentPadding.PaddingTop = UDim.new(0, 10)
+    contentPadding.PaddingBottom = UDim.new(0, 10)
+    contentPadding.Parent = contentFrame
+
+    local function updateContentSize()
+        local size = contentLayout.AbsoluteContentSize
+        contentFrame.CanvasSize = UDim2.new(0, 0, 0, size.Y + contentPadding.PaddingBottom.Offset + contentPadding.PaddingTop.Offset)
     end
 
-    return Library
+    -- Observe changes to update canvas size
+    contentLayout:GetPropertyChangedSignal("AbsoluteContentSize"):Connect(updateContentSize)
+    contentFrame.ChildAdded:Connect(updateContentSize)
+    contentFrame.ChildRemoved:Connect(updateContentSize)
+
+
+    local uiHandler = {}
+
+    function uiHandler:Section(title)
+        local sectionFrame = createBaseFrame("Section", UDim2.new(1, 0, 0, 0), nil, Color3.fromRGB(35, 35, 35), 0, 4)
+        sectionFrame.AutomaticSize = Enum.AutomaticSize.Y
+        sectionFrame.Parent = contentFrame
+
+        local sectionTitle = createTextLabel("SectionTitle", title or "Section", UDim2.new(1, 0, 0, 20), UDim2.new(0, 10, 0, 0))
+        sectionTitle.TextYAlignment = Enum.TextYAlignment.Center
+        sectionTitle.TextColor3 = Color3.fromRGB(180, 180, 180)
+        sectionTitle.TextSize = 11
+        sectionTitle.Parent = sectionFrame
+
+        local sectionLayout = Instance.new("UIListLayout")
+        sectionLayout.Name = "SectionLayout"
+        sectionLayout.FillDirection = Enum.FillDirection.Vertical
+        sectionLayout.HorizontalAlignment = Enum.HorizontalAlignment.Left
+        sectionLayout.Padding = UDim.new(0, 3)
+        sectionLayout.Parent = sectionFrame
+
+        local sectionPadding = Instance.new("UIPadding")
+        sectionPadding.Name = "SectionPadding"
+        sectionPadding.PaddingLeft = UDim.new(0, 10)
+        sectionPadding.PaddingRight = UDim.new(0, 10)
+        sectionPadding.PaddingTop = UDim.new(0, 5)
+        sectionPadding.PaddingBottom = UDim.new(0, 5)
+        sectionPadding.Parent = sectionFrame
+
+        -- Observe changes to update section size
+        sectionLayout:GetPropertyChangedSignal("AbsoluteContentSize"):Connect(function()
+             sectionFrame.Size = UDim2.new(1, 0, 0, sectionLayout.AbsoluteContentSize.Y + sectionPadding.PaddingBottom.Offset + sectionPadding.PaddingTop.Offset + sectionTitle.Size.Y.Offset)
+             updateContentSize() -- Update main content frame size as well
+        end)
+        sectionFrame.ChildAdded:Connect(function() task.wait() sectionLayout:GetPropertyChangedSignal("AbsoluteContentSize"):Fire() end)
+        sectionFrame.ChildRemoved:Connect(function() task.wait() sectionLayout:GetPropertyChangedSignal("AbsoluteContentSize"):Fire() end)
+
+
+        local elementHandler = {}
+
+        function elementHandler:Button(text, callback)
+            local button = createBaseFrame("Button", UDim2.new(1, 0, 0, 25), nil, Color3.fromRGB(50, 50, 50), 0, 4)
+            button.Parent = sectionFrame
+
+            local buttonLabel = createTextLabel("ButtonLabel", text or "Button", UDim2.new(1, -20, 1, 0), UDim2.new(0, 10, 0, 0))
+            buttonLabel.TextYAlignment = Enum.TextYAlignment.Center
+            buttonLabel.Parent = button
+
+            local buttonHoverTween = game:GetService("TweenService"):Create(button, TweenInfo.new(0.1), {BackgroundColor3 = Color3.fromRGB(60, 60, 60)})
+            local buttonLeaveTween = game:GetService("TweenService"):Create(button, TweenInfo.new(0.1), {BackgroundColor3 = Color3.fromRGB(50, 50, 50)})
+
+            button.MouseEnter:Connect(function() buttonHoverTween:Play() end)
+            button.MouseLeave:Connect(function() buttonLeaveTween:Play() end)
+
+            button.MouseButton1Click:Connect(function()
+                if callback then callback() end
+            end)
+
+            -- Adjust section size after adding button
+             task.wait() sectionLayout:GetPropertyChangedSignal("AbsoluteContentSize"):Fire()
+        end
+
+        function elementHandler:Toggle(text, callback)
+            local toggle = createBaseFrame("Toggle", UDim2.new(1, 0, 0, 25), nil, Color3.fromRGB(50, 50, 50), 0, 4)
+            toggle.Parent = sectionFrame
+
+            local toggleLabel = createTextLabel("ToggleLabel", text or "Toggle", UDim2.new(1, -30, 1, 0), UDim2.new(0, 10, 0, 0))
+            toggleLabel.TextYAlignment = Enum.TextYAlignment.Center
+            toggleLabel.Parent = toggle
+
+            local statusFrame = createBaseFrame("StatusFrame", UDim2.new(0, 20, 0, 15), UDim2.new(1, -25, 0.5), Color3.fromRGB(80, 80, 80), 0, 3)
+            statusFrame.AnchorPoint = Vector2.new(1, 0.5)
+            statusFrame.Parent = toggle
+
+            local toggleState = false
+
+            local toggleOnColor = Color3.fromRGB(50, 200, 50)
+            local toggleOffColor = Color3.fromRGB(80, 80, 80)
+
+            local toggleHoverTween = game:GetService("TweenService"):Create(toggle, TweenInfo.new(0.1), {BackgroundColor3 = Color3.fromRGB(60, 60, 60)})
+            local toggleLeaveTween = game:GetService("TweenService"):Create(toggle, TweenInfo.new(0.1), {BackgroundColor3 = Color3.fromRGB(50, 50, 50)})
+            local statusColorTween = game:GetService("TweenService"):Create(statusFrame, TweenInfo.new(0.1), {BackgroundColor3 = toggleOffColor})
+
+            toggle.MouseEnter:Connect(function() toggleHoverTween:Play() end)
+            toggle.MouseLeave:Connect(function() toggleLeaveTween:Play() end)
+
+            toggle.MouseButton1Click:Connect(function()
+                toggleState = not toggleState
+                if toggleState then
+                    statusColorTween = game:GetService("TweenService"):Create(statusFrame, TweenInfo.new(0.1), {BackgroundColor3 = toggleOnColor})
+                    statusColorTween:Play()
+                else
+                    statusColorTween = game:GetService("TweenService"):Create(statusFrame, TweenInfo.new(0.1), {BackgroundColor3 = toggleOffColor})
+                    statusColorTween:Play()
+                end
+                if callback then callback(toggleState) end
+            end)
+
+             -- Adjust section size after adding toggle
+             task.wait() sectionLayout:GetPropertyChangedSignal("AbsoluteContentSize"):Fire()
+        end
+
+        return elementHandler
+    end
+
+    return uiHandler
+end
+
+return Library
