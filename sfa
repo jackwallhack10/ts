@@ -67,13 +67,19 @@ function Library:Create(config)
     titleLabel.Parent = titleBar
 
     -- Close button
-    local closeButton = createTextLabel("CloseButton", "X", UDim2.new(0, 30, 1, 0), UDim2.new(1, -35, 0, 0), Color3.fromRGB(255, 50, 50))
-    closeButton.TextXAlignment = Enum.TextXAlignment.Center
-    closeButton.TextYAlignment = Enum.TextYAlignment.Center
+    local closeButton = Instance.new("TextButton")
+    closeButton.Name = "CloseButton"
+    closeButton.Text = "X"
     closeButton.Size = UDim2.new(0, 30, 1, 0)
     closeButton.Position = UDim2.new(1, -35, 0, 0)
+    closeButton.BackgroundColor3 = Color3.fromRGB(255, 50, 50)
+    closeButton.BackgroundTransparency = 1 -- Make background transparent so color shows
+    closeButton.TextColor3 = Color3.fromRGB(200, 200, 200) -- Use a visible color for the text initially
+    closeButton.TextXAlignment = Enum.TextXAlignment.Center
+    closeButton.TextYAlignment = Enum.TextYAlignment.Center
     closeButton.Font = Enum.Font.SourceSansBold
     closeButton.TextSize = 18
+    closeButton.AutoButtonColor = false -- Prevent default button hover color change
     closeButton.Parent = titleBar
 
     local closeButtonHoverTween = game:GetService("TweenService"):Create(closeButton, TweenInfo.new(0.1), {TextColor3 = Color3.fromRGB(255, 100, 100)})
