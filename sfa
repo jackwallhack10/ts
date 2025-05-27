@@ -14,36 +14,50 @@ local Mouse = LocalPlayer:GetMouse()
 function Library:Create(table)
     local main = Instance.new("Frame")
     main.Name = "main"
-    main.BackgroundColor3 = Color3.fromRGB(26, 26, 26)
+    main.BackgroundColor3 = Color3.fromRGB(24, 24, 24)
     main.Position = UDim2.fromScale(0.321, 0.341)
-    main.Size = UDim2.fromOffset(361, 246)
+    main.Size = UDim2.fromOffset(400, 300)
+    main.AnchorPoint = Vector2.new(0.5, 0.5)
 
     local uICorner = Instance.new("UICorner")
     uICorner.Name = "uICorner"
-    uICorner.CornerRadius = UDim.new(0, 6)
+    uICorner.CornerRadius = UDim.new(0, 8)
     uICorner.Parent = main
+
+    local shadow = Instance.new("ImageLabel")
+    shadow.Name = "shadow"
+    shadow.Image = "rbxassetid://5554236805"
+    shadow.ImageColor3 = Color3.fromRGB(0, 0, 0)
+    shadow.ImageTransparency = 0.6
+    shadow.ScaleType = Enum.ScaleType.Slice
+    shadow.SliceCenter = Rect.new(23, 23, 277, 277)
+    shadow.BackgroundTransparency = 1
+    shadow.Position = UDim2.fromScale(-0.1, -0.1)
+    shadow.Size = UDim2.fromScale(1.2, 1.2)
+    shadow.ZIndex = -1
+    shadow.Parent = main
 
     local topBar = Instance.new("Frame")
     topBar.Name = "topBar"
-    topBar.BackgroundColor3 = Color3.fromRGB(30, 30, 30)
-    topBar.Size = UDim2.fromOffset(361, 36)
+    topBar.BackgroundColor3 = Color3.fromRGB(28, 28, 28)
+    topBar.Size = UDim2.fromOffset(400, 40)
 
     local uICorner1 = Instance.new("UICorner")
     uICorner1.Name = "uICorner1"
-    uICorner1.CornerRadius = UDim.new(0, 6)
+    uICorner1.CornerRadius = UDim.new(0, 8)
     uICorner1.Parent = topBar
 
     local title = Instance.new("TextLabel")
     title.Name = "title"
-    title.Font = Enum.Font.Gotham
+    title.Font = Enum.Font.GothamBold
     title.Text = table.Name
     title.TextColor3 = Color3.fromRGB(31, 152, 82)
-    title.TextSize = 12
+    title.TextSize = 14
     title.TextXAlignment = Enum.TextXAlignment.Left
     title.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
     title.BackgroundTransparency = 1
-    title.Position = UDim2.fromScale(0.0861, 0.25)
-    title.Size = UDim2.fromOffset(83, 18)
+    title.Position = UDim2.fromScale(0.04, 0.25)
+    title.Size = UDim2.fromOffset(200, 20)
     title.Parent = topBar
 
     local close = Instance.new("ImageButton")
@@ -53,8 +67,8 @@ function Library:Create(table)
     close.ScaleType = Enum.ScaleType.Fit
     close.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
     close.BackgroundTransparency = 1
-    close.Position = UDim2.fromScale(0.931, 0.25)
-    close.Size = UDim2.fromOffset(16, 16)
+    close.Position = UDim2.fromScale(0.93, 0.25)
+    close.Size = UDim2.fromOffset(20, 20)
     close.Parent = topBar
 
     topBar.Parent = main
@@ -62,27 +76,34 @@ function Library:Create(table)
     local container = Instance.new("ScrollingFrame")
     container.Name = "container"
     container.ScrollBarImageColor3 = Color3.fromRGB(53, 53, 53)
-    container.ScrollBarThickness = 2
+    container.ScrollBarThickness = 3
     container.Active = true
     container.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
     container.BackgroundTransparency = 1
     container.BorderSizePixel = 0
-    container.Position = UDim2.fromScale(0, 0.146)
-    container.Size = UDim2.fromOffset(361, 200)
+    container.Position = UDim2.fromScale(0, 0.133)
+    container.Size = UDim2.fromOffset(400, 260)
     container.ZIndex = -1
 
     local uIListLayout = Instance.new("UIListLayout")
     uIListLayout.Name = "uIListLayout"
-    uIListLayout.Padding = UDim.new(0, 4)
+    uIListLayout.Padding = UDim.new(0, 6)
     uIListLayout.SortOrder = Enum.SortOrder.LayoutOrder
     uIListLayout.Parent = container
+
+    local uIPadding = Instance.new("UIPadding")
+    uIPadding.Name = "uIPadding"
+    uIPadding.PaddingLeft = UDim.new(0, 10)
+    uIPadding.PaddingRight = UDim.new(0, 10)
+    uIPadding.PaddingTop = UDim.new(0, 10)
+    uIPadding.Parent = container
 
     container.Parent = main
     main.Parent = arizon
 
     --// Close events
     close.MouseEnter:Connect(function()
-        game:GetService('TweenService'):Create(close, TweenInfo.new(0.2), {ImageColor3 = Color3.fromRGB(163, 163, 163)}):Play()
+        game:GetService('TweenService'):Create(close, TweenInfo.new(0.2), {ImageColor3 = Color3.fromRGB(255, 100, 100)}):Play()
     end)
 
     close.MouseLeave:Connect(function()
@@ -117,33 +138,35 @@ function Library:Create(table)
         button.TextSize = 14
         button.AutoButtonColor = false
         button.BackgroundColor3 = Color3.fromRGB(32, 32, 32)
-        button.Size = UDim2.fromOffset(342, 32)
+        button.Size = UDim2.fromOffset(380, 36)
 
         local uICorner = Instance.new("UICorner")
-        uICorner.CornerRadius = UDim.new(0, 5)
+        uICorner.CornerRadius = UDim.new(0, 6)
         uICorner.Parent = button
 
         local titleLabel = Instance.new("TextLabel")
         titleLabel.Name = "title"
-        titleLabel.Font = Enum.Font.Gotham
+        titleLabel.Font = Enum.Font.GothamSemibold
         titleLabel.Text = title
-        titleLabel.TextColor3 = Color3.fromRGB(195, 195, 195)
-        titleLabel.TextSize = 11
+        titleLabel.TextColor3 = Color3.fromRGB(220, 220, 220)
+        titleLabel.TextSize = 12
         titleLabel.TextXAlignment = Enum.TextXAlignment.Left
         titleLabel.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
         titleLabel.BackgroundTransparency = 1
-        titleLabel.Position = UDim2.fromScale(0.0188, 0.219)
-        titleLabel.Size = UDim2.fromOffset(83, 18)
+        titleLabel.Position = UDim2.fromScale(0.03, 0.25)
+        titleLabel.Size = UDim2.fromOffset(200, 18)
         titleLabel.Parent = button
 
         button.Parent = container
 
         button.MouseEnter:Connect(function()
-            game:GetService('TweenService'):Create(button, TweenInfo.new(0.3), {BackgroundColor3 = Color3.fromRGB(36,36,36)}):Play()
+            game:GetService('TweenService'):Create(button, TweenInfo.new(0.2), {BackgroundColor3 = Color3.fromRGB(38, 38, 38)}):Play()
+            game:GetService('TweenService'):Create(titleLabel, TweenInfo.new(0.2), {TextColor3 = Color3.fromRGB(255, 255, 255)}):Play()
         end)
 
         button.MouseLeave:Connect(function()
-            game:GetService('TweenService'):Create(button, TweenInfo.new(0.3), {BackgroundColor3 = Color3.fromRGB(32, 32, 32)}):Play()
+            game:GetService('TweenService'):Create(button, TweenInfo.new(0.2), {BackgroundColor3 = Color3.fromRGB(32, 32, 32)}):Play()
+            game:GetService('TweenService'):Create(titleLabel, TweenInfo.new(0.2), {TextColor3 = Color3.fromRGB(220, 220, 220)}):Play()
         end)
 
         button.MouseButton1Click:Connect(function()
@@ -160,37 +183,38 @@ function Library:Create(table)
         button.TextSize = 14
         button.AutoButtonColor = false
         button.BackgroundColor3 = Color3.fromRGB(32, 32, 32)
-        button.Size = UDim2.fromOffset(342, 32)
+        button.Size = UDim2.fromOffset(380, 36)
 
         local uICorner = Instance.new("UICorner")
-        uICorner.CornerRadius = UDim.new(0, 5)
+        uICorner.CornerRadius = UDim.new(0, 6)
         uICorner.Parent = button
 
         local titleLabel = Instance.new("TextLabel")
         titleLabel.Name = "title"
-        titleLabel.Font = Enum.Font.Gotham
+        titleLabel.Font = Enum.Font.GothamSemibold
         titleLabel.Text = title
-        titleLabel.TextColor3 = Color3.fromRGB(195, 195, 195)
-        titleLabel.TextSize = 11
+        titleLabel.TextColor3 = Color3.fromRGB(220, 220, 220)
+        titleLabel.TextSize = 12
         titleLabel.TextXAlignment = Enum.TextXAlignment.Left
         titleLabel.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
         titleLabel.BackgroundTransparency = 1
-        titleLabel.Position = UDim2.fromScale(0.0188, 0.219)
-        titleLabel.Size = UDim2.fromOffset(83, 18)
+        titleLabel.Position = UDim2.fromScale(0.03, 0.25)
+        titleLabel.Size = UDim2.fromOffset(200, 18)
         titleLabel.Parent = button
 
         local status = Instance.new("Frame")
         status.Name = "status"
         status.BackgroundColor3 = Color3.fromRGB(38, 38, 38)
-        status.Position = UDim2.fromScale(0.912, 0.188)
-        status.Size = UDim2.fromOffset(20, 20)
+        status.Position = UDim2.fromScale(0.92, 0.25)
+        status.Size = UDim2.fromOffset(24, 24)
 
         local uICorner2 = Instance.new("UICorner")
-        uICorner2.CornerRadius = UDim.new(0, 5)
+        uICorner2.CornerRadius = UDim.new(0, 6)
         uICorner2.Parent = status
 
         local uIStroke = Instance.new("UIStroke")
         uIStroke.Color = Color3.fromRGB(48, 48, 48)
+        uIStroke.Thickness = 1.5
         uIStroke.Parent = status
 
         status.Parent = button
@@ -199,11 +223,13 @@ function Library:Create(table)
         local tog = false
 
         button.MouseEnter:Connect(function()
-            game:GetService('TweenService'):Create(button, TweenInfo.new(0.2), {BackgroundColor3 = Color3.fromRGB(36,36,36)}):Play()
+            game:GetService('TweenService'):Create(button, TweenInfo.new(0.2), {BackgroundColor3 = Color3.fromRGB(38, 38, 38)}):Play()
+            game:GetService('TweenService'):Create(titleLabel, TweenInfo.new(0.2), {TextColor3 = Color3.fromRGB(255, 255, 255)}):Play()
         end)
 
         button.MouseLeave:Connect(function()
             game:GetService('TweenService'):Create(button, TweenInfo.new(0.2), {BackgroundColor3 = Color3.fromRGB(32, 32, 32)}):Play()
+            game:GetService('TweenService'):Create(titleLabel, TweenInfo.new(0.2), {TextColor3 = Color3.fromRGB(220, 220, 220)}):Play()
         end)
 
         button.MouseButton1Click:Connect(function()
