@@ -117,259 +117,347 @@ function Library:Create(table)
     local elementHandler = {}
 
     function elementHandler:Button(title, callback)
-        local button = Instance.new("TextButton")
-        button.Name = "button"
-        button.Font = Enum.Font.SourceSans
-        button.Text = ""
-        button.TextColor3 = Color3.fromRGB(0, 0, 0)
-        button.TextSize = 14
-        button.AutoButtonColor = false
-        button.BackgroundColor3 = Color3.fromRGB(32, 32, 32)
-        button.Size = UDim2.fromOffset(380, 36)
+        local success, button = pcall(function()
+            local button = Instance.new("TextButton")
+            button.Name = "button"
+            button.Font = Enum.Font.SourceSans
+            button.Text = ""
+            button.TextColor3 = Color3.fromRGB(0, 0, 0)
+            button.TextSize = 14
+            button.AutoButtonColor = false
+            button.BackgroundColor3 = Color3.fromRGB(32, 32, 32)
+            button.Size = UDim2.fromOffset(380, 36)
 
-        local uICorner = Instance.new("UICorner")
-        uICorner.CornerRadius = UDim.new(0, 6)
-        uICorner.Parent = button
+            local uICorner = Instance.new("UICorner")
+            uICorner.CornerRadius = UDim.new(0, 6)
+            uICorner.Parent = button
 
-        local titleLabel = Instance.new("TextLabel")
-        titleLabel.Name = "title"
-        titleLabel.Font = Enum.Font.GothamSemibold
-        titleLabel.Text = title
-        titleLabel.TextColor3 = Color3.fromRGB(220, 220, 220)
-        titleLabel.TextSize = 12
-        titleLabel.TextXAlignment = Enum.TextXAlignment.Left
-        titleLabel.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
-        titleLabel.BackgroundTransparency = 1
-        titleLabel.Position = UDim2.fromScale(0.03, 0.25)
-        titleLabel.Size = UDim2.fromOffset(200, 18)
-        titleLabel.Parent = button
+            local titleLabel = Instance.new("TextLabel")
+            titleLabel.Name = "title"
+            titleLabel.Font = Enum.Font.GothamSemibold
+            titleLabel.Text = title
+            titleLabel.TextColor3 = Color3.fromRGB(220, 220, 220)
+            titleLabel.TextSize = 12
+            titleLabel.TextXAlignment = Enum.TextXAlignment.Left
+            titleLabel.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+            titleLabel.BackgroundTransparency = 1
+            titleLabel.Position = UDim2.fromScale(0.03, 0.25)
+            titleLabel.Size = UDim2.fromOffset(200, 18)
+            titleLabel.Parent = button
 
-        button.Parent = container
+            button.Parent = container
 
+            return button
+        end)
+
+        if not success then
+            warn("Error creating Button: ", button)
+            return nil -- Return nil if creation failed
+        end
+
+        -- Add event connections with pcall
         button.MouseEnter:Connect(function()
-            game:GetService('TweenService'):Create(button, TweenInfo.new(0.2), {BackgroundColor3 = Color3.fromRGB(38, 38, 38)}):Play()
-            game:GetService('TweenService'):Create(titleLabel, TweenInfo.new(0.2), {TextColor3 = Color3.fromRGB(255, 255, 255)}):Play()
+            local success, err = pcall(function()
+                 game:GetService('TweenService'):Create(button, TweenInfo.new(0.2), {BackgroundColor3 = Color3.fromRGB(38, 38, 38)}):Play()
+                game:GetService('TweenService'):Create(button.title, TweenInfo.new(0.2), {TextColor3 = Color3.fromRGB(255, 255, 255)}):Play()
+            end)
+            if not success then warn("Error in Button MouseEnter: ", err) end
         end)
 
         button.MouseLeave:Connect(function()
-            game:GetService('TweenService'):Create(button, TweenInfo.new(0.2), {BackgroundColor3 = Color3.fromRGB(32, 32, 32)}):Play()
-            game:GetService('TweenService'):Create(titleLabel, TweenInfo.new(0.2), {TextColor3 = Color3.fromRGB(220, 220, 220)}):Play()
+             local success, err = pcall(function()
+                game:GetService('TweenService'):Create(button, TweenInfo.new(0.2), {BackgroundColor3 = Color3.fromRGB(32, 32, 32)}):Play()
+                game:GetService('TweenService'):Create(button.title, TweenInfo.new(0.2), {TextColor3 = Color3.fromRGB(220, 220, 220)}):Play()
+             end)
+             if not success then warn("Error in Button MouseLeave: ", err) end
         end)
 
         button.MouseButton1Click:Connect(function()
-            callback()
+             local success, err = pcall(function()
+                callback()
+             end)
+             if not success then warn("Error in Button MouseButton1Click: ", err) end
         end)
+        
+
+        return button
     end
 
     function elementHandler:Toggle(title, callback)
-        local button = Instance.new("TextButton")
-        button.Name = "button"
-        button.Font = Enum.Font.SourceSans
-        button.Text = ""
-        button.TextColor3 = Color3.fromRGB(0, 0, 0)
-        button.TextSize = 14
-        button.AutoButtonColor = false
-        button.BackgroundColor3 = Color3.fromRGB(32, 32, 32)
-        button.Size = UDim2.fromOffset(380, 36)
+        local success, button = pcall(function()
+            local button = Instance.new("TextButton")
+            button.Name = "button"
+            button.Font = Enum.Font.SourceSans
+            button.Text = ""
+            button.TextColor3 = Color3.fromRGB(0, 0, 0)
+            button.TextSize = 14
+            button.AutoButtonColor = false
+            button.BackgroundColor3 = Color3.fromRGB(32, 32, 32)
+            button.Size = UDim2.fromOffset(380, 36)
 
-        local uICorner = Instance.new("UICorner")
-        uICorner.CornerRadius = UDim.new(0, 6)
-        uICorner.Parent = button
+            local uICorner = Instance.new("UICorner")
+            uICorner.CornerRadius = UDim.new(0, 6)
+            uICorner.Parent = button
 
-        local titleLabel = Instance.new("TextLabel")
-        titleLabel.Name = "title"
-        titleLabel.Font = Enum.Font.GothamSemibold
-        titleLabel.Text = title
-        titleLabel.TextColor3 = Color3.fromRGB(220, 220, 220)
-        titleLabel.TextSize = 12
-        titleLabel.TextXAlignment = Enum.TextXAlignment.Left
-        titleLabel.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
-        titleLabel.BackgroundTransparency = 1
-        titleLabel.Position = UDim2.fromScale(0.03, 0.25)
-        titleLabel.Size = UDim2.fromOffset(200, 18)
-        titleLabel.Parent = button
+            local titleLabel = Instance.new("TextLabel")
+            titleLabel.Name = "title"
+            titleLabel.Font = Enum.Font.GothamSemibold
+            titleLabel.Text = title
+            titleLabel.TextColor3 = Color3.fromRGB(220, 220, 220)
+            titleLabel.TextSize = 12
+            titleLabel.TextXAlignment = Enum.TextXAlignment.Left
+            titleLabel.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+            titleLabel.BackgroundTransparency = 1
+            titleLabel.Position = UDim2.fromScale(0.03, 0.25)
+            titleLabel.Size = UDim2.fromOffset(200, 18)
+            titleLabel.Parent = button
 
-        local status = Instance.new("Frame")
-        status.Name = "status"
-        status.BackgroundColor3 = Color3.fromRGB(38, 38, 38)
-        status.Position = UDim2.fromScale(0.94, 0.5)
-        status.Size = UDim2.fromOffset(16, 16)
-        status.AnchorPoint = Vector2.new(0.5, 0.5)
+            local status = Instance.new("Frame")
+            status.Name = "status"
+            status.BackgroundColor3 = Color3.fromRGB(38, 38, 38)
+            status.Position = UDim2.fromScale(0.94, 0.5)
+            status.Size = UDim2.fromOffset(16, 16)
+            status.AnchorPoint = Vector2.new(0.5, 0.5)
 
-        local uICorner2 = Instance.new("UICorner")
-        uICorner2.CornerRadius = UDim.new(0, 6)
-        uICorner2.Parent = status
+            local uICorner2 = Instance.new("UICorner")
+            uICorner2.CornerRadius = UDim.new(0, 6)
+            uICorner2.Parent = status
 
-        local uIStroke = Instance.new("UIStroke")
-        uIStroke.Color = Color3.fromRGB(48, 48, 48)
-        uIStroke.Thickness = 1.5
-        uIStroke.Parent = status
+            local uIStroke = Instance.new("UIStroke")
+            uIStroke.Color = Color3.fromRGB(48, 48, 48)
+            uIStroke.Thickness = 1.5
+            uIStroke.Parent = status
 
-        status.Parent = button
-        button.Parent = container
+            status.Parent = button
+            button.Parent = container
+
+            return button, status, uIStroke
+        end)
+        
+        if not success then
+            warn("Error creating Toggle: ", button)
+            return nil -- Return nil if creation failed
+        end
+        
+        local button, status, uIStroke = button
 
         local tog = false
 
+        -- Add event connections with pcall
         button.MouseEnter:Connect(function()
-            game:GetService('TweenService'):Create(button, TweenInfo.new(0.2), {BackgroundColor3 = Color3.fromRGB(38, 38, 38)}):Play()
-            game:GetService('TweenService'):Create(titleLabel, TweenInfo.new(0.2), {TextColor3 = Color3.fromRGB(255, 255, 255)}):Play()
+            local success, err = pcall(function()
+                game:GetService('TweenService'):Create(button, TweenInfo.new(0.2), {BackgroundColor3 = Color3.fromRGB(38, 38, 38)}):Play()
+                game:GetService('TweenService'):Create(button.title, TweenInfo.new(0.2), {TextColor3 = Color3.fromRGB(255, 255, 255)}):Play()
+            end)
+            if not success then warn("Error in Toggle MouseEnter: ", err) end
         end)
 
         button.MouseLeave:Connect(function()
-            game:GetService('TweenService'):Create(button, TweenInfo.new(0.2), {BackgroundColor3 = Color3.fromRGB(32, 32, 32)}):Play()
-            game:GetService('TweenService'):Create(titleLabel, TweenInfo.new(0.2), {TextColor3 = Color3.fromRGB(220, 220, 220)}):Play()
+            local success, err = pcall(function()
+                game:GetService('TweenService'):Create(button, TweenInfo.new(0.2), {BackgroundColor3 = Color3.fromRGB(32, 32, 32)}):Play()
+                game:GetService('TweenService'):Create(button.title, TweenInfo.new(0.2), {TextColor3 = Color3.fromRGB(220, 220, 220)}):Play()
+            end)
+            if not success then warn("Error in Toggle MouseLeave: ", err) end
         end)
 
         button.MouseButton1Click:Connect(function()
-            tog = not tog
-            callback(tog)
-            if tog then
-                game:GetService('TweenService'):Create(status, TweenInfo.new(0.2), {BackgroundColor3 = Color3.fromRGB(31, 152, 82)}):Play()
-                game:GetService('TweenService'):Create(uIStroke, TweenInfo.new(0.2), {Color = Color3.fromRGB(52, 255, 137)}):Play()
-            else
-                game:GetService('TweenService'):Create(status, TweenInfo.new(0.2), {BackgroundColor3 = Color3.fromRGB(38, 38, 38)}):Play()
-                game:GetService('TweenService'):Create(uIStroke, TweenInfo.new(0.2), {Color = Color3.fromRGB(48, 48, 48)}):Play()
-            end
+            local success, err = pcall(function()
+                 tog = not tog
+                 callback(tog)
+                 if tog then
+                     game:GetService('TweenService'):Create(status, TweenInfo.new(0.2), {BackgroundColor3 = Color3.fromRGB(31, 152, 82)}):Play()
+                     game:GetService('TweenService'):Create(uIStroke, TweenInfo.new(0.2), {Color = Color3.fromRGB(52, 255, 137)}):Play()
+                 else
+                     game:GetService('TweenService'):Create(status, TweenInfo.new(0.2), {BackgroundColor3 = Color3.fromRGB(38, 38, 38)}):Play()
+                     game:GetService('TweenService'):Create(uIStroke, TweenInfo.new(0.2), {Color = Color3.fromRGB(48, 48, 48)}):Play()
+                 end
+            end)
+            if not success then warn("Error in Toggle MouseButton1Click: ", err) end
         end)
+
+        return button
     end
 
     function elementHandler:Dropdown(title, options, defaultOption, callback)
-        local dropdownContainer = Instance.new("Frame")
-        dropdownContainer.Name = "dropdownContainer"
-        dropdownContainer.BackgroundTransparency = 1
-        dropdownContainer.Size = UDim2.new(1, 0, 0, 36) -- Same height as a button/toggle
+        local success, dropdownContainer = pcall(function()
+            local dropdownContainer = Instance.new("Frame")
+            dropdownContainer.Name = "dropdownContainer"
+            dropdownContainer.BackgroundTransparency = 1
+            dropdownContainer.Size = UDim2.new(1, 0, 0, 36) -- Same height as a button/toggle
 
-        local dropdownButton = Instance.new("TextButton")
-        dropdownButton.Name = "dropdownButton"
-        dropdownButton.Font = Enum.Font.SourceSans
-        dropdownButton.Text = title .. ": " .. defaultOption
-        dropdownButton.TextColor3 = Color3.fromRGB(220, 220, 220)
-        dropdownButton.TextSize = 12
-        dropdownButton.AutoButtonColor = false
-        dropdownButton.BackgroundColor3 = Color3.fromRGB(32, 32, 32)
-        dropdownButton.Size = UDim2.new(1, 0, 1, 0)
-        dropdownButton.TextXAlignment = Enum.TextXAlignment.Left
-        dropdownButton.TextScaled = true
+            local dropdownButton = Instance.new("TextButton")
+            dropdownButton.Name = "dropdownButton"
+            dropdownButton.Font = Enum.Font.SourceSans
+            dropdownButton.Text = title .. ": " .. defaultOption
+            dropdownButton.TextColor3 = Color3.fromRGB(220, 220, 220)
+            dropdownButton.TextSize = 12
+            dropdownButton.AutoButtonColor = false
+            dropdownButton.BackgroundColor3 = Color3.fromRGB(32, 32, 32)
+            dropdownButton.Size = UDim2.new(1, 0, 1, 0)
+            dropdownButton.TextXAlignment = Enum.TextXAlignment.Left
+            dropdownButton.TextScaled = true
 
-        local uICorner = Instance.new("UICorner")
-        uICorner.CornerRadius = UDim.new(0, 6)
-        uICorner.Parent = dropdownButton
+            local uICorner = Instance.new("UICorner")
+            uICorner.CornerRadius = UDim.new(0, 6)
+            uICorner.Parent = dropdownButton
 
-        local dropdownList = Instance.new("ScrollingFrame") -- Use ScrollingFrame
-        dropdownList.Name = "dropdownList"
-        dropdownList.BackgroundColor3 = Color3.fromRGB(32, 32, 32)
-        dropdownList.Size = UDim2.new(1, 0, 0, 150) -- Fixed height for list (adjust as needed)
-        dropdownList.Position = UDim2.new(0, 0, 1, 2) -- Position below the button with a small gap
-        dropdownList.Visible = false
-        dropdownList.BorderSizePixel = 0
-        dropdownList.ZIndex = 10 -- Ensure it appears on top
-        dropdownList.CanvasSize = UDim2.new(0, 0, 0, 0) -- Will be set by AutomaticCanvasSize
-        dropdownList.AutomaticCanvasSize = Enum.AutomaticCanvasSize.Y -- Enable vertical scrolling based on content
-        dropdownList.ScrollBarThickness = 6
-        dropdownList.ScrollBarImageColor3 = Color3.fromRGB(53, 53, 53)
-        dropdownList.VerticalScrollBarInset = Enum.VerticalScrollBarInset.Auto
-        dropdownList.Active = true -- Allow interaction
-        dropdownList.BackgroundTransparency = 0 -- Make background visible
+            local dropdownList = Instance.new("ScrollingFrame") -- Use ScrollingFrame
+            dropdownList.Name = "dropdownList"
+            dropdownList.BackgroundColor3 = Color3.fromRGB(32, 32, 32)
+            dropdownList.Size = UDim2.new(1, 0, 0, 150) -- Fixed height for list (adjust as needed)
+            dropdownList.Position = UDim2.new(0, 0, 1, 2) -- Position below the button with a small gap
+            dropdownList.Visible = false
+            dropdownList.BorderSizePixel = 0
+            dropdownList.ZIndex = 10 -- Ensure it appears on top
+            dropdownList.CanvasSize = UDim2.new(0, 0, 0, 0) -- Will be set by AutomaticCanvasSize
+            dropdownList.AutomaticCanvasSize = Enum.AutomaticCanvasSize.Y -- Enable vertical scrolling based on content
+            dropdownList.ScrollBarThickness = 6
+            dropdownList.ScrollBarImageColor3 = Color3.fromRGB(53, 53, 53)
+            dropdownList.VerticalScrollBarInset = Enum.VerticalScrollBarInset.Auto
+            dropdownList.Active = true -- Allow interaction
+            dropdownList.BackgroundTransparency = 0 -- Make background visible
 
-        local listLayout = Instance.new("UIListLayout")
-        listLayout.Name = "listLayout"
-        listLayout.FillDirection = Enum.FillDirection.Vertical
-        listLayout.Padding = UDim.new(0, 2)
-        listLayout.SortOrder = Enum.SortOrder.LayoutOrder
-        listLayout.Parent = dropdownList
+            local listLayout = Instance.new("UIListLayout")
+            listLayout.Name = "listLayout"
+            listLayout.FillDirection = Enum.FillDirection.Vertical
+            listLayout.Padding = UDim.new(0, 2)
+            listLayout.SortOrder = Enum.SortOrder.LayoutOrder
+            listLayout.Parent = dropdownList
 
-        local listPadding = Instance.new("UIPadding")
-        listPadding.Name = "listPadding"
-        listPadding.PaddingBottom = UDim.new(0, 5)
-        listPadding.PaddingTop = UDim.new(0, 5)
-        listPadding.PaddingLeft = UDim.new(0, 5)
-        listPadding.PaddingRight = UDim.new(0, 5)
-        listPadding.Parent = dropdownList
+            local listPadding = Instance.new("UIPadding")
+            listPadding.Name = "listPadding"
+            listPadding.PaddingBottom = UDim.new(0, 5)
+            listPadding.PaddingTop = UDim.new(0, 5)
+            listPadding.PaddingLeft = UDim.new(0, 5)
+            listPadding.PaddingRight = UDim.new(0, 5)
+            listPadding.Parent = dropdownList
 
-        dropdownButton.Parent = dropdownContainer
-        dropdownList.Parent = dropdownContainer
+            dropdownButton.Parent = dropdownContainer
+            dropdownList.Parent = dropdownContainer
+            
+            return dropdownContainer, dropdownList, dropdownButton, listLayout
+        end)
+        
+        if not success then
+            warn("Error creating Dropdown UI: ", dropdownContainer)
+            return nil -- Return nil if creation failed
+        end
 
+        local dropdownContainer, dropdownList, dropdownButton, listLayout = dropdownContainer
         local isDropdownOpen = false
 
         local function populateDropdown(opts)
-            -- Clear existing options
-            for _, child in ipairs(dropdownList:GetChildren()) do
-                if child:IsA("TextButton") then
-                    child:Destroy()
-                end
-            end
-
-            -- Add new options
-            for _, optionText in ipairs(opts) do
-                local optionButton = Instance.new("TextButton")
-                optionButton.Name = "optionButton"
-                optionButton.Font = Enum.Font.SourceSans
-                optionButton.Text = optionText
-                optionButton.TextColor3 = Color3.fromRGB(220, 220, 220)
-                optionButton.TextSize = 12
-                optionButton.AutoButtonColor = false
-                optionButton.BackgroundColor3 = Color3.fromRGB(40, 40, 40)
-                optionButton.Size = UDim2.new(1, 0, 0, 30)
-                optionButton.TextXAlignment = Enum.TextXAlignment.Left
-                optionButton.TextScaled = true
-                optionButton.Parent = dropdownList
-
-                optionButton.MouseEnter:Connect(function()
-                    game:GetService('TweenService'):Create(optionButton, TweenInfo.new(0.1), {BackgroundColor3 = Color3.fromRGB(50, 50, 50)}):Play()
-                end)
-
-                optionButton.MouseLeave:Connect(function()
-                    game:GetService('TweenService'):Create(optionButton, TweenInfo.new(0.1), {BackgroundColor3 = Color3.fromRGB(40, 40, 40)}):Play()
-                end)
-
-                optionButton.MouseButton1Click:Connect(function()
-                    dropdownButton.Text = title .. ": " .. optionText
-                    isDropdownOpen = false
-                    dropdownList.Visible = false
-                    if callback then
-                        callback(optionText)
+             local success, err = pcall(function()
+                -- Clear existing options
+                for _, child in ipairs(dropdownList:GetChildren()) do
+                    if child:IsA("TextButton") then
+                        child:Destroy()
                     end
-                end)
-            end
-            -- Canvas size is automatically managed by AutomaticCanvasSize
+                end
+
+                -- Add new options
+                for _, optionText in ipairs(opts) do
+                    local optionButtonSuccess, optionButton = pcall(function()
+                        local optionButton = Instance.new("TextButton")
+                        optionButton.Name = "optionButton"
+                        optionButton.Font = Enum.Font.SourceSans
+                        optionButton.Text = optionText
+                        optionButton.TextColor3 = Color3.fromRGB(220, 220, 220)
+                        optionButton.TextSize = 12
+                        optionButton.AutoButtonColor = false
+                        optionButton.BackgroundColor3 = Color3.fromRGB(40, 40, 40)
+                        optionButton.Size = UDim2.new(1, 0, 0, 30)
+                        optionButton.TextXAlignment = Enum.TextXAlignment.Left
+                        optionButton.TextScaled = true
+                        optionButton.Parent = dropdownList
+                        return optionButton
+                    end)
+                    
+                    if not optionButtonSuccess then
+                        warn("Error creating Dropdown option button: ", optionButton)
+                        continue -- Skip to the next option if creation failed
+                    end
+                    
+                    -- Add event connections with pcall for option button
+                    optionButton.MouseEnter:Connect(function()
+                        local success, err = pcall(function()
+                            game:GetService('TweenService'):Create(optionButton, TweenInfo.new(0.1), {BackgroundColor3 = Color3.fromRGB(50, 50, 50)}):Play()
+                        end)
+                         if not success then warn("Error in Dropdown option MouseEnter: ", err) end
+                    end)
+
+                    optionButton.MouseLeave:Connect(function()
+                        local success, err = pcall(function()
+                            game:GetService('TweenService'):Create(optionButton, TweenInfo.new(0.1), {BackgroundColor3 = Color3.fromRGB(40, 40, 40)}):Play()
+                        end)
+                         if not success then warn("Error in Dropdown option MouseLeave: ", err) end
+                    end)
+
+                    optionButton.MouseButton1Click:Connect(function()
+                         local success, err = pcall(function()
+                             dropdownButton.Text = title .. ": " .. optionText
+                             isDropdownOpen = false
+                             dropdownList.Visible = false
+                             if callback then
+                                 callback(optionText)
+                             end
+                         end)
+                         if not success then warn("Error in Dropdown option MouseButton1Click: ", err) end
+                    end)
+                end
+                -- Canvas size is automatically managed by AutomaticCanvasSize
+            end)
+            if not success then warn("Error populating dropdown: ", err) end
         end
 
-        -- Populate initially
-        populateDropdown(options)
+        -- Populate initially with pcall
+        local success, err = pcall(function() populateDropdown(options) end)
+        if not success then warn("Error initially populating dropdown: ", err) end
 
+        -- Add event connections with pcall for dropdown button
         dropdownButton.MouseButton1Click:Connect(function()
-            isDropdownOpen = not isDropdownOpen
-            dropdownList.Visible = isDropdownOpen
-            -- Canvas size is automatically managed by AutomaticCanvasSize
+             local success, err = pcall(function()
+                isDropdownOpen = not isDropdownOpen
+                dropdownList.Visible = isDropdownOpen
+                -- Canvas size is automatically managed by AutomaticCanvasSize
+                if isDropdownOpen then
+                     -- Repopulate to get latest player list when opening
+                     populateDropdown(options)
+                end
+            end)
+            if not success then warn("Error in Dropdown MouseButton1Click: ", err) end
         end)
 
-        -- Close dropdown when clicking outside
+        -- Close dropdown when clicking outside with pcall
         game:GetService("UserInputService").InputBegan:Connect(function(input, gameProcessedEvent)
-            if input.UserInputType == Enum.UserInputType.MouseButton1 and not gameProcessedEvent then
-                -- Check if the click is outside the dropdown button and the dropdown list
-                local mousePosition = input.Position
-                local dropdownButtonAbsolute = dropdownButton.AbsolutePosition
-                local dropdownButtonSize = dropdownButton.AbsoluteSize
-                local dropdownListAbsolute = dropdownList.AbsolutePosition
-                local dropdownListSize = dropdownList.AbsoluteSize
+             local success, err = pcall(function()
+                if input.UserInputType == Enum.UserInputType.MouseButton1 and not gameProcessedEvent then
+                    -- Check if the click is outside the dropdown button and the dropdown list
+                    local mousePosition = input.Position
+                    local dropdownButtonAbsolute = dropdownButton.AbsolutePosition
+                    local dropdownButtonSize = dropdownButton.AbsoluteSize
+                    local dropdownListAbsolute = dropdownList.AbsolutePosition
+                    local dropdownListSize = dropdownList.AbsoluteSize
 
-                local clickedOutsideButton = 
-                    mousePosition.X < dropdownButtonAbsolute.X or 
-                    mousePosition.X > dropdownButtonAbsolute.X + dropdownButtonSize.X or 
-                    mousePosition.Y < dropdownButtonAbsolute.Y or 
-                    mousePosition.Y > dropdownButtonAbsolute.Y + dropdownButtonSize.Y
-                    
-                local clickedOutsideList = 
-                     mousePosition.X < dropdownListAbsolute.X or 
-                    mousePosition.X > dropdownListAbsolute.X + dropdownListSize.X or 
-                    mousePosition.Y < dropdownListAbsolute.Y or 
-                    mousePosition.Y > dropdownListAbsolute.Y + dropdownListSize.Y
+                    local clickedOutsideButton = 
+                        mousePosition.X < dropdownButtonAbsolute.X or 
+                        mousePosition.X > dropdownButtonAbsolute.X + dropdownButtonSize.X or 
+                        mousePosition.Y < dropdownButtonAbsolute.Y or 
+                        mousePosition.Y > dropdownButtonAbsolute.Y + dropdownButtonSize.Y
+                        
+                    local clickedOutsideList = 
+                         mousePosition.X < dropdownListAbsolute.X or 
+                        mousePosition.X > dropdownListAbsolute.X + dropdownListSize.X or 
+                        mousePosition.Y < dropdownListAbsolute.Y or 
+                        mousePosition.Y > dropdownListAbsolute.Y + dropdownListSize.Y
 
-                if isDropdownOpen and clickedOutsideButton and clickedOutsideList then
-                     isDropdownOpen = false
-                     dropdownList.Visible = false
+                    if isDropdownOpen and clickedOutsideButton and clickedOutsideList then
+                         isDropdownOpen = false
+                         dropdownList.Visible = false
+                    end
                 end
-            end
+            end)
+            if not success then warn("Error in Dropdown InputBegan: ", err) end
         end)
 
         return dropdownContainer, populateDropdown
