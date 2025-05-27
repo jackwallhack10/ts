@@ -38,7 +38,7 @@ function Library:Create(table)
     title.Name = "title"
     title.Font = Enum.Font.GothamBold
     title.Text = table.Name
-    title.TextColor3 = Color3.fromRGB(31, 152, 82)
+    title.TextColor3 = Color3.fromRGB(255, 255, 255)
     title.TextSize = 14
     title.TextXAlignment = Enum.TextXAlignment.Left
     title.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
