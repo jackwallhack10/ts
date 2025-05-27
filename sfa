@@ -55,7 +55,7 @@
         title.Name = "title"
         title.Font = Enum.Font.Gotham
         title.Text = table.Name
-        title.TextColor3 = Color3.fromRGB(195, 195, 195)
+        title.TextColor3 = Color3.fromRGB(255, 165, 0)
         title.TextSize = 12
         title.TextXAlignment = Enum.TextXAlignment.Left
         title.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
