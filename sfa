@@ -3,33 +3,32 @@ arizon.Name = "arizon"
 arizon.ZIndexBehavior = Enum.ZIndexBehavior.Sibling
 arizon.Parent = game.CoreGui
 
-local Library = {}
+-- Ensure these are defined before the pcall
 local TweenService = game:GetService("TweenService")
 local RunService = game:GetService("RunService")
 local UserInputService = game:GetService("UserInputService")
 local Players = game:GetService("Players")
-local LocalPlayer = Players.LocalPlayer
-local Mouse = LocalPlayer:GetMouse()
+-- LocalPlayer and Mouse need to be checked inside the pcall as they might not be available immediately
 
 local success, Library = pcall(function()
-
-    -- Add checks for essential services and LocalPlayer
-    if not TweenService then warn("Library Error: TweenService not available.") return end
-
-    if not RunService then warn("Library Error: RunService not available.") return end
-
-    if not UserInputService then warn("Library Error: UserInputService not available.") return end
-
-    if not Players then warn("Library Error: Players service not available.") return end
-
+    -- Move LocalPlayer and Mouse definition and checks inside the pcall
+    local LocalPlayer = Players and Players.LocalPlayer -- Use 'and' for nil safety
     if not LocalPlayer then warn("Library Error: LocalPlayer not available.") return end
 
+    local Mouse = LocalPlayer:GetMouse()
     if not Mouse then warn("Library Error: Mouse not available for LocalPlayer.") return end
+
+    -- Add checks for essential services (redundant if defined outside but good practice)
+    if not TweenService then warn("Library Error: TweenService not available.") return end
+    if not RunService then warn("Library Error: RunService not available.") return end
+    if not UserInputService then warn("Library Error: UserInputService not available.") return end
+    if not Players then warn("Library Error: Players service not available.") return end -- This check might be redundant now
 
     local elementHandler = {}
 
     function Library:Create(table)
-        local createSuccess, main = pcall(function()
+        -- Wrap the UI creation in a pcall
+        local uiCreationSuccess, uiElements = pcall(function()
             local main = Instance.new("Frame")
             main.Name = "main"
             main.BackgroundColor3 = Color3.fromRGB(24, 24, 24)
@@ -109,12 +108,13 @@ local success, Library = pcall(function()
             return main, topBar, close, container
         end)
         
-        if not createSuccess then
-             warn("Error during main UI creation in Library:Create: ", main)
-             return nil
+        -- Handle UI creation errors
+        if not uiCreationSuccess then
+             warn("Error during main UI creation in Library:Create: ", uiElements)
+             return nil -- Return nil if creation failed
         end
         
-        local main, topBar, close, container = main
+        local main, topBar, close, container = unpack(uiElements)
 
         --// Close events with pcall
         close.MouseEnter:Connect(function()
@@ -509,14 +509,15 @@ local success, Library = pcall(function()
 
     -- Add more element types here if needed
 
-    return elementHandler
+    return elementHandler -- This is the successful return value
 end)
 
 if not success then
+    -- The specific error is now in the 'Library' variable when success is false
     warn("Error initializing UI Library: ", Library)
     -- Return an empty or dummy library if initialization failed
     Library = {}
-    Library.Create = function() warn("UI Library failed to initialize.") return {} end
+    Library.Create = function(...) warn("UI Library failed to initialize due to a previous error: ", Library) return {} end
 end
 
 return Library 
