@@ -117,7 +117,7 @@ function lib:Window(text, preset, closebind)
     TabHoldLayout.Parent = TabHold
     TabHoldLayout.SortOrder = Enum.SortOrder.LayoutOrder
     TabHoldLayout.Padding = UDim.new(0, 5)
-    TabHoldLayout.Orientation = Enum.Orientation.Horizontal
+    TabHoldLayout.FillDirection = Enum.FillDirection.Horizontal
 
     Title.Name = "Title"
     Title.Parent = Main
