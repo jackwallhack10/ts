@@ -93,7 +93,7 @@ function lib:Window(text, preset, closebind)
     local TabHold = Instance.new("Frame")
     local TabHoldLayout = Instance.new("UIListLayout")
     local Title = Instance.new("TextLabel")
-    local TabFolder = Instance.new("Folder")
+    local TabFolder = Instance.new("Frame")
     local DragFrame = Instance.new("Frame")
 
     Main.Name = "Main"
