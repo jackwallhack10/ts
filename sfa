@@ -531,25 +531,27 @@ function lib:Window(text, preset, closebind)
             ToggleTitle.TextSize = 14.000
             ToggleTitle.TextXAlignment = Enum.TextXAlignment.Left
 
+            -- Toggle Switch Track
             ToggleTrack.Name = "ToggleTrack"
             ToggleTrack.Parent = Toggle
-            ToggleTrack.BackgroundColor3 = Color3.fromRGB(50, 50, 50)
+            ToggleTrack.BackgroundColor3 = Color3.fromRGB(50, 50, 50) -- Dark grey track
             ToggleTrack.AnchorPoint = Vector2.new(1, 0.5)
-            ToggleTrack.Position = UDim2.new(1, -20, 0.5, -8)
-            ToggleTrack.Size = UDim2.new(0, 30, 0, 16)
+            ToggleTrack.Position = UDim2.new(1, -20, 0.5, -8) -- Position near the right edge
+            ToggleTrack.Size = UDim2.new(0, 30, 0, 16) -- Size for the oval shape
 
-            ToggleTrackCorner.CornerRadius = UDim.new(1, 0)
+            ToggleTrackCorner.CornerRadius = UDim.new(1, 0) -- Makes it oval
             ToggleTrackCorner.Name = "ToggleTrackCorner"
             ToggleTrackCorner.Parent = ToggleTrack
 
+            -- Toggle Switch Circle
             ToggleCircle.Name = "ToggleCircle"
-            ToggleCircle.Parent = ToggleTrack
-            ToggleCircle.BackgroundColor3 = Color3.fromRGB(150, 150, 150)
+            ToggleCircle.Parent = ToggleTrack -- Circle is inside the track
+            ToggleCircle.BackgroundColor3 = Color3.fromRGB(150, 150, 150) -- Light grey circle
             ToggleCircle.AnchorPoint = Vector2.new(0, 0.5)
-            ToggleCircle.Position = UDim2.new(0, 2, 0.5, -6)
-            ToggleCircle.Size = UDim2.new(0, 12, 0, 12)
+            ToggleCircle.Position = UDim2.new(0, 2, 0.5, -6) -- Initial position (left side of track)
+            ToggleCircle.Size = UDim2.new(0, 12, 0, 12) -- Size for the circle
 
-            ToggleCircleCorner.CornerRadius = UDim.new(1, 0)
+            ToggleCircleCorner.CornerRadius = UDim.new(1, 0) -- Makes it round
             ToggleCircleCorner.Name = "ToggleCircleCorner"
             ToggleCircleCorner.Parent = ToggleCircle
 
@@ -558,26 +560,28 @@ function lib:Window(text, preset, closebind)
                     toggled = not toggled
 
                     if toggled then
+                        -- Toggle on: move circle right and change track color
                         TweenService:Create(
                             ToggleCircle,
                             TweenInfo.new(.2, Enum.EasingStyle.Quad, Enum.EasingDirection.Out),
-                            {Position = UDim2.new(1, -14, 0.5, -6)}
+                            {Position = UDim2.new(1, -14, 0.5, -6)} -- Move to right side of track
                         ):Play()
                         TweenService:Create(
                             ToggleTrack,
                             TweenInfo.new(.2, Enum.EasingStyle.Quad, Enum.EasingDirection.Out),
-                            {BackgroundColor3 = Color3.fromRGB(150, 150, 150)}
+                            {BackgroundColor3 = Color3.fromRGB(150, 150, 150)} -- Light grey track when active
                         ):Play()
                     else
+                        -- Toggle off: move circle left and change track color back
                         TweenService:Create(
                             ToggleCircle,
                             TweenInfo.new(.2, Enum.EasingStyle.Quad, Enum.EasingDirection.Out),
-                            {Position = UDim2.new(0, 2, 0.5, -6)}
+                            {Position = UDim2.new(0, 2, 0.5, -6)} -- Move back to left side of track
                         ):Play()
                         TweenService:Create(
                             ToggleTrack,
                             TweenInfo.new(.2, Enum.EasingStyle.Quad, Enum.EasingDirection.Out),
-                            {BackgroundColor3 = Color3.fromRGB(50, 50, 50)}
+                            {BackgroundColor3 = Color3.fromRGB(50, 50, 50)} -- Dark grey track when inactive
                         ):Play()
                     end
 
@@ -586,6 +590,7 @@ function lib:Window(text, preset, closebind)
             )
 
             if default == true then
+                -- Set initial state to toggled on
                 ToggleTrack.BackgroundColor3 = Color3.fromRGB(150, 150, 150)
                 ToggleCircle.Position = UDim2.new(1, -14, 0.5, -6)
                 toggled = true
