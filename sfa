@@ -222,15 +222,20 @@ local Highlight = (isfile and loadfile and isfile("Highlight.lua") and loadfile(
 local SimpleSpy3 = Create("ScreenGui",{ResetOnSpawn = false})
 local Storage = Create("Folder",{})
 local Background = Create("Frame",{Parent = SimpleSpy3,BackgroundColor3 = Color3.fromRGB(45, 45, 48),BackgroundTransparency = 0.1,Position = UDim2.new(0, 500, 0, 200),Size = UDim2.new(0, 450, 0, 268),})
+local UICorner_Background = Create("UICorner", {Parent = Background, CornerRadius = UDim.new(0, 8)}) -- Added UICorner for rounded corners
 local LeftPanel = Create("Frame",{Parent = Background,BackgroundColor3 = Color3.fromRGB(53, 53, 55),BorderSizePixel = 0,Position = UDim2.new(0, 0, 0, 19),Size = UDim2.new(0, 131, 0, 249)})
+local UICorner_LeftPanel = Create("UICorner", {Parent = LeftPanel, CornerRadius = UDim.new(0, 8)}) -- Added UICorner
 local LogList = Create("ScrollingFrame",{Parent = LeftPanel,Active = true,BackgroundColor3 = Color3.new(1, 1, 1),BackgroundTransparency = 1,BorderSizePixel = 0,Position = UDim2.new(0, 5, 0, 24),Size = UDim2.new(1, -10, 1, -33), -- Adjusted position and size for padding
 CanvasSize = UDim2.new(0, 0, 0, 0),ScrollBarThickness = 8}) -- Increased scrollbar thickness slightly
 local UIListLayout = Create("UIListLayout",{Parent = LogList,HorizontalAlignment = Enum.HorizontalAlignment.Left,SortOrder = Enum.SortOrder.LayoutOrder,Padding = UDim.new(0, 5)}) -- Added padding between items and aligned left
 local RightPanel = Create("Frame",{Parent = Background,BackgroundColor3 = Color3.fromRGB(40, 40, 43),BorderSizePixel = 0,Position = UDim2.new(0, 131, 0, 19),Size = UDim2.new(0, 319, 0, 249)})
+local UICorner_RightPanel = Create("UICorner", {Parent = RightPanel, CornerRadius = UDim.new(0, 8)}) -- Added UICorner
 local CodeBox = Create("Frame",{Parent = RightPanel,BackgroundColor3 = Color3.fromRGB(30, 30, 33),BorderSizePixel = 0,Size = UDim2.new(1, 0, 0.5, -9), Position = UDim2.new(0, 0, 0, 0)})
+local UICorner_CodeBox = Create("UICorner", {Parent = CodeBox, CornerRadius = UDim.new(0, 8)}) -- Added UICorner
 local ScrollingFrame = Create("ScrollingFrame",{Parent = RightPanel,Active = true,BackgroundColor3 = Color3.fromRGB(40, 40, 43), -- Changed background color to match RightPanel
 BackgroundTransparency = 0.5, -- Added subtle transparency
 Position = UDim2.new(0, 0, 0.5, 0),Size = UDim2.new(1, 0, 0.5, -9),CanvasSize = UDim2.new(0, 0, 0, 0),ScrollBarThickness = 4})
+local UICorner_ScrollingFrame = Create("UICorner", {Parent = ScrollingFrame, CornerRadius = UDim.new(0, 8)}) -- Added UICorner
 local UIGridLayout = Create("UIGridLayout",{Parent = ScrollingFrame,HorizontalAlignment = Enum.HorizontalAlignment.Center,SortOrder = Enum.SortOrder.LayoutOrder,CellPadding = UDim2.new(0, 5, 0, 5),CellSize = UDim2.new(0, 94, 0, 27)}) -- Added padding to grid layout
 local TopBar = Create("Frame",{Parent = Background,BackgroundColor3 = Color3.fromRGB(30, 30, 33),BorderSizePixel = 0,Size = UDim2.new(1, 0, 0, 19)})
 local Simple = Create("TextButton",{Parent = TopBar,BackgroundColor3 = Color3.new(1, 1, 1),AutoButtonColor = false,BackgroundTransparency = 1,Position = UDim2.new(0, 5, 0, 0),Size = UDim2.new(0, 57, 0, 18),Font = Enum.Font.SourceSansBold,Text =  "Brizzy",TextColor3 = Color3.new(0.9, 0.9, 0.9),TextSize = 14,TextXAlignment = Enum.TextXAlignment.Left})
@@ -943,8 +948,9 @@ end
 ---@param description function
 ---@param onClick function
 function newButton(name, description, onClick)
-    local FunctionTemplate = Create("Frame",{Name = "FunctionTemplate",Parent = ScrollingFrame,BackgroundColor3 = Color3.fromRGB(60, 60, 60),BackgroundTransparency = 0.3,Size = UDim2.new(1, -14, 0, 27), -- Adjusted size slightly for padding
+    local FunctionTemplate = Create("Frame",{Name = "FunctionTemplate",Parent = ScrollingFrame,BackgroundColor3 = Color3.fromRGB(55, 55, 58),BackgroundTransparency = 0.4,Size = UDim2.new(1, -14, 0, 27), -- Adjusted size slightly for padding
     ZIndex = 1})
+    local UICorner_FunctionTemplate = Create("UICorner", {Parent = FunctionTemplate, CornerRadius = UDim.new(0, 4)}) -- Added UICorner
     local ColorBar = Create("Frame",{Name = "ColorBar",Parent = FunctionTemplate,BackgroundColor3 = Color3.new(1, 1, 1),BorderSizePixel = 0,Position = UDim2.new(0, 0, 0, 0),Size = UDim2.new(0, 7, 1, 0),ZIndex = 3}) -- Color bar on the left
     local Text = Create("TextLabel",{Text = name,Name = "Text",Parent = FunctionTemplate,BackgroundColor3 = Color3.new(1, 1, 1),BackgroundTransparency = 1,Position = UDim2.new(0, 10, 0, 0),Size = UDim2.new(1, -10, 1, 0), -- Adjusted position and size
     ZIndex = 2,Font = Enum.Font.SourceSans,TextColor3 = Color3.new(0.9, 0.9, 0.9),TextSize = 14,TextStrokeTransparency = 0.8,TextXAlignment = Enum.TextXAlignment.Left,TextYAlignment = Enum.TextYAlignment.Center}) -- Centered text vertically
@@ -953,12 +959,12 @@ function newButton(name, description, onClick)
 
     Button.MouseEnter:Connect(function()
         -- Add hover effect: make background slightly more opaque/lighter
-        TweenService:Create(FunctionTemplate, TweenInfo.new(0.15), {BackgroundColor3 = Color3.fromRGB(70, 70, 73), BackgroundTransparency = 0.2}):Play()
+        TweenService:Create(FunctionTemplate, TweenInfo.new(0.15), {BackgroundColor3 = Color3.fromRGB(65, 65, 68), BackgroundTransparency = 0.25}):Play()
         makeToolTip(true, description())
     end)
     Button.MouseLeave:Connect(function()
         -- Remove hover effect: revert background to default
-        TweenService:Create(FunctionTemplate, TweenInfo.new(0.15), {BackgroundColor3 = Color3.fromRGB(60, 60, 60), BackgroundTransparency = 0.3}):Play()
+        TweenService:Create(FunctionTemplate, TweenInfo.new(0.15), {BackgroundColor3 = Color3.fromRGB(55, 55, 58), BackgroundTransparency = 0.4}):Play()
         makeToolTip(false)
     end)
     FunctionTemplate.AncestryChanged:Connect(function()
@@ -983,8 +989,11 @@ function newRemote(type, data)
     local remote = data.remote
     local callingscript = data.callingscript
 
-    local RemoteTemplate = Create("Frame",{LayoutOrder = layoutOrderNum,Name = "RemoteTemplate",Parent = LogList,BackgroundColor3 = Color3.fromRGB(50, 50, 50),BackgroundTransparency = 0.3,Size = UDim2.new(1, -14, 0, 27), -- Adjusted size slightly for padding
+    local RemoteTemplate = Create("Frame",{LayoutOrder = layoutOrderNum,Name = "RemoteTemplate",Parent = LogList,BackgroundColor3 = Color3.fromRGB(60, 60, 63), -- Slightly lighter background
+BackgroundTransparency = 0.2, -- Slightly less transparent
+Size = UDim2.new(1, -14, 0, 27), -- Adjusted size slightly for padding
 ZIndex = 1})
+    local UICorner_RemoteTemplate = Create("UICorner", {Parent = RemoteTemplate, CornerRadius = UDim.new(0, 4)}) -- Added UICorner
     local ColorBar = Create("Frame",{Name = "ColorBar",Parent = RemoteTemplate,BackgroundColor3 = (type == "event" and Color3.fromRGB(255, 242, 0)) or Color3.fromRGB(99, 86, 245),BorderSizePixel = 0,Position = UDim2.new(0, 0, 0, 0),Size = UDim2.new(0, 7, 1, 0),ZIndex = 3})
     local Text = Create("TextLabel",{TextTruncate = Enum.TextTruncate.AtEnd,Name = "Text",Parent = RemoteTemplate,BackgroundColor3 = Color3.new(1, 1, 1),BackgroundTransparency = 1,Position = UDim2.new(0, 10, 0, 0),Size = UDim2.new(1, -10, 1, 0), -- Adjusted position and size
 ZIndex = 2,Font = Enum.Font.SourceSans,Text = remote.Name,TextColor3 = Color3.new(0.9, 0.9, 0.9),TextSize = 14,TextXAlignment = Enum.TextXAlignment.Left,TextYAlignment = Enum.TextYAlignment.Center}) -- Centered text vertically
@@ -1018,6 +1027,20 @@ AutoButtonColor = false,Font = Enum.Font.SourceSans,Text = "",TextColor3 = Color
             eventSelect(RemoteTemplate)
         end
     end)
+    
+    -- Add hover effect for remote entries
+    Button.MouseEnter:Connect(function()
+        if selected ~= log then -- Only apply hover if not selected
+            TweenService:Create(RemoteTemplate, TweenInfo.new(0.15), {BackgroundColor3 = Color3.fromRGB(70, 70, 73), BackgroundTransparency = 0.15}):Play()
+        end
+    end)
+
+    Button.MouseLeave:Connect(function()
+        if selected ~= log then -- Only revert if not selected
+            TweenService:Create(RemoteTemplate, TweenInfo.new(0.15), {BackgroundColor3 = Color3.fromRGB(60, 60, 63), BackgroundTransparency = 0.2}):Play()
+        end
+    end)
+
     layoutOrderNum -= 1
     table.insert(remoteLogs, 1, {connect, RemoteTemplate})
     clean()
